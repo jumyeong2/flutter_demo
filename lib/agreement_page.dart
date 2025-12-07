@@ -156,6 +156,11 @@ class _AgreementPageState extends State<AgreementPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: BackButton(onPressed: () => Navigator.pop(context)),
+        title: const Text("Rulebook"),
+      ),
       backgroundColor: Colors.grey[100],
       body: Stack(
         children: [

@@ -3,22 +3,18 @@ import 'package:flutter/material.dart';
 class OnboardingPage extends StatefulWidget {
   final VoidCallback onBack;
   final VoidCallback onStart;
-
   const OnboardingPage({
     super.key,
     required this.onBack,
     required this.onStart,
   });
-
   @override
   State<OnboardingPage> createState() => _OnboardingPageState();
 }
-
 class _OnboardingPageState extends State<OnboardingPage>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   final List<Animation<double>> _animations = [];
-
   @override
   void initState() {
     super.initState();
@@ -26,7 +22,6 @@ class _OnboardingPageState extends State<OnboardingPage>
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
-
     for (int i = 0; i < 6; i++) {
       _animations.add(
         CurvedAnimation(
@@ -35,16 +30,13 @@ class _OnboardingPageState extends State<OnboardingPage>
         ),
       );
     }
-
     _controller.forward();
   }
-
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,7 +78,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                   child: Column(
                     children: [
                       const Text(
-                        "Rulebook 체험 여정을\n시작해보세요!",
+                        "Rulebook 체험을\n시작해보세요!",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 24,
@@ -110,53 +102,54 @@ class _OnboardingPageState extends State<OnboardingPage>
                 ),
               ),
               const SizedBox(height: 40),
-
               // Timeline
               Expanded(
-                child: Stack(
-                  children: [
-                    Positioned(
-                      left: 19,
-                      top: 20,
-                      bottom: 40,
-                      child: Container(width: 2, color: Colors.grey[100]),
-                    ),
-                    Column(
-                      children: [
-                        _buildStep(
-                          1,
-                          "3대 핵심 진단",
-                          "돈(지분), 권력(의사결정), 이별(안전장치)에\n대해 핵심 질문을 던집니다.",
-                          true,
-                          _animations[1],
-                        ),
-                        const SizedBox(height: 32),
-                        _buildStep(
-                          2,
-                          "AI 리스크 분석",
-                          "입력된 데이터를 바탕으로 잠재적 분쟁\n요소를 찾습니다.",
-                          false,
-                          _animations[2],
-                        ),
-                        const SizedBox(height: 32),
-                        _buildStep(
-                          3,
-                          "솔루션 리포트 발급",
-                          "진단 결과와 개선 가이드북(PDF)을\n제공합니다.",
-                          false,
-                          _animations[3],
-                        ),
-                      ],
-                    ),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Positioned(
+                        left: 19,
+                        top: 20,
+                        bottom: 40,
+                        child: Container(width: 2, color: Colors.grey[100]),
+                      ),
+                      Column(
+                        children: [
+                          _buildStep(
+                            1,
+                            "3대 핵심 진단",
+                            "돈(지분), 권력(의사결정), 이별(안전장치)에\n대해 핵심 질문을 던집니다.",
+                            true,
+                            _animations[1],
+                          ),
+                          const SizedBox(height: 32),
+                          _buildStep(
+                            2,
+                            "AI 리스크 분석",
+                            "입력된 데이터를 바탕으로 잠재적 분쟁\n요소를 찾습니다.",
+                            false,
+                            _animations[2],
+                          ),
+                          const SizedBox(height: 32),
+                          _buildStep(
+                            3,
+                            "솔루션 리포트 발급",
+                            "진단 결과와 개선 가이드북(PDF)을\n제공합니다.",
+                            false,
+                            _animations[3],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-
+              SizedBox(height: 20),
               // Tip Section
               FadeTransition(
                 opacity: _animations[4],
                 child: Container(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: Colors.blue[50],
                     borderRadius: BorderRadius.circular(16),
@@ -191,7 +184,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              "3분만 투자하면, 내 팀의 위험 요소를\n바로 확인할 수 있어요.",
+                              "30분만 투자하면, 내 팀의 위험 요소를\n바로 확인할 수 있어요.",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.blue[900],
@@ -206,7 +199,6 @@ class _OnboardingPageState extends State<OnboardingPage>
                 ),
               ),
               const SizedBox(height: 24),
-
               // Bottom CTA
               FadeTransition(
                 opacity: _animations[5],
@@ -244,7 +236,6 @@ class _OnboardingPageState extends State<OnboardingPage>
       ),
     );
   }
-
   Widget _buildStep(
     int step,
     String title,
