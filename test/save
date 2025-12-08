@@ -1,0 +1,1054 @@
+import React, { useState } from 'react';
+import { 
+  Activity, 
+  FileText, 
+  MessageSquare, 
+  CheckCircle2, 
+  Menu, 
+  X, 
+  ChevronRight,
+  BrainCircuit,
+  BarChart3,
+  Zap,
+  LogOut,
+  Download,
+  Star,
+  Users,
+  AlertTriangle,
+  Siren,
+  ArrowLeft,
+  Clock,
+  ShieldCheck,
+  Search,
+  Scale, 
+  ArrowRight, 
+  FileSignature, 
+  Shield, 
+  Gavel, 
+  Info,
+  Mail // 메일 아이콘 추가
+} from 'lucide-react';
+
+// --- [Page 3] 공동창업자 합의 UX 컴포넌트 ---
+const FounderAgreementUX = () => {
+  // 초기 데이터: 공동창업자 계약 시나리오 (구체적 수치 제안 업데이트)
+  const [items, setItems] = useState([
+    {
+      id: 1,
+      category: "역할 및 책임 (R&R)",
+      question: "각 창업자의 핵심 역할과 의사결정 권한은 어떻게 나눌까요?",
+      description: "C-Level 직함과 최종 결정권이 있는 영역을 명확히 해야 합니다.",
+      userA: "저는 CEO로서 경영, 투자 유치, 제품 기획 총괄을 맡고 싶습니다. 개발 관련 최종 결정권은 CTO에게 위임합니다.",
+      userB: "저는 CTO로서 개발 전반을 맡되, 제품 기획 단계에서도 기술적 거부권(Veto)을 갖고 싶습니다.",
+      consensus: "",
+      status: "conflict",
+      aiSuggestion: "시장 표준 R&R: 경영/자금은 CEO 전결(100%), 기술 스택은 CTO 전결(100%). 단, 제품 로드맵은 5:5 합의를 원칙으로 하되, 데드락(Deadlock) 발생 시 CEO가 최종 결정권(Casting Vote)을 행사하는 구조가 일반적입니다.",
+      isAiLoading: false
+    },
+    {
+      id: 2,
+      category: "베스팅(Vesting) 기간",
+      question: "지분을 온전히 자신의 것으로 만드는 데 몆 년이 걸리게 할까요?",
+      description: "보통 창업 멤버의 근속을 유도하기 위해 설정합니다. (표준: 3~4년)",
+      userA: "서로 믿는 사이니까 별도 기간 없이 바로 100% 인정하면 좋겠습니다.",
+      userB: "혹시 모를 이탈을 대비해 4년 베스팅을 적용해야 안전할 것 같습니다.",
+      consensus: "",
+      status: "conflict",
+      aiSuggestion: "VC 투자 표준: 총 4년(48개월) 베스팅. 최초 1년(Cliff) 근무 시 지분의 25%를 일괄 인정하고, 이후 3년간 매월 1/48(약 2.08%)씩 분할 귀속시키는 조건이 가장 보편적입니다.",
+      isAiLoading: false
+    },
+    {
+      id: 4,
+      category: "이탈 시 지분 처리 (Bad Leaver)",
+      question: "고의적 태만이나 배임으로 인한 퇴사 시 지분은 어떻게 할까요?",
+      description: "Bad Leaver 발생 시 지분을 액면가로 회수할지 등에 대한 합의입니다.",
+      userA: "징계 해고나 배임의 경우라면 액면가로 전량 회수해야 합니다.",
+      userB: "동의합니다. 액면가 회수 조항 넣죠.",
+      consensus: "",
+      status: "conflict",
+      aiSuggestion: "표준 계약 조항: Bad Leaver(횡령, 배임 등) 확정 시, 보유 지분 100%를 '액면가'로 강제 회수(Call Option). 단순 변심 등(Good Leaver)의 경우, 근속 기간에 비례해 베스팅된 지분은 인정하되 잔여 지분만 무상 회수합니다.",
+      isAiLoading: false
+    }
+  ]);
+
+  const [showFinalModal, setShowFinalModal] = useState(false);
+  const [email, setEmail] = useState(""); // 이메일 입력 상태
+  const [emailSent, setEmailSent] = useState(false); // 이메일 전송 완료 상태
+
+  // 진행률 계산
+  const resolvedCount = items.filter(i => i.status === "resolved").length;
+  const progress = (resolvedCount / items.length) * 100;
+
+  // User A 입력 핸들러
+  const handleUserAChange = (id, value) => {
+    setItems(prev => prev.map(item => {
+      if (item.id === id) {
+        const newStatus = value.trim() === item.userB.trim() ? "resolved" : "conflict";
+        return { ...item, userA: value, status: newStatus };
+      }
+      return item;
+    }));
+  };
+
+  // 합의안 입력 핸들러
+  const handleConsensusChange = (id, value) => {
+    setItems(prev => prev.map(item => item.id === id ? { ...item, consensus: value } : item));
+  };
+
+  // 합의 완료 처리
+  const markAsResolved = (id) => {
+    setItems(prev => prev.map(item => {
+      if (item.id === id) {
+        if (!item.consensus.trim()) {
+          alert("계약 조항으로 들어갈 합의 내용을 입력해주세요.");
+          return item;
+        }
+        return { ...item, status: "resolved" };
+      }
+      return item;
+    }));
+  };
+
+  // AI 가이드 실행
+  const triggerAI = (id) => {
+    setItems(prev => prev.map(item => item.id === id ? { ...item, isAiLoading: true } : item));
+    
+    setTimeout(() => {
+      setItems(prev => prev.map(item => {
+        if (item.id === id) {
+          return { 
+            ...item, 
+            consensus: item.aiSuggestion, // 미리 정의된 제안을 입력창에 반영
+            isAiLoading: false 
+          };
+        }
+        return item;
+      }));
+    }, 1200);
+  };
+
+  // 아이콘 매핑
+  const getIcon = (category) => {
+    if (category.includes("역할")) return <Users className="w-5 h-5" />;
+    if (category.includes("베스팅")) return <Clock className="w-5 h-5" />;
+    if (category.includes("클리프")) return <AlertTriangle className="w-5 h-5" />;
+    if (category.includes("이탈")) return <Shield className="w-5 h-5" />;
+    return <Scale className="w-5 h-5" />;
+  };
+
+  // 이메일 전송 핸들러
+  const handleSendEmail = () => {
+    if (!email.includes("@")) {
+      alert("올바른 이메일 주소를 입력해주세요.");
+      return;
+    }
+    // 실제 전송 로직은 여기에 구현 (API 호출 등)
+    setTimeout(() => {
+      setEmailSent(true);
+    }, 500);
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-100 p-4 md:p-8 font-sans text-slate-800">
+      <div className="max-w-5xl mx-auto">
+        
+        {/* 헤더 영역 */}
+        <header className="mb-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-3">
+                <FileSignature className="w-8 h-8 text-indigo-600" />
+                공동창업자 주주 간 계약(SHA) 조율
+              </h1>
+              <p className="text-slate-500 mt-2 text-sm">
+                스타트업의 안전한 항해를 위해 민감한 주제(지분, 이탈 등)를 미리 합의하고 기록합니다.
+              </p>
+            </div>
+            <div className="text-right">
+              <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Agreement Progress</div>
+              <div className="text-3xl font-bold text-indigo-600">{Math.round(progress)}%</div>
+            </div>
+          </div>
+          <div className="w-full bg-slate-100 rounded-full h-2 mt-4 overflow-hidden">
+            <div className="bg-indigo-600 h-2 transition-all duration-700 ease-out" style={{ width: `${progress}%` }}></div>
+          </div>
+        </header>
+
+        {/* 메인 리스트 */}
+        <div className="space-y-8">
+          {items.map((item) => (
+            <div 
+              key={item.id} 
+              className={`bg-white rounded-xl shadow-sm border-2 transition-all duration-300 relative overflow-hidden ${
+                item.status === 'conflict' ? 'border-amber-200' : 'border-indigo-100'
+              }`}
+            >
+              {/* 상태 배지 (Floating) */}
+              <div className={`absolute top-0 right-0 px-4 py-2 rounded-bl-xl text-xs font-bold flex items-center gap-2 ${
+                 item.status === 'conflict' ? 'bg-amber-100 text-amber-700' : 'bg-indigo-100 text-indigo-700'
+              }`}>
+                {item.status === 'conflict' ? (
+                  <>
+                    <Scale className="w-3 h-3" /> 조율 필요
+                  </>
+                ) : (
+                  <>
+                    <Gavel className="w-3 h-3" /> 조항 확정
+                  </>
+                )}
+              </div>
+
+              <div className="p-6 md:p-8">
+                {/* 질문 및 카테고리 */}
+                <div className="mb-6 pr-20">
+                  <div className="flex items-center gap-2 text-indigo-600 font-bold mb-2">
+                    {getIcon(item.category)}
+                    <span>{item.category}</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-800 mb-2">{item.question}</h3>
+                  <div className="flex items-start gap-2 text-sm text-slate-500 bg-slate-50 p-3 rounded-lg">
+                    <Info className="w-4 h-4 mt-0.5 shrink-0" />
+                    {item.description}
+                  </div>
+                </div>
+
+                {/* 의견 대립 섹션 */}
+                <div className="grid md:grid-cols-2 gap-6 mb-8">
+                  {/* 나 (User A) */}
+                  <div className={`p-4 rounded-xl border ${item.status === 'resolved' ? 'bg-slate-50 border-slate-200' : 'bg-indigo-50/50 border-indigo-100'}`}>
+                    <label className="block text-xs font-bold text-slate-400 mb-2 uppercase">User A (나)</label>
+                    <textarea
+                      value={item.userA}
+                      onChange={(e) => handleUserAChange(item.id, e.target.value)}
+                      className="w-full bg-transparent border-none resize-none outline-none text-slate-700 h-20 text-sm"
+                      placeholder="본인의 입장을 작성하세요."
+                      disabled={item.status === 'resolved'}
+                    />
+                  </div>
+
+                  {/* 상대방 (User B) */}
+                  <div className={`p-4 rounded-xl border ${item.status === 'resolved' ? 'bg-slate-50 border-slate-200' : 'bg-amber-50/30 border-amber-100'}`}>
+                    <label className="block text-xs font-bold text-slate-400 mb-2 uppercase">User B (공동창업자)</label>
+                    <div className="text-slate-700 text-sm h-20 overflow-y-auto leading-relaxed">
+                      {item.userB}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 합의 도출 영역 */}
+                <div className={`relative rounded-xl transition-all duration-300 ${
+                  item.status === 'conflict' ? 'bg-slate-50 p-6 border border-slate-200' : 'bg-indigo-50 p-6 border border-indigo-200'
+                }`}>
+                  {/* AI Suggestion Button (Only visible in conflict) */}
+                  {item.status === 'conflict' && (
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="text-sm font-bold text-slate-700">최종 합의안 (계약 조항)</span>
+                      <button
+                        onClick={() => triggerAI(item.id)}
+                        disabled={item.isAiLoading}
+                        className="flex items-center gap-2 text-xs bg-white border border-indigo-200 text-indigo-600 px-4 py-2 rounded-full shadow-sm hover:bg-indigo-50 transition-all font-semibold"
+                      >
+                        {item.isAiLoading ? (
+                          <span className="animate-spin">⏳</span>
+                        ) : (
+                          <Scale className="w-3 h-3" />
+                        )}
+                        {item.isAiLoading ? '시장 표준 분석 중...' : '시장 표준(Standard) 제안받기'}
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="flex gap-4 items-start">
+                    <div className="flex-1">
+                       <textarea
+                        value={item.consensus}
+                        onChange={(e) => handleConsensusChange(item.id, e.target.value)}
+                        placeholder={item.status === 'conflict' ? "양측의 의견을 조율하여 최종 계약 문구를 작성하세요. (AI 제안 활용 가능)" : ""}
+                        disabled={item.status === 'resolved'}
+                        className={`w-full p-4 rounded-lg text-sm leading-relaxed resize-none h-24 outline-none transition-all font-medium ${
+                          item.status === 'resolved' 
+                            ? 'bg-transparent text-indigo-900' 
+                            : 'bg-white border border-slate-300 focus:ring-2 focus:ring-indigo-200'
+                        }`}
+                      />
+                    </div>
+                    
+                    <div className="flex flex-col gap-2 shrink-0">
+                      {item.status === 'conflict' ? (
+                        <button 
+                          onClick={() => markAsResolved(item.id)}
+                          className="h-24 px-6 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl flex flex-col items-center justify-center gap-2 group"
+                        >
+                          <Gavel className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                          <span className="text-xs font-bold">조항<br/>확정</span>
+                        </button>
+                      ) : (
+                        <button 
+                          onClick={() => setItems(prev => prev.map(i => i.id === item.id ? {...i, status: 'conflict'} : i))}
+                          className="h-24 px-6 bg-white border border-indigo-200 text-indigo-600 rounded-lg hover:bg-indigo-50 transition-all flex flex-col items-center justify-center gap-2"
+                        >
+                          <span className="text-xs font-bold">수정<br/>하기</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {item.status === 'resolved' && (
+                    <div className="mt-3 flex items-center gap-2 text-xs text-indigo-600 font-medium">
+                      <CheckCircle2 className="w-4 h-4" />
+                      이 내용은 최종 계약서의 {item.id}조 항으로 반영됩니다.
+                    </div>
+                  )}
+                </div>
+
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer Action */}
+        <div className="mt-12 pb-20 flex justify-end">
+          <button
+            onClick={() => setShowFinalModal(true)}
+            disabled={progress < 100}
+            className={`flex items-center gap-3 px-10 py-5 rounded-xl font-bold text-lg shadow-xl transition-all ${
+              progress < 100 
+                ? 'bg-slate-200 text-slate-400 cursor-not-allowed' 
+                : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:translate-y-[-2px]'
+            }`}
+          >
+            {progress < 100 ? (
+              <>조항이 모두 확정되지 않았습니다 ({Math.round(progress)}%)</>
+            ) : (
+              <>
+                <FileSignature className="w-6 h-6" />
+                합의서(Term Sheet) 생성
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Modal (Updated) */}
+        {showFinalModal && (
+          <div className="fixed inset-0 bg-slate-900/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+            <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[85vh] overflow-y-auto">
+              <div className="p-10">
+                <div className="border-b pb-6 mb-6 text-center">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-50 text-indigo-600 rounded-full mb-4">
+                    <Scale className="w-8 h-8" />
+                  </div>
+                  <h2 className="text-3xl font-serif font-bold text-slate-900">Co-Founder Agreement</h2>
+                  {/* 면책조항 강조 */}
+                  <p className="mt-4 text-amber-600 bg-amber-50 px-4 py-2 rounded-lg text-sm font-bold border border-amber-100 leading-relaxed">
+                    "본 문서는 법적 효력이 없으며, 참고용입니다.<br/>정식 계약 전에는 반드시 전문 변호사 검토를 받으십시오."
+                  </p>
+                </div>
+
+                {/* 조항 내용 제거됨 */}
+
+                {/* 이메일 발송 컨테이너 */}
+                <div className="mt-10 pt-8 border-t border-slate-100">
+                  {!emailSent ? (
+                    <div className="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                      <div className="flex flex-col gap-4">
+                        <div className="flex items-center gap-2 mb-1">
+                           <FileText className="text-slate-400" size={18} />
+                           <h4 className="font-bold text-slate-700">합의서 PDF 받기</h4>
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          <div className="flex-1">
+                            <input 
+                              type="email" 
+                              placeholder="이메일 주소를 입력하세요 (example@company.com)" 
+                              className="w-full h-12 px-4 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                            />
+                          </div>
+                          <button 
+                            className="h-12 px-8 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 shadow-lg flex items-center justify-center gap-2 transition-all whitespace-nowrap"
+                            onClick={handleSendEmail}
+                          >
+                            <Mail size={18} />
+                            PDF 보내기
+                          </button>
+                        </div>
+                        <p className="text-xs text-slate-400 pl-1">
+                          * 입력하신 이메일로 합의서 초안(PDF)과 변호사 검토 가이드가 발송됩니다.
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="bg-green-50 p-8 rounded-xl border border-green-100 text-center animate-fade-in">
+                        <div className="inline-flex items-center justify-center w-12 h-12 bg-green-100 text-green-600 rounded-full mb-3">
+                           <CheckCircle2 size={24} />
+                        </div>
+                        <h4 className="text-lg font-bold text-green-800 mb-1">발송 완료!</h4>
+                        <p className="text-green-700 mb-4">
+                          <span className="font-bold">{email}</span>로<br/>합의서가 성공적으로 전송되었습니다.
+                        </p>
+                        <button 
+                          onClick={() => { setShowFinalModal(false); setEmailSent(false); }}
+                          className="text-sm font-bold text-slate-500 hover:text-slate-800 underline"
+                        >
+                          닫기
+                        </button>
+                    </div>
+                  )}
+                  
+                  {!emailSent && (
+                    <div className="mt-4 text-right">
+                      <button 
+                        onClick={() => setShowFinalModal(false)}
+                        className="text-slate-400 hover:text-slate-600 font-medium text-sm underline"
+                      >
+                        닫기 (저장하지 않음)
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+};
+
+// --- 메인 App 컴포넌트 ---
+const App = () => {
+  // 화면 상태 관리 ('landing' | 'onboarding' | 'agreement')
+  const [currentView, setCurrentView] = useState('landing');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [demoStep, setDemoStep] = useState(0);
+
+  // --- 온보딩 페이지 컴포넌트 ---
+  const OnboardingPage = () => {
+    return (
+      <div className="min-h-screen bg-white font-sans text-gray-900 flex flex-col">
+        {/* Header / Nav */}
+        <nav className="w-full h-16 border-b border-gray-100 flex items-center px-4 bg-white sticky top-0 z-50">
+          <button 
+            onClick={() => setCurrentView('landing')}
+            className="p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-full transition"
+          >
+            <ArrowLeft size={24} />
+          </button>
+          <div className="ml-2 font-bold text-lg text-slate-900">Rulebook 체험</div>
+        </nav>
+
+        {/* Main Content */}
+        <div className="flex-1 max-w-lg mx-auto w-full px-6 py-8 flex flex-col">
+          
+          {/* Title Section */}
+          <div className="mb-10 text-center animate-fade-in-up">
+            <h1 className="text-2xl font-bold text-slate-900 mb-3 leading-snug">
+              Rulebook 체험 여정을<br/>시작해보세요!
+            </h1>
+            <p className="text-slate-500 text-sm leading-relaxed">
+              간단한 3단계로 나의 협업 리스크와<br/>개선 가이드를 확인할 수 있어요.
+            </p>
+          </div>
+
+          {/* Steps Timeline */}
+          <div className="flex-1 space-y-0 mb-8 relative">
+             {/* Vertical Connecting Line */}
+             <div className="absolute left-[19px] top-4 bottom-10 w-0.5 bg-slate-100 -z-10"></div>
+
+             {/* Step 1 */}
+             <div className="flex gap-4 pb-8 relative group animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                <div className="flex flex-col items-center">
+                   <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold shadow-lg ring-4 ring-white z-10">
+                      1
+                   </div>
+                </div>
+                <div className="pt-1">
+                   <h3 className="text-lg font-bold text-blue-600 mb-1">3대 핵심 진단</h3>
+                   <p className="text-sm text-slate-600 leading-snug">
+                     돈(지분), 권력(의사결정), 이별(안전장치)에<br/>대해 핵심 질문을 던집니다.
+                   </p>
+                </div>
+             </div>
+
+             {/* Step 2 */}
+             <div className="flex gap-4 pb-8 relative group animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                <div className="flex flex-col items-center">
+                   <div className="w-10 h-10 rounded-full bg-white border-2 border-slate-200 text-slate-400 flex items-center justify-center font-bold z-10 group-hover:border-blue-400 group-hover:text-blue-400 transition-colors">
+                      2
+                   </div>
+                </div>
+                <div className="pt-1">
+                   <h3 className="text-lg font-bold text-slate-400 mb-1 group-hover:text-slate-600 transition-colors">AI 리스크 분석</h3>
+                   <p className="text-sm text-slate-400 leading-snug">
+                     입력된 데이터를 바탕으로 잠재적 분쟁<br/>요소를 찾습니다.
+                   </p>
+                </div>
+             </div>
+
+             {/* Step 3 */}
+             <div className="flex gap-4 relative group animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                <div className="flex flex-col items-center">
+                   <div className="w-10 h-10 rounded-full bg-white border-2 border-slate-200 text-slate-400 flex items-center justify-center font-bold z-10 group-hover:border-blue-400 group-hover:text-blue-400 transition-colors">
+                      3
+                   </div>
+                </div>
+                <div className="pt-1">
+                   <h3 className="text-lg font-bold text-slate-400 mb-1 group-hover:text-slate-600 transition-colors">솔루션 리포트 발급</h3>
+                   <p className="text-sm text-slate-400 leading-snug">
+                     진단 결과와 개선 가이드북(PDF)을<br/>제공합니다.
+                   </p>
+                </div>
+             </div>
+          </div>
+
+          {/* Tip Section */}
+          <div className="bg-blue-50 p-5 rounded-2xl flex items-start gap-3 mb-8 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+            <div className="bg-white p-2 rounded-full text-blue-600 shadow-sm shrink-0">
+               <Clock size={16} />
+            </div>
+            <div>
+               <p className="text-xs font-bold text-blue-800 mb-1">Quick Tip</p>
+               <p className="text-sm text-blue-900 font-medium leading-relaxed">
+                 3분만 투자하면, 내 팀의 위험 요소를<br/>바로 확인할 수 있어요.
+               </p>
+            </div>
+          </div>
+
+          {/* Bottom CTA */}
+          <div className="mt-auto animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+             <button 
+               className="w-full bg-blue-600 text-white h-14 rounded-xl font-bold text-lg shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition active:scale-[0.98] flex items-center justify-center gap-2"
+               onClick={() => setCurrentView('agreement')}
+             >
+               무료 체험 시작하기 <ChevronRight size={20} />
+             </button>
+          </div>
+
+        </div>
+      </div>
+    );
+  };
+
+  // --- 메인 랜딩 페이지 렌더링 ---
+  const LandingPage = () => {
+    // 데모 시뮬레이션 데이터 (구체화된 Q&A 및 AI 중재안)
+    const demoSteps = [
+      {
+        title: "1단계: 심층 진단 (Deep Dive)",
+        desc: "가장 민감한 '이탈 조건'에 대해 각자의 솔직한 생각을 입력합니다.",
+        content: (
+          <div className="space-y-4">
+            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+              <div className="flex items-start gap-3 mb-4">
+                <div className="bg-slate-100 p-2 rounded-lg text-slate-600">
+                  <LogOut size={20} />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500 font-bold uppercase tracking-wide">Scenario Q.03 (Exit Plan)</p>
+                  <p className="font-bold text-gray-900 text-lg leading-snug">
+                    "법인 설립 후 1년 이내에 공동창업자가 자발적으로 퇴사한다면, 지분은 어떻게 처리해야 할까요?"
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex flex-col gap-4">
+                {/* 민준의 답변 */}
+                <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 transition hover:bg-blue-100/50">
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold bg-blue-600 text-white px-2 py-0.5 rounded">민준 (CEO)</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-slate-800 leading-relaxed font-medium">
+                    "초기 자본금 리스크는 제가 졌습니다. 1년도 안 돼서 나간다면 남은 팀원을 위해 <span className="text-blue-700 underline decoration-blue-300 decoration-2 underline-offset-2">지분은 전량 반납(Cliff)</span>해야 합니다."
+                  </p>
+                </div>
+
+                {/* 강인의 답변 - 위기 시각화(Red Theme) 적용 */}
+                <div className="bg-red-50 p-4 rounded-xl border border-red-200 relative transition hover:bg-red-100/50">
+                  <div className="absolute -top-3 -right-2 bg-red-600 text-white text-[10px] px-3 py-1 rounded-full animate-pulse shadow-sm font-bold border-2 border-white flex items-center gap-1">
+                    <Siren size={10} /> 의견 차이 감지
+                  </div>
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold bg-red-600 text-white px-2 py-0.5 rounded">강인 (CTO)</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-slate-800 leading-relaxed font-medium">
+                    "월급 없이 밤새워 개발한 코드는 회사의 자산이 됩니다. 퇴사하더라도 <span className="text-red-700 underline decoration-red-300 decoration-2 underline-offset-2">최소한의 개발 기여분(10%)은 인정</span>해줘야 공평하죠."
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      },
+      {
+        title: "2단계: 리스크 시각화 (Risk Radar)",
+        desc: "답변 데이터를 분석하여 조율이 필요한 부분을 시각화합니다.",
+        content: (
+          <div className="flex items-center justify-center py-4">
+            <div className="w-full max-w-sm bg-white p-4 rounded-xl border border-gray-200">
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-sm font-bold text-gray-500">합의 준비도</span>
+                <span className="text-2xl font-bold text-red-600">45<span className="text-sm text-gray-400 font-normal">/100</span></span>
+              </div>
+              
+              <div className="space-y-4">
+                {/* Risk Item 1 - Red Light Crisis */}
+                <div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="font-bold text-slate-700 flex items-center gap-1">지분 회수(Cliff) 조건</span>
+                    <span className="text-red-600 font-bold flex items-center gap-1"><AlertTriangle size={10}/> 심각한 충돌</span>
+                  </div>
+                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-red-500 w-[85%] animate-pulse"></div>
+                  </div>
+                  <p className="text-[10px] text-red-500 mt-1 font-medium">CEO(전량회수) vs CTO(기여인정) 의견 대립</p>
+                </div>
+
+                {/* Risk Item 2 */}
+                <div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="font-medium text-gray-700">역할 및 보상 (R&R)</span>
+                    <span className="text-blue-600 font-bold">일치함 ✅</span>
+                  </div>
+                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-blue-500 w-[90%]"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      },
+      {
+        title: "3단계: AI 중재안 (Solution)",
+        desc: "업계 표준 데이터와 양측의 입장을 고려한 구체적인 절충안을 제시합니다.",
+        content: (
+          <div className="space-y-3">
+            <div className="p-3 bg-white border border-gray-200 rounded-lg opacity-60 hover:opacity-100 transition">
+              <div className="flex justify-between items-center mb-1">
+                <span className="font-bold text-slate-600 text-sm">Option A. 표준형 (Standard)</span>
+              </div>
+              <p className="text-xs text-gray-500">1년 미만 퇴사 시 지분 전량 회수. 대신 급여 소급 지급 조항 추가.</p>
+            </div>
+
+            <div className="p-4 bg-blue-50 border border-blue-500 rounded-lg cursor-pointer relative shadow-md transform scale-[1.02]">
+               <div className="absolute -top-2 right-2 bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <BrainCircuit size={10} /> AI 추천
+              </div>
+              <div className="flex justify-between items-center mb-1">
+                <span className="font-bold text-blue-900 text-sm">Option B. 마일스톤 연동형 (Hybrid)</span>
+              </div>
+              <p className="text-xs text-blue-800 leading-relaxed font-medium">
+                기본적으로 1년 클리프를 적용하되, <strong className="underline">"MVP 런칭"</strong>이라는 마일스톤 달성 시 
+                퇴사하더라도 <strong className="text-blue-700">5% 지분 인정(Vesting)</strong>하는 절충안.
+              </p>
+            </div>
+          </div>
+        )
+      }
+    ];
+
+    return (
+      <div className="min-h-screen bg-white font-sans text-gray-900 overflow-x-hidden">
+        {/* Background Decoration */}
+        <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10">
+          <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-blue-100/50 blur-[100px] opacity-50"></div>
+          <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-100/40 blur-[120px] opacity-50"></div>
+        </div>
+
+        {/* Navigation */}
+        <nav className="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between h-16 items-center">
+              <div className="flex items-center gap-2 cursor-pointer" onClick={() => setCurrentView('landing')}>
+                <div className="bg-slate-900 text-white p-1.5 rounded-lg">
+                  <BrainCircuit size={24} />
+                </div>
+                <span className="text-xl font-bold text-slate-900 tracking-tight">Co-founder Sync</span>
+              </div>
+              
+              <div className="hidden md:flex items-center space-x-8">
+                <a href="#process" className="text-sm font-medium text-gray-600 hover:text-slate-900 transition">프로세스</a>
+                <a href="#radar" className="text-sm font-medium text-gray-600 hover:text-slate-900 transition">리스크 진단</a>
+                <a href="#rulebook" className="text-sm font-medium text-slate-900 font-bold hover:text-blue-600 transition">Rulebook이란?</a>
+                <button 
+                  onClick={() => setCurrentView('onboarding')}
+                  className="bg-slate-900 text-white px-5 py-2 rounded-lg hover:bg-slate-800 transition text-sm font-bold shadow-md shadow-slate-900/10"
+                >
+                  팀 Rulebook 만들기
+                </button>
+              </div>
+
+              <div className="md:hidden">
+                <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-gray-600">
+                  {isMenuOpen ? <X /> : <Menu />}
+                </button>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        {/* Hero Section */}
+        <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto text-center">
+             {/* Badge */}
+             <div className="inline-flex items-center gap-2 bg-white border border-yellow-200 px-4 py-2 rounded-full shadow-sm animate-fade-in hover:shadow-md transition-shadow cursor-default mb-8">
+                <Zap size={16} className="text-yellow-500 fill-yellow-500" />
+                <span className="text-sm font-bold text-slate-700">⚡️ 지금 <span className="text-blue-600">12팀</span>이 실시간으로 합의 중입니다</span>
+              </div>
+
+              <h1 className="text-4xl lg:text-7xl font-extrabold leading-tight text-slate-900 tracking-tight mb-8">
+                변호사 없이 끝내는<br />
+                <span className="text-slate-500">가장 완벽한 합의,</span><br/>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 relative inline-block mt-2 pb-2">
+                  '팀 Rulebook'
+                  <svg className="absolute bottom-0 left-0 w-full h-3 -z-10 bg-blue-100/60" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+                </span>
+              </h1>
+
+              <div className="text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto mb-10">
+                <p className="font-medium text-slate-800 text-xl">"우리는 서로 믿으니까 계약서는 나중에?"</p>
+                <p className="mt-3">
+                  <span className="font-bold text-blue-600 text-xl">아니요, 믿을수록 처음부터 투명해야 합니다.</span><br/>
+                  <span className="text-slate-500 mt-1 block">감정 소모 없이, 데이터로 합의하세요.</span>
+                </p>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+                <button 
+                  onClick={() => setCurrentView('onboarding')}
+                  className="flex items-center justify-center gap-2 bg-slate-900 text-white px-8 py-4 rounded-xl hover:bg-slate-800 transition text-lg font-bold shadow-xl shadow-slate-900/20 hover:-translate-y-1"
+                >
+                  질문 3개로 Rulebook 체험하기 (무료) <ChevronRight size={20} />
+                </button>
+                <button className="flex items-center justify-center gap-2 bg-white text-slate-700 border border-slate-200 px-8 py-4 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition text-lg font-bold shadow-sm hover:-translate-y-1">
+                  <FileText size={20} className="text-slate-500"/> 샘플 리포트 보기
+                </button>
+              </div>
+
+              {/* Social Proof */}
+              <div className="flex justify-center items-center gap-4 pt-8 text-sm text-slate-500">
+                <div className="flex -space-x-2">
+                  {[1,2,3,4].map((i) => (
+                    <div key={i} className="w-8 h-8 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center overflow-hidden">
+                        <Users size={16} className="text-slate-400" />
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center gap-1">
+                    <div className="flex text-yellow-400">
+                      {[1,2,3,4,5].map(i => <Star key={i} size={12} fill="currentColor" />)}
+                    </div>
+                    <span className="font-medium text-slate-700">4.9/5</span>
+                    <span className="text-slate-400">(1,200+ 팀 사용)</span>
+                </div>
+              </div>
+          </div>
+        </section>
+
+        {/* Process Section */}
+        <section id="process" className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-20">
+              <h2 className="text-3xl font-bold text-slate-900">감정 싸움 없이 합의하는 4단계 프로세스</h2>
+              <p className="mt-4 text-slate-500">코파운더 싱크는 '중간 다리' 역할을 통해 객관적인 합의를 이끌어냅니다.</p>
+            </div>
+
+            <div className="grid md:grid-cols-4 gap-8 relative">
+              <div className="hidden md:block absolute top-12 left-1/2 -translate-x-1/2 w-[80%] h-0.5 bg-gradient-to-r from-slate-200 via-blue-200 to-slate-200 -z-10"></div>
+
+              {[
+                { 
+                  icon: <MessageSquare className="text-blue-600" />, 
+                  title: "1. 진단 (Sync)", 
+                  desc: "단순한 설문이 아닙니다. 예민하지만 꼭 필요한 질문에 각자 답변합니다." 
+                },
+                { 
+                  icon: <BarChart3 className="text-blue-600" />, 
+                  title: "2. 리스크 시각화", 
+                  desc: "생각이 일치하는 부분과 조율이 필요한 부분을 데이터로 명확히 보여줍니다." 
+                },
+                { 
+                  icon: <BrainCircuit className="text-blue-600" />, 
+                  title: "3. AI 중재안", 
+                  desc: "\"이런 방식은 어때요?\" 양쪽의 입장을 고려한 Option A, B, C를 제안합니다." 
+                },
+                { 
+                  icon: <FileText className="text-blue-600" />, 
+                  title: "4. Rulebook", 
+                  desc: "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 룰북을 생성합니다." 
+                }
+              ].map((item, idx) => (
+                <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-lg hover:-translate-y-2 transition duration-300 group">
+                  <div className="w-14 h-14 bg-slate-50 rounded-xl flex items-center justify-center mb-6 mx-auto group-hover:bg-blue-600 transition-colors duration-300">
+                    {React.cloneElement(item.icon, { className: "text-blue-600 group-hover:text-white transition-colors duration-300" })}
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900 mb-3 text-center">{item.title}</h3>
+                  <p className="text-sm text-slate-500 text-center leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Interactive Demo Dashboard */}
+        <section id="demo" className="py-20 bg-slate-50">
+          <div className="max-w-5xl mx-auto px-4">
+             <div className="text-center mb-12">
+               <h2 className="text-3xl font-bold text-slate-900 mb-4">어떻게 합의하는지 미리 보세요</h2>
+               <p className="text-slate-500">30초면 갈등을 예방하는 과정을 체험할 수 있습니다.</p>
+             </div>
+
+             <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden transform hover:scale-[1.01] transition duration-500 ring-1 ring-slate-900/5">
+                <div className="bg-slate-50/80 px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                  <div className="flex gap-2">
+                    <div className="w-3 h-3 rounded-full bg-slate-300"></div>
+                    <div className="w-3 h-3 rounded-full bg-slate-300"></div>
+                    <div className="w-3 h-3 rounded-full bg-slate-300"></div>
+                  </div>
+                  <span className="text-xs font-mono text-slate-400">Team_Rulebook_Generator</span>
+                </div>
+                
+                <div className="p-6 md:p-10">
+                  <div className="flex justify-between mb-8 relative">
+                    <div className="absolute top-1/2 left-0 w-full h-0.5 bg-slate-100 -z-10"></div>
+                    {['진단', '시각화', 'AI중재'].map((step, idx) => (
+                      <button 
+                        key={idx}
+                        onClick={() => setDemoStep(idx)}
+                        className={`flex flex-col items-center gap-2 bg-white px-2 z-10 ${demoStep === idx ? 'opacity-100 scale-110' : 'opacity-50'}`}
+                      >
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${demoStep === idx ? 'bg-blue-600 text-white shadow-lg ring-4 ring-blue-100' : 'bg-slate-100 text-slate-500'}`}>
+                          {idx + 1}
+                        </div>
+                        <span className="text-xs font-medium text-slate-600">{step}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="bg-slate-50 rounded-xl p-6 min-h-[340px] flex flex-col justify-center transition-all duration-300 border border-slate-100">
+                    <div className="mb-4">
+                      <h3 className="text-lg font-bold text-slate-900 mb-1">{demoSteps[demoStep].title}</h3>
+                      <p className="text-sm text-slate-500">{demoSteps[demoStep].desc}</p>
+                    </div>
+                    {demoSteps[demoStep].content}
+                  </div>
+                  
+                  <div className="mt-6 text-center">
+                    <button 
+                      onClick={() => setDemoStep((prev) => (prev + 1) % 3)}
+                      className="text-sm text-blue-600 font-medium hover:underline flex items-center justify-center gap-1 mx-auto"
+                    >
+                      다음 단계 미리보기 <ChevronRight size={14}/>
+                    </button>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </section>
+
+        {/* Feature: Risk Radar */}
+        <section id="radar" className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row items-center gap-12 mb-24">
+              <div className="flex-1 order-2 md:order-1">
+                <div className="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">LIVE DATA</div>
+                  <div className="flex justify-center mb-6">
+                    <Activity size={64} className="text-blue-500 opacity-20 animate-pulse" />
+                  </div>
+                  <div className="space-y-4">
+                     <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                        <span className="font-medium text-slate-700">💰 보상/지분 합의</span>
+                        <span className="text-green-600 font-bold text-sm">안정적 (95점)</span>
+                     </div>
+                     <div className="flex justify-between items-center p-3 bg-red-50 border border-red-100 rounded-lg">
+                        <span className="font-medium text-slate-700">🚪 Exit / 이탈 조건</span>
+                        <span className="text-red-600 font-bold text-sm">위험 (32점)</span>
+                     </div>
+                     <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                        <span className="font-medium text-slate-700">🎯 비전 일치도</span>
+                        <span className="text-yellow-600 font-bold text-sm">보통 (70점)</span>
+                     </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex-1 order-1 md:order-2">
+                <h3 className="text-blue-600 font-bold text-sm mb-2 tracking-wide">RISK RADAR</h3>
+                <h2 className="text-3xl font-bold text-slate-900 mb-6">
+                  팀의 안정성을 점수로 관리하세요.<br/>
+                  <span className="text-slate-400 text-2xl">Team Stability Score</span>
+                </h2>
+                <p className="text-slate-600 text-lg leading-relaxed mb-6">
+                  '그냥 느낌이 좀 쎄한데?'라는 감을 데이터로 확인시켜 드립니다.<br/>
+                  자금, 비전, 역할, 이탈 조건 등 5가지 핵심 영역을 시각화하여
+                  어디서 갈등이 터질지 미리 예측하고 방어합니다.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Feature: Rulebook */}
+        <section id="rulebook" className="py-24 bg-slate-50 relative overflow-hidden">
+          {/* Background pattern */}
+          <div className="absolute top-0 right-0 w-1/2 h-full bg-[url('https://www.transparenttextures.com/patterns/graphy.png')] opacity-5"></div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="flex flex-col md:flex-row items-center gap-16">
+              <div className="flex-1">
+                <h3 className="text-blue-600 font-bold text-sm mb-2 tracking-wide flex items-center gap-2">
+                   <span className="w-8 h-[1px] bg-blue-600"></span> FINAL OUTPUT
+                </h3>
+                <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-6 leading-tight">
+                  말뿐인 약속은 잊혀집니다.<br/>
+                  '공동창업자 Rulebook'으로 기록하세요.
+                </h2>
+                <p className="text-slate-600 text-lg leading-relaxed mb-8">
+                  동업계약서 쓰기엔 너무 딱딱하고, 말로만 하기엔 불안하신가요?<br/>
+                  Co-founder Sync는 합의된 내용을 바탕으로
+                  우리 팀만의 헌법, <strong>[Rulebook.pdf]</strong>를 생성해 드립니다.
+                </p>
+                <ul className="space-y-4">
+                  {['Mission & Vision (우리가 모인 이유)', 'R&R (명확한 역할과 책임)', 'Compensation (지분 및 급여)', 'Decision Making (의사결정 구조)', 'Exit Plan (아름다운 이별의 조건)'].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3 text-slate-700 bg-white p-3 rounded-lg shadow-sm border border-slate-100">
+                      <CheckCircle2 size={20} className="text-blue-500 flex-shrink-0" />
+                      <span className="font-medium">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-10">
+                    <button className="group flex items-center gap-3 text-slate-900 font-bold text-lg hover:text-blue-600 transition">
+                        <div className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center group-hover:border-blue-600 group-hover:bg-blue-50 transition">
+                          <Download size={20} />
+                        </div>
+                        Rulebook 샘플 다운로드 (PDF)
+                    </button>
+                </div>
+              </div>
+              <div className="flex-1 w-full">
+                 <div className="bg-slate-800 p-6 lg:p-8 rounded-3xl shadow-2xl relative -rotate-2 hover:rotate-0 transition duration-500 transform hover:scale-[1.02] group">
+                    {/* Floating Badge */}
+                    <div className="absolute -top-6 -right-6 bg-yellow-400 text-slate-900 font-bold px-6 py-3 rounded-full shadow-lg transform rotate-12 group-hover:rotate-0 transition z-20 flex items-center gap-2">
+                      <Star fill="black" size={16} /> Legal Approved
+                    </div>
+
+                    <div className="bg-white rounded-2xl p-8 min-h-[500px] flex flex-col relative overflow-hidden">
+                      {/* Texture */}
+                      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+                      
+                      {/* PDF Header */}
+                      <div className="border-b border-slate-100 pb-6 mb-6 flex justify-between items-center">
+                        <div>
+                          <h4 className="font-bold text-2xl font-serif text-slate-900">Co-founder Rulebook</h4>
+                          <p className="text-sm text-slate-400 mt-1">Ver 1.0 | 2024.05.20</p>
+                        </div>
+                        <div className="bg-slate-50 p-3 rounded-xl">
+                          <FileText className="text-slate-400" size={32} />
+                        </div>
+                      </div>
+                      
+                      {/* PDF Body */}
+                      <div className="space-y-8 flex-1">
+                        <div className="space-y-3">
+                          <p className="text-xs font-bold text-blue-600 uppercase tracking-wider flex items-center gap-2">
+                             Chapter 3. Equity & Vesting <span className="h-[1px] flex-1 bg-blue-100"></span>
+                          </p>
+                          <p className="text-lg font-bold text-slate-800">제3조 (지분 및 베스팅)</p>
+                          <p className="text-sm text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            공동창업자 김민준, 이강인은 총 4년의 베스팅 기간을 설정하며, 1년의 클리프 기간을 둔다. 이탈 시 회수 조건은...
+                          </p>
+                        </div>
+                        <div className="space-y-3">
+                          <p className="text-xs font-bold text-blue-600 uppercase tracking-wider flex items-center gap-2">
+                             Chapter 5. Exit Plan <span className="h-[1px] flex-1 bg-blue-100"></span>
+                          </p>
+                          <p className="text-lg font-bold text-slate-800">제5조 (이탈 조건)</p>
+                          <p className="text-sm text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            자발적 퇴사의 경우 보유 지분의 50%를 액면가로 회사에 반환하며, 이는 남은 창업자들의 리스크를 헷지하기 위함이다...
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* PDF Footer */}
+                      <div className="mt-8 pt-6 border-t border-slate-100 flex justify-between items-end">
+                         <div className="flex -space-x-3">
+                            <div className="w-12 h-12 rounded-full bg-blue-100 border-4 border-white flex items-center justify-center text-sm font-bold text-blue-600 shadow-sm">김</div>
+                            <div className="w-12 h-12 rounded-full bg-indigo-100 border-4 border-white flex items-center justify-center text-sm font-bold text-indigo-600 shadow-sm">이</div>
+                         </div>
+                         <div className="flex flex-col items-end">
+                             <div className="h-10 w-32 bg-slate-100 rounded mb-2 opacity-50"></div>
+                             <div className="flex items-center gap-1 text-[10px] text-slate-400 uppercase tracking-widest">
+                               <CheckCircle2 size={10} className="text-green-500"/> Digital Signature Verified
+                             </div>
+                         </div>
+                      </div>
+                    </div>
+                    {/* Background Accent */}
+                    <div className="absolute -z-10 top-4 -right-4 w-full h-full bg-slate-200/50 rounded-3xl"></div>
+                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 bg-slate-900 text-white relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full opacity-20">
+             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+          </div>
+          <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <h2 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
+              건강한 팀만이<br/> 유니콘이 될 수 있습니다.
+            </h2>
+            <p className="text-slate-300 mb-10 text-lg">
+              지금의 껄끄러움이 나중의 소송을 막습니다.<br/>
+              가장 합리적인 비용으로 팀의 안전장치를 마련하세요.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <button 
+                onClick={() => setCurrentView('onboarding')}
+                className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition shadow-lg hover:shadow-blue-600/30"
+              >
+                질문 3개로 Rulebook 체험하기 (무료)
+              </button>
+            </div>
+            <p className="mt-6 text-sm text-slate-500 flex items-center justify-center gap-2">
+              <CheckCircle2 size={14} /> 초기 스타트업(법인 설립 전) 단계에 가장 권장됩니다.
+            </p>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="bg-white py-12 border-t border-slate-100">
+          <div className="max-w-7xl mx-auto px-4 text-center text-slate-500">
+            <div className="flex items-center justify-center gap-2 mb-4">
+               <BrainCircuit size={20} className="text-slate-400" />
+               <span className="font-bold text-slate-700">Co-founder Sync</span>
+            </div>
+            <p className="text-sm">© 2024 Co-founder Sync. All rights reserved.</p>
+            <div className="flex justify-center gap-6 mt-4 text-xs">
+              <a href="#" className="hover:text-slate-900">서비스 이용약관</a>
+              <a href="#" className="hover:text-slate-900">개인정보 처리방침</a>
+              <a href="#" className="hover:text-slate-900">문의하기</a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    );
+  };
+
+  // Switch Views
+  if (currentView === 'agreement') return <FounderAgreementUX />;
+  return currentView === 'landing' ? <LandingPage /> : <OnboardingPage />;
+};
+
+export default App;
