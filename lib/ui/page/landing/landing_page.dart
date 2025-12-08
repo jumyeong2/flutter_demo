@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'landing_controller.dart';
+import '../../widgets/responsive_layout.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -62,12 +63,12 @@ class LandingPage extends StatelessWidget {
             child: Column(
               children: [
                 _buildNavbar(context, controller),
-                _buildHeroSection(controller),
+                _buildHeroSection(context, controller),
                 _buildProcessSection(),
-                _buildDemoSection(controller, demoSteps),
-                _buildRadarSection(),
-                _buildRulebookSection(),
-                _buildCtaSection(controller),
+                _buildDemoSection(context, controller, demoSteps),
+                _buildRadarSection(context),
+                _buildRulebookSection(context),
+                _buildCtaSection(context, controller),
                 _buildFooter(),
               ],
             ),
@@ -112,7 +113,7 @@ class LandingPage extends StatelessWidget {
               ),
             ],
           ),
-          if (MediaQuery.of(context).size.width > 768)
+          if (!ResponsiveLayout.isMobile(context))
             Row(
               children: [
                 _navLink("프로세스"),
@@ -167,7 +168,7 @@ class LandingPage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeroSection(LandingController controller) {
+  Widget _buildHeroSection(BuildContext context, LandingController controller) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 128, 24, 80),
       child: Column(
@@ -211,39 +212,43 @@ class LandingPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 32),
-          const Text(
+          Text(
             "변호사 없이 끝내는\n가장 완벽한 합의,",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 40,
+              fontSize: ResponsiveLayout.isMobile(context) ? 28 : 40,
               fontWeight: FontWeight.w800,
               height: 1.2,
               color: Color(0xFF0F172A),
             ),
           ),
-          const Text(
+          Text(
             "'팀 Rulebook'",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 40,
+              fontSize: ResponsiveLayout.isMobile(context) ? 28 : 40,
               fontWeight: FontWeight.w800,
               color: Colors.blue,
             ),
           ),
           const SizedBox(height: 40),
-          const Text(
+          Text(
             "\"우리는 서로 믿으니까 계약서는 나중에?\"",
+            textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: ResponsiveLayout.isMobile(context) ? 16 : 20,
               fontWeight: FontWeight.w500,
               color: Color(0xFF1E293B),
             ),
           ),
           const SizedBox(height: 12),
-          const Text(
+          Text(
             "아니요, 믿을수록 처음부터 투명해야 합니다.\n감정 소모 없이, 데이터로 합의하세요.",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: Color(0xFF64748B)),
+            style: TextStyle(
+              fontSize: ResponsiveLayout.isMobile(context) ? 14 : 16,
+              color: Color(0xFF64748B),
+            ),
           ),
           const SizedBox(height: 40),
           Wrap(
@@ -254,7 +259,7 @@ class LandingPage extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: controller.startTrial,
                 icon: const Icon(Icons.chevron_right),
-                label: const Text("질문 3개로 Rulebook 체험하기 (무료)"),
+                label: const Text("팀 Rulebook 만들기"),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF0F172A),
                   foregroundColor: Colors.white,
@@ -262,8 +267,8 @@ class LandingPage extends StatelessWidget {
                     horizontal: 32,
                     vertical: 20,
                   ),
-                  textStyle: const TextStyle(
-                    fontSize: 18,
+                  textStyle: TextStyle(
+                    fontSize: ResponsiveLayout.isMobile(context) ? 16 : 18,
                     fontWeight: FontWeight.bold,
                   ),
                   shape: RoundedRectangleBorder(
@@ -350,10 +355,16 @@ class LandingPage extends StatelessWidget {
                 runSpacing: 32,
                 alignment: WrapAlignment.center,
                 children: steps.map((step) {
+                  double width;
+                  if (ResponsiveLayout.isMobile(context)) {
+                    width = constraints.maxWidth;
+                  } else if (ResponsiveLayout.isTablet(context)) {
+                    width = (constraints.maxWidth - 32) / 2;
+                  } else {
+                    width = (constraints.maxWidth - 96) / 4;
+                  }
                   return Container(
-                    width: constraints.maxWidth > 768
-                        ? (constraints.maxWidth - 96) / 4
-                        : constraints.maxWidth,
+                    width: width,
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -414,6 +425,7 @@ class LandingPage extends StatelessWidget {
   }
 
   Widget _buildDemoSection(
+    BuildContext context,
     LandingController controller,
     List<Map<String, dynamic>> demoSteps,
   ) {
@@ -619,7 +631,7 @@ class LandingPage extends StatelessWidget {
     );
   }
 
-  Widget _buildRadarSection() {
+  Widget _buildRadarSection(BuildContext context) {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.symmetric(vertical: 96, horizontal: 24),
@@ -634,7 +646,9 @@ class LandingPage extends StatelessWidget {
             children: [
               // Radar Card
               Container(
-                width: 400,
+                width: ResponsiveLayout.isMobile(context)
+                    ? double.infinity
+                    : 400,
                 padding: const EdgeInsets.all(32),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -737,7 +751,7 @@ class LandingPage extends StatelessWidget {
     );
   }
 
-  Widget _buildRulebookSection() {
+  Widget _buildRulebookSection(BuildContext context) {
     return Container(
       color: Colors.grey[50],
       padding: const EdgeInsets.symmetric(vertical: 96, horizontal: 24),
@@ -796,7 +810,9 @@ class LandingPage extends StatelessWidget {
               Transform.rotate(
                 angle: -0.05,
                 child: Container(
-                  width: 400,
+                  width: ResponsiveLayout.isMobile(context)
+                      ? double.infinity
+                      : 400,
                   height: 500,
                   padding: const EdgeInsets.all(32),
                   decoration: BoxDecoration(
@@ -935,28 +951,31 @@ class LandingPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCtaSection(LandingController controller) {
+  Widget _buildCtaSection(BuildContext context, LandingController controller) {
     return Container(
       color: const Color(0xFF0F172A),
       padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 24),
       width: double.infinity,
       child: Column(
         children: [
-          const Text(
+          Text(
             "건강한 팀만이\n유니콘이 될 수 있습니다.",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 36,
+              fontSize: ResponsiveLayout.isMobile(context) ? 28 : 36,
               fontWeight: FontWeight.bold,
               color: Colors.white,
               height: 1.2,
             ),
           ),
           const SizedBox(height: 24),
-          const Text(
+          Text(
             "지금의 껄끄러움이 나중의 소송을 막습니다.\n가장 합리적인 비용으로 팀의 안전장치를 마련하세요.",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18, color: Color(0xFF94A3B8)),
+            style: TextStyle(
+              fontSize: ResponsiveLayout.isMobile(context) ? 14 : 18,
+              color: Color(0xFF94A3B8),
+            ),
           ),
           const SizedBox(height: 40),
           ElevatedButton(
@@ -1029,7 +1048,7 @@ class _DemoStep1 extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
                       color: Colors.grey[100],
                       borderRadius: BorderRadius.circular(8),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../data/model/agreement_item.dart';
+import '../../widgets/responsive_layout.dart';
 import 'agreement_controller.dart';
 
 class AgreementPage extends StatelessWidget {
@@ -27,7 +28,7 @@ class AgreementPage extends StatelessWidget {
                 constraints: const BoxConstraints(maxWidth: 1024),
                 child: Column(
                   children: [
-                    _buildHeader(controller),
+                    _buildHeader(context, controller),
                     const SizedBox(height: 32),
                     Obx(
                       () => Column(
@@ -49,7 +50,7 @@ class AgreementPage extends StatelessWidget {
           ),
           Obx(
             () => controller.showFinalModal.value
-                ? _buildFinalModal(controller)
+                ? _buildFinalModal(context, controller)
                 : const SizedBox.shrink(),
           ),
         ],
@@ -57,9 +58,10 @@ class AgreementPage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(AgreementController controller) {
+  Widget _buildHeader(BuildContext context, AgreementController controller) {
+    bool isMobile = ResponsiveLayout.isMobile(context);
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(isMobile ? 16 : 24),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -68,82 +70,157 @@ class AgreementPage extends StatelessWidget {
           BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4),
         ],
       ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      child: isMobile
+          ? Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Row(
-                      children: [
-                        Icon(
-                          Icons.edit_document,
-                          color: Colors.indigo,
-                          size: 32,
-                        ),
-                        SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            "공동창업자 주주 간 계약(SHA) 조율",
+                    const Icon(
+                      Icons.edit_document,
+                      color: Colors.indigo,
+                      size: 28, // Reduced size for mobile
+                    ),
+                    Obx(
+                      () => Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            "Progress",
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 12,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF0F172A),
+                              color: Colors.grey[400],
                             ),
                           ),
-                        ),
-                      ],
+                          Text(
+                            "${controller.progress.round()}%",
+                            style: const TextStyle(
+                              fontSize: 20, // Reduced font size
+                              fontWeight: FontWeight.bold,
+                              color: Colors.indigo,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "공동창업자 주주 간 계약(SHA) 조율",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF0F172A),
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       "스타트업의 안전한 항해를 위해 민감한 주제(지분, 이탈 등)를 미리 합의하고 기록합니다.",
-                      style: TextStyle(color: Colors.grey[500], fontSize: 14),
-                    ),
-                  ],
-                ),
-              ),
-              Obx(
-                () => Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "Agreement Progress",
                       style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey[400],
+                        color: Colors.grey[500],
+                        fontSize: 13,
+                      ), // Slightly smaller
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Obx(
+                  () => ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: controller.progress / 100,
+                      backgroundColor: Colors.grey[100],
+                      color: Colors.indigo,
+                      minHeight: 6, // Thinner bar
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Row(
+                            children: [
+                              Icon(
+                                Icons.edit_document,
+                                color: Colors.indigo,
+                                size: 32,
+                              ),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  "공동창업자 주주 간 계약(SHA) 조율",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF0F172A),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            "스타트업의 안전한 항해를 위해 민감한 주제(지분, 이탈 등)를 미리 합의하고 기록합니다.",
+                            style: TextStyle(
+                              color: Colors.grey[500],
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      "${controller.progress.round()}%",
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.indigo,
+                    Obx(
+                      () => Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            "Agreement Progress",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                          Text(
+                            "${controller.progress.round()}%",
+                            style: const TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.indigo,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Obx(
-            () => ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: controller.progress / 100,
-                backgroundColor: Colors.grey[100],
-                color: Colors.indigo,
-                minHeight: 8,
-              ),
+                const SizedBox(height: 16),
+                Obx(
+                  () => ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: controller.progress / 100,
+                      backgroundColor: Colors.grey[100],
+                      color: Colors.indigo,
+                      minHeight: 8,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -153,6 +230,8 @@ class AgreementPage extends StatelessWidget {
     AgreementItem item,
   ) {
     bool isConflict = item.status == "conflict";
+    bool isMobile = ResponsiveLayout.isMobile(context);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 32),
       decoration: BoxDecoration(
@@ -202,7 +281,7 @@ class AgreementPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(isMobile ? 16 : 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -227,10 +306,10 @@ class AgreementPage extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   item.question,
-                  style: const TextStyle(
-                    fontSize: 20,
+                  style: TextStyle(
+                    fontSize: isMobile ? 18 : 20,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E293B),
+                    color: const Color(0xFF1E293B),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -263,35 +342,56 @@ class AgreementPage extends StatelessWidget {
                 const SizedBox(height: 24),
 
                 // Opinions
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _opinionBox(
-                        "User A (나)",
-                        item.userA,
-                        (val) => controller.handleUserAChange(item.id, val),
-                        item.status == "resolved",
-                        isUserA: true,
+                isMobile
+                    ? Column(
+                        children: [
+                          _opinionBox(
+                            "User A (나)",
+                            item.userA,
+                            (val) => controller.handleUserAChange(item.id, val),
+                            item.status == "resolved",
+                            isUserA: true,
+                          ),
+                          const SizedBox(height: 16),
+                          _opinionBox(
+                            "User B (공동창업자)",
+                            item.userB,
+                            null,
+                            true, // Always disabled for User B in this demo
+                            isUserA: false,
+                          ),
+                        ],
+                      )
+                    : Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: _opinionBox(
+                              "User A (나)",
+                              item.userA,
+                              (val) =>
+                                  controller.handleUserAChange(item.id, val),
+                              item.status == "resolved",
+                              isUserA: true,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: _opinionBox(
+                              "User B (공동창업자)",
+                              item.userB,
+                              null,
+                              true, // Always disabled for User B in this demo
+                              isUserA: false,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _opinionBox(
-                        "User B (공동창업자)",
-                        item.userB,
-                        null,
-                        true, // Always disabled for User B in this demo
-                        isUserA: false,
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 24),
 
                 // Consensus Area
                 Container(
-                  padding: const EdgeInsets.all(24),
+                  padding: EdgeInsets.all(isMobile ? 16 : 24),
                   decoration: BoxDecoration(
                     color: isConflict ? Colors.grey[50] : Colors.indigo[50],
                     borderRadius: BorderRadius.circular(16),
@@ -316,81 +416,179 @@ class AgreementPage extends StatelessWidget {
                                   color: Color(0xFF334155),
                                 ),
                               ),
-                              OutlinedButton.icon(
-                                onPressed: item.isAiLoading
-                                    ? null
-                                    : () => controller.triggerAI(item.id),
-                                icon: item.isAiLoading
-                                    ? const SizedBox(
-                                        width: 12,
-                                        height: 12,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                        ),
-                                      )
-                                    : const Icon(Icons.scale, size: 16),
-                                label: Text(
-                                  item.isAiLoading
-                                      ? "시장 표준 분석 중..."
-                                      : "시장 표준(Standard) 제안받기",
-                                ),
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: Colors.indigo,
-                                  side: BorderSide(color: Colors.indigo[200]!),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                              if (!isMobile) // Mobile hides this here, maybe show elsewhere or simplify
+                                OutlinedButton.icon(
+                                  onPressed: item.isAiLoading
+                                      ? null
+                                      : () => controller.triggerAI(item.id),
+                                  icon: item.isAiLoading
+                                      ? const SizedBox(
+                                          width: 12,
+                                          height: 12,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        )
+                                      : const Icon(Icons.scale, size: 16),
+                                  label: Text(
+                                    item.isAiLoading
+                                        ? "시장 표준 분석 중..."
+                                        : "시장 표준(Standard) 제안받기",
+                                  ),
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: Colors.indigo,
+                                    side: BorderSide(
+                                      color: Colors.indigo[200]!,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
                                   ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller:
-                                  TextEditingController(text: item.consensus)
-                                    ..selection = TextSelection.fromPosition(
-                                      TextPosition(
-                                        offset: item.consensus.length,
+
+                      // AI Button for Mobile (Stacked)
+                      if (isConflict && isMobile)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              onPressed: item.isAiLoading
+                                  ? null
+                                  : () => controller.triggerAI(item.id),
+                              icon: item.isAiLoading
+                                  ? const SizedBox(
+                                      width: 12,
+                                      height: 12,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
                                       ),
-                                    ),
-                              onChanged: (val) => controller
-                                  .handleConsensusChange(item.id, val),
-                              enabled: item.status != "resolved",
-                              maxLines: 4,
-                              decoration: InputDecoration(
-                                hintText: isConflict
-                                    ? "양측의 의견을 조율하여 최종 계약 문구를 작성하세요. (AI 제안 활용 가능)"
-                                    : "",
-                                filled: true,
-                                fillColor: item.status == "resolved"
-                                    ? Colors.transparent
-                                    : Colors.white,
-                                border: item.status == "resolved"
-                                    ? InputBorder.none
-                                    : OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: BorderSide(
-                                          color: Colors.grey[300]!,
-                                        ),
-                                      ),
+                                    )
+                                  : const Icon(Icons.scale, size: 16),
+                              label: Text(
+                                item.isAiLoading
+                                    ? "시장 표준 분석 중..."
+                                    : "시장 표준(Standard) 제안받기",
                               ),
-                              style: TextStyle(
-                                color: item.status == "resolved"
-                                    ? Colors.indigo[900]
-                                    : Colors.black,
-                                fontWeight: item.status == "resolved"
-                                    ? FontWeight.w500
-                                    : FontWeight.normal,
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: Colors.indigo,
+                                side: BorderSide(color: Colors.indigo[200]!),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
                               ),
                             ),
                           ),
-                          const SizedBox(width: 16),
+                        ),
+
+                      // Input & Action
+                      Flex(
+                        direction: isMobile ? Axis.vertical : Axis.horizontal,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          isMobile
+                              ? SizedBox(
+                                  width: double.infinity,
+                                  child: TextField(
+                                    controller:
+                                        TextEditingController(
+                                            text: item.consensus,
+                                          )
+                                          ..selection =
+                                              TextSelection.fromPosition(
+                                                TextPosition(
+                                                  offset: item.consensus.length,
+                                                ),
+                                              ),
+                                    onChanged: (val) => controller
+                                        .handleConsensusChange(item.id, val),
+                                    enabled: item.status != "resolved",
+                                    maxLines: 4,
+                                    decoration: InputDecoration(
+                                      hintText: isConflict
+                                          ? "양측의 의견을 조율하여 최종 계약 문구를 작성하세요."
+                                          : "",
+                                      filled: true,
+                                      fillColor: item.status == "resolved"
+                                          ? Colors.transparent
+                                          : Colors.white,
+                                      border: item.status == "resolved"
+                                          ? InputBorder.none
+                                          : OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              borderSide: BorderSide(
+                                                color: Colors.grey[300]!,
+                                              ),
+                                            ),
+                                    ),
+                                    style: TextStyle(
+                                      color: item.status == "resolved"
+                                          ? Colors.indigo[900]
+                                          : Colors.black,
+                                      fontWeight: item.status == "resolved"
+                                          ? FontWeight.w500
+                                          : FontWeight.normal,
+                                    ),
+                                  ),
+                                )
+                              : Expanded(
+                                  child: TextField(
+                                    controller:
+                                        TextEditingController(
+                                            text: item.consensus,
+                                          )
+                                          ..selection =
+                                              TextSelection.fromPosition(
+                                                TextPosition(
+                                                  offset: item.consensus.length,
+                                                ),
+                                              ),
+                                    onChanged: (val) => controller
+                                        .handleConsensusChange(item.id, val),
+                                    enabled: item.status != "resolved",
+                                    maxLines: 4,
+                                    decoration: InputDecoration(
+                                      hintText: isConflict
+                                          ? "양측의 의견을 조율하여 최종 계약 문구를 작성하세요."
+                                          : "",
+                                      filled: true,
+                                      fillColor: item.status == "resolved"
+                                          ? Colors.transparent
+                                          : Colors.white,
+                                      border: item.status == "resolved"
+                                          ? InputBorder.none
+                                          : OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              borderSide: BorderSide(
+                                                color: Colors.grey[300]!,
+                                              ),
+                                            ),
+                                    ),
+                                    style: TextStyle(
+                                      color: item.status == "resolved"
+                                          ? Colors.indigo[900]
+                                          : Colors.black,
+                                      fontWeight: item.status == "resolved"
+                                          ? FontWeight.w500
+                                          : FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+
+                          if (!isMobile) const SizedBox(width: 16),
+                          if (isMobile) const SizedBox(height: 16),
+
                           SizedBox(
-                            height: 100,
+                            width: isMobile ? double.infinity : null,
+                            height: isMobile ? 50 : 100,
                             child: item.status == "conflict"
                                 ? ElevatedButton(
                                     onPressed: () =>
@@ -405,30 +603,33 @@ class AgreementPage extends StatelessWidget {
                                         horizontal: 24,
                                       ),
                                     ),
-                                    child: const Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.gavel),
-                                        SizedBox(height: 4),
-                                        Text(
-                                          "조항\n확정",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
+                                    child: isMobile
+                                        ? const Text(
+                                            "조항 확정",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )
+                                        : const Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(Icons.gavel),
+                                              SizedBox(height: 4),
+                                              Text(
+                                                "조항\n확정",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                      ],
-                                    ),
                                   )
                                 : OutlinedButton(
                                     onPressed: () {
-                                      // Directly modifying item via controller logic needed
-                                      // But for simplicity, we call a method if we had one for unresolve.
-                                      // For now, let's just cheat and update item via controller update
                                       item.status = "conflict";
-                                      // Trigger update via a dummy change or re-setting item
                                       controller.handleUserAChange(
                                         item.id,
                                         item.userA,
@@ -446,20 +647,27 @@ class AgreementPage extends StatelessWidget {
                                         horizontal: 24,
                                       ),
                                     ),
-                                    child: const Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "수정\n하기",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
+                                    child: isMobile
+                                        ? const Text(
+                                            "수정 하기",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )
+                                        : const Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "수정\n하기",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                      ],
-                                    ),
                                   ),
                           ),
                         ],
@@ -475,12 +683,14 @@ class AgreementPage extends StatelessWidget {
                                 color: Colors.indigo[600],
                               ),
                               const SizedBox(width: 8),
-                              Text(
-                                "이 내용은 최종 계약서의 ${item.id}조 항으로 반영됩니다.",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.indigo[600],
-                                  fontWeight: FontWeight.w500,
+                              Expanded(
+                                child: Text(
+                                  "이 내용은 최종 계약서의 ${item.id}조 항으로 반영됩니다.",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.indigo[600],
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
                             ],
@@ -504,6 +714,8 @@ class AgreementPage extends StatelessWidget {
     bool disabled, {
     required bool isUserA,
   }) {
+    // Only text selection change logic inside TextField needs care, but for brevity/cleanliness
+    // we just return the widget. The layout is handled by parent.
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -593,14 +805,18 @@ class AgreementPage extends StatelessWidget {
     });
   }
 
-  Widget _buildFinalModal(AgreementController controller) {
+  Widget _buildFinalModal(
+    BuildContext context,
+    AgreementController controller,
+  ) {
+    bool isMobile = ResponsiveLayout.isMobile(context);
     return Container(
       color: Colors.black54,
       child: Center(
         child: Container(
-          width: 600,
+          width: isMobile ? MediaQuery.of(context).size.width * 0.9 : 600,
           margin: const EdgeInsets.all(24),
-          padding: const EdgeInsets.all(40),
+          padding: EdgeInsets.all(isMobile ? 24 : 40),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(24),
