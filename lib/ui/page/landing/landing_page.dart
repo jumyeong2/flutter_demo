@@ -213,7 +213,7 @@ class LandingPage extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           Text(
-            "변호사 없이 끝내는\n가장 완벽한 합의,",
+            "팀이 터지기 전에 막아주는\n공동창업 리스크 관리 솔루션’ ",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: ResponsiveLayout.isMobile(context) ? 28 : 40,
@@ -223,7 +223,7 @@ class LandingPage extends StatelessWidget {
             ),
           ),
           Text(
-            "'팀 Rulebook'",
+            "'CoSync Rulebook'",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: ResponsiveLayout.isMobile(context) ? 28 : 40,
@@ -259,7 +259,7 @@ class LandingPage extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: controller.startTrial,
                 icon: const Icon(Icons.chevron_right),
-                label: const Text("팀 Rulebook 만들기"),
+                label: const Text("질문 3개 체험하기 (무료)"),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF0F172A),
                   foregroundColor: Colors.white,
@@ -282,13 +282,13 @@ class LandingPage extends StatelessWidget {
                 label: const Text("샘플 리포트 보기"),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: const Color(0xFF334155),
-                  side: BorderSide(color: Colors.grey[300]!),
+                  side: BorderSide(color: Colors.grey[400]!),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,
                     vertical: 20,
                   ),
                   textStyle: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                   shape: RoundedRectangleBorder(
@@ -333,25 +333,24 @@ class LandingPage extends StatelessWidget {
       child: Column(
         children: [
           const Text(
-            "감정 싸움 없이 합의하는 4단계 프로세스",
+            "감정 싸움 없이 합의하는\n4단계 프로세스",
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
               color: Color(0xFF0F172A),
             ),
-            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
           const Text(
             "코파운더 싱크는 '중간 다리' 역할을 통해 객관적인 합의를 이끌어냅니다.",
             style: TextStyle(fontSize: 16, color: Color(0xFF64748B)),
-            textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 80),
+          const SizedBox(height: 50),
           LayoutBuilder(
             builder: (context, constraints) {
               bool isMobile = ResponsiveLayout.isMobile(context);
-              double spacing = isMobile ? 12 : 32;
+              double spacing = isMobile ? 8 : 24;
 
               return Wrap(
                 spacing: spacing,
@@ -362,13 +361,13 @@ class LandingPage extends StatelessWidget {
                   if (isMobile) {
                     width = (constraints.maxWidth - spacing) / 2;
                   } else if (ResponsiveLayout.isTablet(context)) {
-                    width = (constraints.maxWidth - 32) / 2;
+                    width = (constraints.maxWidth - spacing) / 2;
                   } else {
-                    width = (constraints.maxWidth - 96) / 4;
+                    width = (constraints.maxWidth - (spacing * 3)) / 4;
                   }
                   return Container(
                     width: width,
-                    height: isMobile ? 260 : null,
+                    height: isMobile ? 280 : 360,
                     padding: EdgeInsets.all(isMobile ? 16 : 24),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -445,14 +444,15 @@ class LandingPage extends StatelessWidget {
           const Text(
             "어떻게 합의하는지 미리 보세요",
             style: TextStyle(
-              fontSize: 30,
+              fontSize: 28,
               fontWeight: FontWeight.bold,
               color: Color(0xFF0F172A),
             ),
+            textAlign: TextAlign.start,
           ),
           const SizedBox(height: 16),
           const Text(
-            "30초면 갈등을 예방하는 과정을 체험할 수 있습니다.",
+            "30분이면 갈등을 예방하는 과정을 체험할 수 있습니다.",
             style: TextStyle(fontSize: 16, color: Color(0xFF64748B)),
           ),
           const SizedBox(height: 48),
@@ -699,7 +699,7 @@ class LandingPage extends StatelessWidget {
                     RichText(
                       text: const TextSpan(
                         style: TextStyle(
-                          fontSize: 36,
+                          fontSize: 30,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF0F172A),
                           height: 1.2,
@@ -717,7 +717,7 @@ class LandingPage extends StatelessWidget {
                     const Text(
                       "'그냥 느낌이 좀 쎄한데?'라는 감을 데이터로 확인시켜 드립니다.\n자금, 비전, 역할, 이탈 조건 등 5가지 핵심 영역을 시각화하여 어디서 갈등이 터질지 미리 예측하고 방어합니다.",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         color: Color(0xFF475569),
                         height: 1.6,
                       ),
@@ -790,7 +790,7 @@ class LandingPage extends StatelessWidget {
                     const Text(
                       "말뿐인 약속은 잊혀집니다.\n'공동창업자 Rulebook'으로 기록하세요.",
                       style: TextStyle(
-                        fontSize: 36,
+                        fontSize: 30,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF0F172A),
                         height: 1.2,
@@ -800,7 +800,7 @@ class LandingPage extends StatelessWidget {
                     const Text(
                       "동업계약서 쓰기엔 너무 딱딱하고, 말로만 하기엔 불안하신가요?\nCo-founder Sync는 합의된 내용을 바탕으로 우리 팀만의 헌법, [Rulebook.pdf]를 생성해 드립니다.",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         color: Color(0xFF475569),
                         height: 1.6,
                       ),
