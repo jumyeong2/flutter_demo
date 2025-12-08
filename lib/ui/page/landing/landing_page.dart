@@ -357,7 +357,7 @@ class LandingPage extends StatelessWidget {
                 children: steps.map((step) {
                   double width;
                   if (ResponsiveLayout.isMobile(context)) {
-                    width = constraints.maxWidth;
+                    width = (constraints.maxWidth - 32) / 2;
                   } else if (ResponsiveLayout.isTablet(context)) {
                     width = (constraints.maxWidth - 32) / 2;
                   } else {
@@ -365,7 +365,9 @@ class LandingPage extends StatelessWidget {
                   }
                   return Container(
                     width: width,
-                    padding: const EdgeInsets.all(24),
+                    padding: EdgeInsets.all(
+                      ResponsiveLayout.isMobile(context) ? 16 : 24,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
