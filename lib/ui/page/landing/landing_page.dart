@@ -429,9 +429,13 @@ class LandingPage extends StatelessWidget {
     LandingController controller,
     List<Map<String, dynamic>> demoSteps,
   ) {
+    bool isMobile = ResponsiveLayout.isMobile(context);
     return Container(
       color: Colors.grey[50],
-      padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 24),
+      padding: EdgeInsets.symmetric(
+        vertical: 80,
+        horizontal: isMobile ? 16 : 24,
+      ),
       child: Column(
         children: [
           const Text(
@@ -465,8 +469,8 @@ class LandingPage extends StatelessWidget {
               children: [
                 // Header
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isMobile ? 16 : 24,
                     vertical: 16,
                   ),
                   decoration: BoxDecoration(
@@ -503,7 +507,7 @@ class LandingPage extends StatelessWidget {
                 ),
                 // Body
                 Padding(
-                  padding: const EdgeInsets.all(40),
+                  padding: EdgeInsets.all(isMobile ? 16 : 40),
                   child: Column(
                     children: [
                       // Steps
@@ -521,7 +525,7 @@ class LandingPage extends StatelessWidget {
                       // Content
                       Obx(
                         () => Container(
-                          padding: const EdgeInsets.all(24),
+                          padding: EdgeInsets.all(isMobile ? 16 : 24),
                           decoration: BoxDecoration(
                             color: Colors.grey[50],
                             borderRadius: BorderRadius.circular(12),
@@ -1033,10 +1037,11 @@ class LandingPage extends StatelessWidget {
 class _DemoStep1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    bool isMobile = ResponsiveLayout.isMobile(context);
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(isMobile ? 12 : 16),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
@@ -1046,9 +1051,13 @@ class _DemoStep1 extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     padding: const EdgeInsets.all(2),
+                    margin: const EdgeInsets.only(
+                      top: 2,
+                    ), // Align slightly with text
                     decoration: BoxDecoration(
                       color: Colors.grey[100],
                       borderRadius: BorderRadius.circular(8),
