@@ -1,38 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'landing_controller.dart';
 
-class LandingPage extends StatefulWidget {
-  final VoidCallback onStartTrial;
-
-  const LandingPage({super.key, required this.onStartTrial});
-
-  @override
-  State<LandingPage> createState() => _LandingPageState();
-}
-
-class _LandingPageState extends State<LandingPage> {
-  int _demoStep = 0;
-  bool _isMenuOpen = false;
-
-  final List<Map<String, dynamic>> _demoSteps = [
-    {
-      "title": "1단계: 심층 진단 (Deep Dive)",
-      "desc": "가장 민감한 '이탈 조건'에 대해 각자의 솔직한 생각을 입력합니다.",
-      "content": _DemoStep1(),
-    },
-    {
-      "title": "2단계: 리스크 시각화 (Risk Radar)",
-      "desc": "답변 데이터를 분석하여 조율이 필요한 부분을 시각화합니다.",
-      "content": _DemoStep2(),
-    },
-    {
-      "title": "3단계: AI 중재안 (Solution)",
-      "desc": "업계 표준 데이터와 양측의 입장을 고려한 구체적인 절충안을 제시합니다.",
-      "content": _DemoStep3(),
-    },
-  ];
+class LandingPage extends StatelessWidget {
+  const LandingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(LandingController());
+
+    final List<Map<String, dynamic>> demoSteps = [
+      {
+        "title": "1단계: 심층 진단 (Deep Dive)",
+        "desc": "가장 민감한 '이탈 조건'에 대해 각자의 솔직한 생각을 입력합니다.",
+        "content": _DemoStep1(),
+      },
+      {
+        "title": "2단계: 리스크 시각화 (Risk Radar)",
+        "desc": "답변 데이터를 분석하여 조율이 필요한 부분을 시각화합니다.",
+        "content": _DemoStep2(),
+      },
+      {
+        "title": "3단계: AI 중재안 (Solution)",
+        "desc": "업계 표준 데이터와 양측의 입장을 고려한 구체적인 절충안을 제시합니다.",
+        "content": _DemoStep3(),
+      },
+    ];
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -45,7 +39,7 @@ class _LandingPageState extends State<LandingPage> {
               width: 500,
               height: 500,
               decoration: BoxDecoration(
-                color: Colors.blue[100]!.withOpacity(0.5),
+                color: Colors.blue[100]!.withValues(alpha: 0.5),
                 shape: BoxShape.circle,
               ),
             ),
@@ -57,7 +51,7 @@ class _LandingPageState extends State<LandingPage> {
               width: 600,
               height: 600,
               decoration: BoxDecoration(
-                color: Colors.indigo[100]!.withOpacity(0.4),
+                color: Colors.indigo[100]!.withValues(alpha: 0.4),
                 shape: BoxShape.circle,
               ),
             ),
@@ -67,13 +61,13 @@ class _LandingPageState extends State<LandingPage> {
           SingleChildScrollView(
             child: Column(
               children: [
-                _buildNavbar(),
-                _buildHeroSection(),
+                _buildNavbar(context, controller),
+                _buildHeroSection(controller),
                 _buildProcessSection(),
-                _buildDemoSection(),
+                _buildDemoSection(controller, demoSteps),
                 _buildRadarSection(),
                 _buildRulebookSection(),
-                _buildCtaSection(),
+                _buildCtaSection(controller),
                 _buildFooter(),
               ],
             ),
@@ -83,11 +77,11 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 
-  Widget _buildNavbar() {
+  Widget _buildNavbar(BuildContext context, LandingController controller) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.8),
+        color: Colors.white.withValues(alpha: 0.8),
         border: Border(bottom: BorderSide(color: Colors.grey[100]!)),
       ),
       child: Row(
@@ -105,7 +99,7 @@ class _LandingPageState extends State<LandingPage> {
                   Icons.psychology,
                   color: Colors.white,
                   size: 24,
-                ), // BrainCircuit replacement
+                ),
               ),
               const SizedBox(width: 8),
               const Text(
@@ -126,7 +120,7 @@ class _LandingPageState extends State<LandingPage> {
                 _navLink("Rulebook이란?"),
                 const SizedBox(width: 16),
                 ElevatedButton(
-                  onPressed: widget.onStartTrial,
+                  onPressed: controller.startTrial,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF0F172A),
                     foregroundColor: Colors.white,
@@ -146,9 +140,13 @@ class _LandingPageState extends State<LandingPage> {
               ],
             )
           else
-            IconButton(
-              icon: Icon(_isMenuOpen ? Icons.close : Icons.menu),
-              onPressed: () => setState(() => _isMenuOpen = !_isMenuOpen),
+            Obx(
+              () => IconButton(
+                icon: Icon(
+                  controller.isMenuOpen.value ? Icons.close : Icons.menu,
+                ),
+                onPressed: controller.toggleMenu,
+              ),
             ),
         ],
       ),
@@ -169,7 +167,7 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 
-  Widget _buildHeroSection() {
+  Widget _buildHeroSection(LandingController controller) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 128, 24, 80),
       child: Column(
@@ -181,7 +179,10 @@ class _LandingPageState extends State<LandingPage> {
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: Colors.yellow[200]!),
               boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 4,
+                ),
               ],
             ),
             child: Row(
@@ -251,7 +252,7 @@ class _LandingPageState extends State<LandingPage> {
             alignment: WrapAlignment.center,
             children: [
               ElevatedButton.icon(
-                onPressed: widget.onStartTrial,
+                onPressed: controller.startTrial,
                 icon: const Icon(Icons.chevron_right),
                 label: const Text("질문 3개로 Rulebook 체험하기 (무료)"),
                 style: ElevatedButton.styleFrom(
@@ -360,7 +361,7 @@ class _LandingPageState extends State<LandingPage> {
                       border: Border.all(color: Colors.grey[100]!),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withValues(alpha: 0.05),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -412,7 +413,10 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 
-  Widget _buildDemoSection() {
+  Widget _buildDemoSection(
+    LandingController controller,
+    List<Map<String, dynamic>> demoSteps,
+  ) {
     return Container(
       color: Colors.grey[50],
       padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 24),
@@ -438,7 +442,10 @@ class _LandingPageState extends State<LandingPage> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 20),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 20,
+                ),
               ],
               border: Border.all(color: Colors.grey[100]!),
             ),
@@ -488,53 +495,58 @@ class _LandingPageState extends State<LandingPage> {
                   child: Column(
                     children: [
                       // Steps
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _demoStepButton(0, "진단"),
-                          _demoStepButton(1, "시각화"),
-                          _demoStepButton(2, "AI중재"),
-                        ],
+                      Obx(
+                        () => Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _demoStepButton(0, "진단", controller),
+                            _demoStepButton(1, "시각화", controller),
+                            _demoStepButton(2, "AI중재", controller),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 32),
                       // Content
-                      Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[50],
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey[100]!),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _demoSteps[_demoStep]['title'],
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF0F172A),
+                      Obx(
+                        () => Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey[100]!),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                demoSteps[controller.demoStep.value]['title'],
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF0F172A),
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              _demoSteps[_demoStep]['desc'],
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Color(0xFF64748B),
+                              const SizedBox(height: 4),
+                              Text(
+                                demoSteps[controller.demoStep.value]['desc'],
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Color(0xFF64748B),
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 24),
-                            _demoSteps[_demoStep]['content'] as Widget,
-                          ],
+                              const SizedBox(height: 24),
+                              demoSteps[controller.demoStep.value]['content']
+                                  as Widget,
+                            ],
+                          ),
                         ),
                       ),
                       const SizedBox(height: 24),
                       TextButton.icon(
                         onPressed: () {
-                          setState(() {
-                            _demoStep = (_demoStep + 1) % 3;
-                          });
+                          controller.setDemoStep(
+                            (controller.demoStep.value + 1) % 3,
+                          );
                         },
                         icon: const Icon(Icons.chevron_right, size: 16),
                         label: const Text("다음 단계 미리보기"),
@@ -556,10 +568,14 @@ class _LandingPageState extends State<LandingPage> {
     decoration: BoxDecoration(color: color, shape: BoxShape.circle),
   );
 
-  Widget _demoStepButton(int index, String label) {
-    bool isActive = _demoStep == index;
+  Widget _demoStepButton(
+    int index,
+    String label,
+    LandingController controller,
+  ) {
+    bool isActive = controller.demoStep.value == index;
     return GestureDetector(
-      onTap: () => setState(() => _demoStep = index),
+      onTap: () => controller.setDemoStep(index),
       child: Column(
         children: [
           Container(
@@ -571,7 +587,7 @@ class _LandingPageState extends State<LandingPage> {
               boxShadow: isActive
                   ? [
                       BoxShadow(
-                        color: Colors.blue.withOpacity(0.3),
+                        color: Colors.blue.withValues(alpha: 0.3),
                         blurRadius: 8,
                         spreadRadius: 2,
                       ),
@@ -625,7 +641,7 @@ class _LandingPageState extends State<LandingPage> {
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 20,
                     ),
                   ],
@@ -633,11 +649,7 @@ class _LandingPageState extends State<LandingPage> {
                 ),
                 child: Column(
                   children: [
-                    const Icon(
-                      Icons.show_chart,
-                      size: 64,
-                      color: Colors.blue,
-                    ), // Activity replacement
+                    const Icon(Icons.show_chart, size: 64, color: Colors.blue),
                     const SizedBox(height: 24),
                     _riskItem("💰 보상/지분 합의", "안정적 (95점)", Colors.green),
                     const SizedBox(height: 12),
@@ -702,9 +714,9 @@ class _LandingPageState extends State<LandingPage> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.05),
+        color: color.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.1)),
+        border: Border.all(color: color.withValues(alpha: 0.1)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -792,7 +804,7 @@ class _LandingPageState extends State<LandingPage> {
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.15),
+                        color: Colors.black.withValues(alpha: 0.15),
                         blurRadius: 30,
                         offset: const Offset(0, 10),
                       ),
@@ -923,7 +935,7 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 
-  Widget _buildCtaSection() {
+  Widget _buildCtaSection(LandingController controller) {
     return Container(
       color: const Color(0xFF0F172A),
       padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 24),
@@ -948,7 +960,7 @@ class _LandingPageState extends State<LandingPage> {
           ),
           const SizedBox(height: 40),
           ElevatedButton(
-            onPressed: widget.onStartTrial,
+            onPressed: controller.startTrial,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue[600],
               foregroundColor: Colors.white,
@@ -998,8 +1010,6 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 }
-
-// --- Demo Step Content Widgets ---
 
 class _DemoStep1 extends StatelessWidget {
   @override
@@ -1229,7 +1239,12 @@ class _DemoStep3 extends StatelessWidget {
           color: isRecommended ? Colors.blue : Colors.grey[200]!,
         ),
         boxShadow: isRecommended
-            ? [BoxShadow(color: Colors.blue.withOpacity(0.1), blurRadius: 8)]
+            ? [
+                BoxShadow(
+                  color: Colors.blue.withValues(alpha: 0.1),
+                  blurRadius: 8,
+                ),
+              ]
             : [],
       ),
       child: Column(

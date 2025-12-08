@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'onboarding_controller.dart';
 
 class OnboardingPage extends StatefulWidget {
-  final VoidCallback onBack;
-  final VoidCallback onStart;
-  const OnboardingPage({
-    super.key,
-    required this.onBack,
-    required this.onStart,
-  });
+  const OnboardingPage({super.key});
+
   @override
   State<OnboardingPage> createState() => _OnboardingPageState();
 }
+
 class _OnboardingPageState extends State<OnboardingPage>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   final List<Animation<double>> _animations = [];
+  final OnboardingController controller = Get.put(OnboardingController());
+
   @override
   void initState() {
     super.initState();
@@ -32,11 +32,13 @@ class _OnboardingPageState extends State<OnboardingPage>
     }
     _controller.forward();
   }
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +48,7 @@ class _OnboardingPageState extends State<OnboardingPage>
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: widget.onBack,
+          onPressed: controller.goBack,
         ),
         title: const Text(
           "Rulebook 체험",
@@ -203,7 +205,7 @@ class _OnboardingPageState extends State<OnboardingPage>
               FadeTransition(
                 opacity: _animations[5],
                 child: ElevatedButton(
-                  onPressed: widget.onStart,
+                  onPressed: controller.startExperience,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue[600],
                     foregroundColor: Colors.white,
@@ -212,7 +214,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                       borderRadius: BorderRadius.circular(12),
                     ),
                     elevation: 4,
-                    shadowColor: Colors.blue.withOpacity(0.4),
+                    shadowColor: Colors.blue.withValues(alpha: 0.4),
                   ),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -236,6 +238,7 @@ class _OnboardingPageState extends State<OnboardingPage>
       ),
     );
   }
+
   Widget _buildStep(
     int step,
     String title,
@@ -266,7 +269,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                 boxShadow: isActive
                     ? [
                         BoxShadow(
-                          color: Colors.blue.withOpacity(0.3),
+                          color: Colors.blue.withValues(alpha: 0.3),
                           blurRadius: 8,
                           spreadRadius: 2,
                         ),
