@@ -199,7 +199,7 @@ class LandingPage extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                     children: [
-                      TextSpan(text: "⚡️ 지금 "),
+                      TextSpan(text: "지금 "),
                       TextSpan(
                         text: "12팀",
                         style: TextStyle(color: Colors.blue),
@@ -350,14 +350,17 @@ class LandingPage extends StatelessWidget {
           const SizedBox(height: 80),
           LayoutBuilder(
             builder: (context, constraints) {
+              bool isMobile = ResponsiveLayout.isMobile(context);
+              double spacing = isMobile ? 12 : 32;
+
               return Wrap(
-                spacing: 32,
-                runSpacing: 32,
+                spacing: spacing,
+                runSpacing: spacing,
                 alignment: WrapAlignment.center,
                 children: steps.map((step) {
                   double width;
-                  if (ResponsiveLayout.isMobile(context)) {
-                    width = (constraints.maxWidth - 32) / 2;
+                  if (isMobile) {
+                    width = (constraints.maxWidth - spacing) / 2;
                   } else if (ResponsiveLayout.isTablet(context)) {
                     width = (constraints.maxWidth - 32) / 2;
                   } else {
@@ -365,9 +368,8 @@ class LandingPage extends StatelessWidget {
                   }
                   return Container(
                     width: width,
-                    padding: EdgeInsets.all(
-                      ResponsiveLayout.isMobile(context) ? 16 : 24,
-                    ),
+                    height: isMobile ? 260 : null,
+                    padding: EdgeInsets.all(isMobile ? 16 : 24),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
