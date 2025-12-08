@@ -1111,6 +1111,7 @@ class _DemoStep1 extends StatelessWidget {
 
   Widget _chatBubble(String name, String text, MaterialColor color) {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: color[50],
