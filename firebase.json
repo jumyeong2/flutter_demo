@@ -1,1 +1,45 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"cosyncagreement","appId":"1:968213830986:android:9de638b3fd92990bf535b3","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"cosyncagreement","appId":"1:968213830986:ios:bde4ff19e708982df535b3","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"cosyncagreement","configurations":{"android":"1:968213830986:android:9de638b3fd92990bf535b3","ios":"1:968213830986:ios:bde4ff19e708982df535b3","web":"1:968213830986:web:613d437ba6b2c7dcf535b3"}}}}}}
+{
+    "hosting": {
+        "public": "build/web",
+        "ignore": [
+            "firebase.json",
+            "**/.*",
+            "**/node_modules/**"
+        ],
+        "rewrites": [
+            {
+                "source": "**",
+                "destination": "/index.html"
+            }
+        ]
+    },
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "cosyncagreement",
+                    "appId": "1:968213830986:android:9de638b3fd92990bf535b3",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "ios": {
+                "default": {
+                    "projectId": "cosyncagreement",
+                    "appId": "1:968213830986:ios:bde4ff19e708982df535b3",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "ios/Runner/GoogleService-Info.plist"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "cosyncagreement",
+                    "configurations": {
+                        "android": "1:968213830986:android:9de638b3fd92990bf535b3",
+                        "ios": "1:968213830986:ios:bde4ff19e708982df535b3",
+                        "web": "1:968213830986:web:613d437ba6b2c7dcf535b3"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -457,7 +457,7 @@ class LandingPage extends StatelessWidget {
           ),
           const SizedBox(height: 48),
           Container(
-            constraints: const BoxConstraints(maxWidth: 1024),
+            // constraints: const BoxConstraints(maxWidth: 1024),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
@@ -645,7 +645,7 @@ class LandingPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 96, horizontal: 24),
       child: Center(
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 1200),
+          // constraints: const BoxConstraints(maxWidth: 1200),
           child: Wrap(
             spacing: 48,
             runSpacing: 48,
@@ -765,7 +765,7 @@ class LandingPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 96, horizontal: 24),
       child: Center(
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 1200),
+          // constraints: const BoxConstraints(maxWidth: 1200),
           child: Wrap(
             spacing: 64,
             runSpacing: 64,
