@@ -28,52 +28,54 @@ class LandingPage extends StatelessWidget {
       },
     ];
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          // Background Decoration
-          Positioned(
-            top: -50,
-            right: -50,
-            child: Container(
-              width: 500,
-              height: 500,
-              decoration: BoxDecoration(
-                color: Colors.blue[100]!.withValues(alpha: 0.5),
-                shape: BoxShape.circle,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: [
+            // Background Decoration
+            Positioned(
+              top: -50,
+              right: -50,
+              child: Container(
+                width: 500,
+                height: 500,
+                decoration: BoxDecoration(
+                  color: Colors.blue[100]!.withValues(alpha: 0.5),
+                  shape: BoxShape.circle,
+                ),
               ),
             ),
-          ),
-          Positioned(
-            bottom: -50,
-            left: -50,
-            child: Container(
-              width: 600,
-              height: 600,
-              decoration: BoxDecoration(
-                color: Colors.indigo[100]!.withValues(alpha: 0.4),
-                shape: BoxShape.circle,
+            Positioned(
+              bottom: -50,
+              left: -50,
+              child: Container(
+                width: 600,
+                height: 600,
+                decoration: BoxDecoration(
+                  color: Colors.indigo[100]!.withValues(alpha: 0.4),
+                  shape: BoxShape.circle,
+                ),
               ),
             ),
-          ),
 
-          // Main Scroll View
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildNavbar(context, controller),
-                _buildHeroSection(context, controller),
-                _buildProcessSection(),
-                _buildDemoSection(context, controller, demoSteps),
-                _buildRadarSection(context),
-                _buildRulebookSection(context),
-                _buildCtaSection(context, controller),
-                _buildFooter(),
-              ],
+            // Main Scroll View
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildNavbar(context, controller),
+                  _buildHeroSection(context, controller),
+                  _buildProcessSection(),
+                  _buildDemoSection(context, controller, demoSteps),
+                  _buildRadarSection(context),
+                  _buildRulebookSection(context),
+                  _buildCtaSection(context, controller),
+                  _buildFooter(),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
