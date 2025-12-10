@@ -30,21 +30,50 @@ class LandingPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildNavbar(context, controller),
-            _buildHeroSection(context, controller),
-            _buildProcessSection(),
-            _buildDemoSection(context, controller, demoSteps),
-            _buildRadarSection(context),
-            _buildRulebookSection(context),
-            _buildCtaSection(context, controller),
-            _buildFooter(),
-          ],
-        ),
+      body: Stack(
+        children: [
+          // Main Page View
+          PageView(
+            pageSnapping: false,
+            scrollDirection: Axis.vertical,
+            children: [
+              _buildHeroSection(context, controller),
+              _buildCenteredPage(_buildProcessSection()),
+              _buildCenteredPage(
+                _buildDemoSection(context, controller, demoSteps),
+              ),
+              _buildCenteredPage(_buildRadarSection(context)),
+              _buildCenteredPage(_buildRulebookSection(context)),
+              _buildCenteredScrollablePage(
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildCtaSection(context, controller),
+                    _buildFooter(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          // Navbar (Fixed on top)
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: _buildNavbar(context, controller),
+          ),
+        ],
       ),
     );
+  }
+
+  Widget _buildCenteredPage(Widget child) {
+    return Center(child: SingleChildScrollView(child: child));
+  }
+
+  Widget _buildCenteredScrollablePage(Widget child) {
+    return Center(child: SingleChildScrollView(child: child));
   }
 
   Widget _buildNavbar(BuildContext context, LandingController controller) {
@@ -173,7 +202,7 @@ class LandingPage extends StatelessWidget {
           // Content
           Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 80),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -263,45 +292,62 @@ class LandingPage extends StatelessWidget {
                     runSpacing: 16,
                     alignment: WrapAlignment.center,
                     children: [
-                      ElevatedButton.icon(
-                        onPressed: controller.startTrial,
-                        icon: const Icon(Icons.chevron_right),
-                        label: const Text("질문 3개 체험하기 (무료)"),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF0F172A),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 32,
-                            vertical: 20,
-                          ),
-                          textStyle: TextStyle(
-                            fontSize: ResponsiveLayout.isMobile(context)
-                                ? 16
-                                : 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                      Container(
+                        width: 280,
+                        height: 60,
+                        child: ElevatedButton.icon(
+                          onPressed: controller.startTrial,
+                          icon: const Icon(Icons.chevron_right),
+                          label: const Text("질문 3개 체험하기 (무료)"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0F172A),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 32,
+                              vertical: 20,
+                            ),
+                            textStyle: TextStyle(
+                              fontSize: ResponsiveLayout.isMobile(context)
+                                  ? 16
+                                  : 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                       ),
-                      OutlinedButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.description, color: Colors.grey),
-                        label: const Text("샘플 리포트 보기"),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: const Color(0xFF334155),
-                          side: BorderSide(color: Colors.grey[400]!),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 32,
-                            vertical: 20,
+                      Container(
+                        width: 280,
+                        height: 60,
+                        child: OutlinedButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.description,
+                            color: Colors.grey,
                           ),
-                          textStyle: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                          label: const Text(
+                            "샘플 리포트 보기",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: const Color(0xFF334155),
+                            side: BorderSide(color: Colors.grey[400]!),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 32,
+                              vertical: 20,
+                            ),
+                            textStyle: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                       ),
@@ -341,7 +387,7 @@ class LandingPage extends StatelessWidget {
     ];
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 96, horizontal: 24),
+      padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
       color: Colors.white,
       child: Column(
         children: [
@@ -359,7 +405,7 @@ class LandingPage extends StatelessWidget {
             "코파운더 싱크는 '중간 다리' 역할을 통해 객관적인 합의를 이끌어냅니다.",
             style: TextStyle(fontSize: 16, color: Color(0xFF64748B)),
           ),
-          const SizedBox(height: 50),
+          const SizedBox(height: 32),
           LayoutBuilder(
             builder: (context, constraints) {
               bool isMobile = ResponsiveLayout.isMobile(context);
@@ -380,7 +426,7 @@ class LandingPage extends StatelessWidget {
                   }
                   return Container(
                     width: width,
-                    height: isMobile ? 280 : 360,
+                    height: isMobile ? 240 : 300,
                     padding: EdgeInsets.all(isMobile ? 16 : 24),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -449,7 +495,7 @@ class LandingPage extends StatelessWidget {
     return Container(
       color: Colors.grey[50],
       padding: EdgeInsets.symmetric(
-        vertical: 80,
+        vertical: 24, // Reduced from 48
         horizontal: isMobile ? 16 : 24,
       ),
       child: Column(
@@ -463,12 +509,12 @@ class LandingPage extends StatelessWidget {
             ),
             textAlign: TextAlign.start,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8), // Reduced from 16
           const Text(
             "30분이면 갈등을 예방하는 과정을 체험할 수 있습니다.",
             style: TextStyle(fontSize: 16, color: Color(0xFF64748B)),
           ),
-          const SizedBox(height: 48),
+          const SizedBox(height: 16), // Reduced from 24
           Container(
             // constraints: const BoxConstraints(maxWidth: 1024),
             decoration: BoxDecoration(
@@ -488,7 +534,7 @@ class LandingPage extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: isMobile ? 16 : 24,
-                    vertical: 16,
+                    vertical: 12, // Reduced from 16
                   ),
                   decoration: BoxDecoration(
                     color: Colors.grey[50],
@@ -524,7 +570,9 @@ class LandingPage extends StatelessWidget {
                 ),
                 // Body
                 Padding(
-                  padding: EdgeInsets.all(isMobile ? 16 : 40),
+                  padding: EdgeInsets.all(
+                    isMobile ? 12 : 24,
+                  ), // Reduced from 16/40
                   child: Column(
                     children: [
                       // Steps
@@ -538,11 +586,13 @@ class LandingPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 16), // Reduced from 32
                       // Content
                       Obx(
                         () => Container(
-                          padding: EdgeInsets.all(isMobile ? 16 : 24),
+                          padding: const EdgeInsets.all(
+                            16,
+                          ), // Reduced/Fixed at 16
                           decoration: BoxDecoration(
                             color: Colors.grey[50],
                             borderRadius: BorderRadius.circular(12),
@@ -567,14 +617,14 @@ class LandingPage extends StatelessWidget {
                                   color: Color(0xFF64748B),
                                 ),
                               ),
-                              const SizedBox(height: 24),
+                              const SizedBox(height: 12), // Reduced from 24
                               demoSteps[controller.demoStep.value]['content']
                                   as Widget,
                             ],
                           ),
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 8), // Reduced from 24
                       TextButton.icon(
                         onPressed: () {
                           controller.setDemoStep(
@@ -655,13 +705,13 @@ class LandingPage extends StatelessWidget {
   Widget _buildRadarSection(BuildContext context) {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 96, horizontal: 24),
+      padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
       child: Center(
         child: Container(
           // constraints: const BoxConstraints(maxWidth: 1200),
           child: Wrap(
             spacing: 48,
-            runSpacing: 48,
+            runSpacing: 24,
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
@@ -775,13 +825,16 @@ class LandingPage extends StatelessWidget {
   Widget _buildRulebookSection(BuildContext context) {
     return Container(
       color: Colors.grey[50],
-      padding: const EdgeInsets.symmetric(vertical: 96, horizontal: 24),
+      padding: const EdgeInsets.symmetric(
+        vertical: 24, // Reduced from 48
+        horizontal: 24,
+      ),
       child: Center(
         child: Container(
           // constraints: const BoxConstraints(maxWidth: 1200),
           child: Wrap(
-            spacing: 64,
-            runSpacing: 64,
+            spacing: 48, // Reduced from 64
+            runSpacing: 16, // Reduced from 32
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
@@ -799,7 +852,7 @@ class LandingPage extends StatelessWidget {
                         letterSpacing: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 8), // Reduced from 16
                     const Text(
                       "말뿐인 약속은 잊혀집니다.\n'공동창업자 Rulebook'으로 기록하세요.",
                       style: TextStyle(
@@ -809,16 +862,16 @@ class LandingPage extends StatelessWidget {
                         height: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16), // Reduced from 24
                     const Text(
-                      "동업계약서 쓰기엔 너무 딱딱하고, 말로만 하기엔 불안하신가요?\nCo-founder Sync는 합의된 내용을 바탕으로 우리 팀만의 헌법, [Rulebook.pdf]를 생성해 드립니다.",
+                      "동업계약서 쓰기엔 너무 딱딱하고, 말로만 하기엔 불안하신가요?\nCoSync는 합의된 내용을 바탕으로 우리 팀만의 헌법, [Rulebook.pdf]를 생성해 드립니다.",
                       style: TextStyle(
                         fontSize: 16,
                         color: Color(0xFF475569),
                         height: 1.6,
                       ),
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 16), // Reduced from 32
                     _checkItem("Mission & Vision (우리가 모인 이유)"),
                     _checkItem("R&R (명확한 역할과 책임)"),
                     _checkItem("Compensation (지분 및 급여)"),
@@ -834,8 +887,8 @@ class LandingPage extends StatelessWidget {
                   width: ResponsiveLayout.isMobile(context)
                       ? double.infinity
                       : 400,
-                  height: 500,
-                  padding: const EdgeInsets.all(32),
+                  height: 400, // Reduced from 500
+                  padding: const EdgeInsets.all(24), // Reduced from 32
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(24),
@@ -865,7 +918,7 @@ class LandingPage extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                "Ver 1.0 | 2024.05.20",
+                                "Ver 1.0 | 2025.05.20",
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey,
@@ -880,7 +933,7 @@ class LandingPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const Divider(height: 32),
+                      const Divider(height: 24), // Reduced from 32
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -890,7 +943,7 @@ class LandingPage extends StatelessWidget {
                               "제3조 (지분 및 베스팅)",
                               "공동창업자 김민준, 이강인은 총 4년의 베스팅 기간을 설정하며...",
                             ),
-                            const SizedBox(height: 24),
+                            const SizedBox(height: 16), // Reduced from 24
                             _docSection(
                               "Chapter 5. Exit Plan",
                               "제5조 (이탈 조건)",
@@ -912,7 +965,7 @@ class LandingPage extends StatelessWidget {
 
   Widget _checkItem(String text) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 8), // Reduced from 12
       child: Row(
         children: [
           const Icon(Icons.check_circle, color: Colors.blue, size: 20),
