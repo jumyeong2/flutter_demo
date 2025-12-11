@@ -28,10 +28,15 @@ class LandingPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const HeroSection(),
+                const SizedBox(height: 100),
                 const ProcessSection(),
+                const SizedBox(height: 100),
                 const DemoSection(),
+                const SizedBox(height: 50),
                 const RadarSection(),
+                const SizedBox(height: 100),
                 const RulebookSection(),
+                const SizedBox(height: 50),
                 const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [CtaSection(), FooterSection()],

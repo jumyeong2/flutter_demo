@@ -44,8 +44,8 @@ class LandingNavbar extends StatelessWidget {
               ),
             ],
           ),
-          // Navigation Links (Desktop)
-          if (!ResponsiveLayout.isMobile(context))
+          // Navigation Links (Desktop only, Tablet uses menu)
+          if (ResponsiveLayout.isDesktop(context))
             Row(
               children: [
                 _navLink("프로세스"),
@@ -70,6 +70,7 @@ class LandingNavbar extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
+                const SizedBox(width: 40),
               ],
             )
           // Menu Button (Mobile)

@@ -96,7 +96,7 @@ class HeroSection extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 80),
                   Text(
                     "팀이 터지기 전에 막아주는\n공동창업 리스크 관리 솔루션’ ",
                     textAlign: TextAlign.center,
@@ -135,7 +135,7 @@ class HeroSection extends StatelessWidget {
                       color: const Color(0xFF64748B),
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 60),
                   Wrap(
                     spacing: 16,
                     runSpacing: 16,
