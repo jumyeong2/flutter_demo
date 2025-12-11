@@ -10,41 +10,45 @@ class SampleReportPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.grey[100], // bg-gray-100
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF0F172A),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: SingleChildScrollView(
-            child: Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 896), // max-w-4xl
-                margin:
-                    isMobile ? const EdgeInsets.only(bottom: 16) : const EdgeInsets.symmetric(vertical: 32),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ), // shadow-xl
-                  ],
-                  borderRadius: isMobile
-                      ? BorderRadius.circular(8)
-                      : BorderRadius.circular(8), // md:rounded-lg
-                ),
-                clipBehavior: Clip.hardEdge, // overflow-hidden
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _buildHeader(context, isMobile),
-                    _buildSummarySection(context, isMobile),
-                    _buildDetailSection1(context, isMobile),
-                    _buildDetailSection2(context, isMobile),
-                    _buildDetailSection3(context, isMobile),
-                    _buildDisclaimer(context, isMobile),
-                    _buildFooter(context, isMobile),
-                  ],
-                ),
+        child: SingleChildScrollView(
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 896), // max-w-4xl
+              margin: isMobile
+                  ? const EdgeInsets.only(bottom: 12)
+                  : const EdgeInsets.symmetric(vertical: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ), // shadow-xl
+                ],
+                borderRadius: BorderRadius.zero, // remove rounding on body
+              ),
+              clipBehavior: Clip.hardEdge, // overflow-hidden
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildHeader(context, isMobile),
+                  _buildSummarySection(context, isMobile),
+                  _buildDetailSection1(context, isMobile),
+                  _buildDetailSection2(context, isMobile),
+                  _buildDetailSection3(context, isMobile),
+                  _buildDisclaimer(context, isMobile),
+                  _buildFooter(context, isMobile),
+                ],
               ),
             ),
           ),
