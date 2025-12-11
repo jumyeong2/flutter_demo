@@ -217,8 +217,8 @@ class SampleReportPage extends StatelessWidget {
                     _buildSummaryBadge(
                       "R&R",
                       "조율 필요",
-                      Colors.yellow[800]!,
-                      Colors.yellow[600]!,
+                      Colors.orange,
+                      Colors.orange,
                     ), // Approximate yellow styling
                     _buildSummaryBadge(
                       "베스팅",
@@ -304,7 +304,7 @@ class SampleReportPage extends StatelessWidget {
       marketStandard:
           "시장 표준 R&R: 경영/자금은 CEO 전결(100%), 기술 스택은 CTO 전결(100%). 단, 제품 로드맵은 5:5 합의를 원칙으로 하되, 데드락(Deadlock) 발생 시 CEO가 캐스팅 보트(Casting Vote)를 행사하는 구조가 일반적입니다.",
       insight:
-          "CoSync의 누적 체결 데이터 15,000건 분석 결과, 초기 스타트업의 82%는 C-Level 간 '전결권'을 명확히 분리하고 있습니다. 특히 B님이 희망하시는 <strong>'기술적 거부권(Veto)'</strong>을 설정한 팀은 그렇지 않은 팀 대비 의사결정 시간이 <strong>평균 3.4배</strong> 더 소요되는 것으로 나타나, 데이터상으로는 '협의' 조항으로의 완화가 권장됩니다.",
+          "CoSync의 누적 체결 데이터 250건 분석 결과, 초기 스타트업의 82%는 임원(C-Level) 간 '전결권'을 명확히 분리하고 있습니다. 특히 B님이 희망하시는 <strong>'기술적 거부권(Veto)'</strong>을 설정한 팀은 그렇지 않은 팀 대비 의사결정 시간이 <strong>평균 3.4배</strong> 더 소요되는 것으로 나타나, 데이터상으로는 '협의' 조항으로의 완화가 권장됩니다.",
       agreement:
           "경영/자금은 CEO, 기술은 CTO 전결. 제품 로드맵은 상호 합의하되 데드락 발생 시 CEO가 최종 결정권(Casting Vote)을 행사합니다.",
     );
@@ -333,7 +333,6 @@ class SampleReportPage extends StatelessWidget {
           "양측 의견을 절충하여 '총 3년(36개월) 베스팅'으로 단축하되, 1년 Cliff(필수 근속) 조건은 유지하여 상호 신뢰와 안전장치를 확보합니다.",
     );
   }
-
   Widget _buildDetailSection3(BuildContext context, bool isMobile) {
     return _buildDetailBase(
       context,
@@ -830,6 +829,7 @@ const Map<String, String> _termMeanings = {
   "캐스팅 보트(Casting Vote)": "표가 동률일 때 최종 결정권. 예를 들어 CEO가 캐스팅 보트를 가지면 의견이 반반일 때 CEO가 최종 결정.",
   "최종 결정권(Casting Vote)": "표가 동률일 때 최종 결정권. 예를 들어 CEO가 캐스팅 보트를 가지면 의견이 반반일 때 CEO가 최종 결정.",
   "콜옵션(Call Option)": "특정 조건에서 회사가 지분을 정해진 가격(주로 액면가)으로 사올 수 있는 권리. 문제가 있는 퇴사자 지분을 회수할 때 쓰임.",
+  "전결권": "어떤 사안을 누가 단독으로 결정할 수 있고, 어떤 사안은 상위 승인이나 공동 의결이 필요한지를 명확히 규정하는 장치.",
   "Bad Leaver": "배임·횡령 같은 중대한 잘못으로 퇴사한 사람. 보통 이 경우 지분을 싸게(액면가 등) 회수하는 조항을 둠.",
   "Good Leaver": "정상적 사유(개인 사정, 건강, 성과 문제 아님 등)로 퇴사한 사람. 이미 근속하며 확정된 지분은 인정하되, 남은 미확정 지분만 회수하는 식으로 보호.",
 };
@@ -847,6 +847,7 @@ const Map<String, String> _termDisplay = {
   "Call Option": "콜옵션(Call Option)",
   "Bad Leaver": "배드 리버(Bad Leaver)",
   "Good Leaver": "굿 리버(Good Leaver)",
+  "전결권": "전결권",
 };
 
 List<InlineSpan> _buildRichTextWithTerms(
@@ -894,7 +895,7 @@ List<InlineSpan> _buildTermSpans(
 }) {
   final List<InlineSpan> result = [];
   final termsPattern =
-      r"(베스팅\(Vesting\)|베스팅|클리프\(Cliff\)|Cliff|데드락\(Deadlock\)|캐스팅 보트\(Casting Vote\)|최종 결정권\(Casting Vote\)|Casting Vote|콜옵션\(Call Option\)|Call Option|Bad Leaver|Good Leaver)";
+      r"(베스팅\(Vesting\)|베스팅|클리프\(Cliff\)|Cliff|데드락\(Deadlock\)|캐스팅 보트\(Casting Vote\)|최종 결정권\(Casting Vote\)|Casting Vote|콜옵션\(Call Option\)|Call Option|Bad Leaver|Good Leaver|전결권)";
   final reg = RegExp(termsPattern);
 
   int last = 0;
