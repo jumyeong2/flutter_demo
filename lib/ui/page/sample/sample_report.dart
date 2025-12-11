@@ -302,7 +302,7 @@ class SampleReportPage extends StatelessWidget {
       userBContent: "개발 전권. 기획 단계에서의 기술적 거부권(Veto) 희망.",
       userBHighlight: "기술적 거부권(Veto)",
       marketStandard:
-          "시장 표준 R&R: 경영/자금은 CEO 전결(100%), 기술 스택은 CTO 전결(100%). 단, 제품 로드맵은 5:5 합의를 원칙으로 하되, 데드락(Deadlock) 발생 시 CEO가 최종 결정권(Casting Vote)을 행사하는 구조가 일반적입니다.",
+          "시장 표준 R&R: 경영/자금은 CEO 전결(100%), 기술 스택은 CTO 전결(100%). 단, 제품 로드맵은 5:5 합의를 원칙으로 하되, 데드락(Deadlock) 발생 시 CEO가 캐스팅 보트(Casting Vote)를 행사하는 구조가 일반적입니다.",
       insight:
           "CoSync의 누적 체결 데이터 15,000건 분석 결과, 초기 스타트업의 82%는 C-Level 간 '전결권'을 명확히 분리하고 있습니다. 특히 B님이 희망하시는 <strong>'기술적 거부권(Veto)'</strong>을 설정한 팀은 그렇지 않은 팀 대비 의사결정 시간이 <strong>평균 3.4배</strong> 더 소요되는 것으로 나타나, 데이터상으로는 '협의' 조항으로의 완화가 권장됩니다.",
       agreement:
@@ -326,7 +326,7 @@ class SampleReportPage extends StatelessWidget {
       userBContent: "이탈 대비 4년 베스팅 적용 필요.",
       userBHighlight: "4년 베스팅",
       marketStandard:
-          "VC 투자 표준: 총 4년(48개월) 베스팅. 최초 1년(Cliff) 근무 시 지분의 25%를 일괄 인정하고, 이후 3년간 매월 1/48(약 2.08%)씩 분할 귀속시키는 조건이 가장 보편적입니다.",
+          "VC 투자 표준: 총 4년(48개월) 베스팅. 최초 1년 클리프(Cliff) 근무 시 지분의 25%를 일괄 인정하고, 이후 3년간 매월 1/48(약 2.08%)씩 분할 귀속시키는 조건이 가장 보편적입니다.",
       insight:
           "CoSync를 통해 후속 투자를 유치한 팀의 <strong>96%</strong>가 '베스팅(Vesting)' 조항을 보유하고 있었습니다. A님의 '베스팅 없음(즉시 100% 인정)' 의견은 전체 데이터의 <strong>하위 2%</strong>에 해당하며, 이는 투자 유치 실패율을 40% 이상 높이는 리스크 요인으로 집계됩니다. 데이터 기반의 안전한 의사결정이 필요합니다.",
       agreement:
@@ -348,7 +348,7 @@ class SampleReportPage extends StatelessWidget {
       userAContent: "징계 해고/배임 시 액면가로 전량 회수.",
       userBContent: "동의함. 액면가 회수 조항 삽입.",
       marketStandard:
-          "Bad Leaver(횡령, 배임 등) 확정 시, 보유 지분 100%를 '액면가'로 강제 회수(Call Option). 단순 변심 등(Good Leaver)의 경우, 근속 기간에 비례해 베스팅된 지분은 인정하되 잔여 지분만 무상 회수합니다.",
+          "Bad Leaver(횡령, 배임 등) 확정 시, 보유 지분 100%를 '액면가'로 콜옵션(Call Option). 단순 변심 등(Good Leaver)의 경우, 근속 기간에 비례해 베스팅된 지분은 인정하되 잔여 지분만 무상 회수합니다.",
       insight:
           "CoSync 사용자 중 <strong>99.5%</strong>가 동의한 '표준 합의(Consensus)' 항목입니다. 배임, 횡령 등의 명백한 귀책사유에 대해서는 예외 없이 <strong>'액면가 회수'</strong>를 적용하는 것이 압도적인 데이터 표준이며, 두 분의 의견 또한 이 데이터 트렌드와 정확히 일치합니다.",
       agreement:
@@ -773,17 +773,25 @@ class TermTooltip extends StatelessWidget {
   final String term;
   final String meaning;
   final TextStyle? style;
+  final String? display;
 
   const TermTooltip({
     super.key,
     required this.term,
     required this.meaning,
     this.style,
+    this.display,
   });
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = style ?? const TextStyle(color: Colors.blue);
+    final textStyle = style ??
+        const TextStyle(
+          color: Colors.blue,
+          fontWeight: FontWeight.bold,
+          decoration: TextDecoration.underline,
+          decorationStyle: TextDecorationStyle.solid,
+        );
     return Tooltip(
       message: meaning,
       waitDuration: const Duration(milliseconds: 250),
@@ -802,8 +810,10 @@ class TermTooltip extends StatelessWidget {
           ),
         ),
         child: Text(
-          term,
+          display ?? term,
           style: textStyle.copyWith(
+            color: Colors.blue,
+            fontWeight: FontWeight.bold,
             decoration: TextDecoration.underline,
             decorationStyle: TextDecorationStyle.solid,
           ),
@@ -818,9 +828,25 @@ const Map<String, String> _termMeanings = {
   "클리프(Cliff)": "베스팅을 시작할 때 '최초 확정' 구간. 예를 들어 1년 클리프면 1년을 채워야 첫 25% 지분이 한 번에 확정되고, 이후 매달/매분기 조금씩 추가 확정.",
   "데드락(Deadlock)": "의사결정이 완전히 막힌 상태. 서로 합의가 안 되어 회사가 멈춰버리는 상황.",
   "캐스팅 보트(Casting Vote)": "표가 동률일 때 최종 결정권. 예를 들어 CEO가 캐스팅 보트를 가지면 의견이 반반일 때 CEO가 최종 결정.",
+  "최종 결정권(Casting Vote)": "표가 동률일 때 최종 결정권. 예를 들어 CEO가 캐스팅 보트를 가지면 의견이 반반일 때 CEO가 최종 결정.",
   "콜옵션(Call Option)": "특정 조건에서 회사가 지분을 정해진 가격(주로 액면가)으로 사올 수 있는 권리. 문제가 있는 퇴사자 지분을 회수할 때 쓰임.",
   "Bad Leaver": "배임·횡령 같은 중대한 잘못으로 퇴사한 사람. 보통 이 경우 지분을 싸게(액면가 등) 회수하는 조항을 둠.",
   "Good Leaver": "정상적 사유(개인 사정, 건강, 성과 문제 아님 등)로 퇴사한 사람. 이미 근속하며 확정된 지분은 인정하되, 남은 미확정 지분만 회수하는 식으로 보호.",
+};
+
+const Map<String, String> _termDisplay = {
+  "베스팅(Vesting)": "베스팅(Vesting)",
+  "베스팅": "베스팅(Vesting)",
+  "클리프(Cliff)": "클리프(Cliff)",
+  "Cliff": "클리프(Cliff)",
+  "데드락(Deadlock)": "데드락(Deadlock)",
+  "캐스팅 보트(Casting Vote)": "최종 결정권(Casting Vote)",
+  "최종 결정권(Casting Vote)": "최종 결정권(Casting Vote)",
+  "Casting Vote": "최종 결정권(Casting Vote)",
+  "콜옵션(Call Option)": "콜옵션(Call Option)",
+  "Call Option": "콜옵션(Call Option)",
+  "Bad Leaver": "배드 리버(Bad Leaver)",
+  "Good Leaver": "굿 리버(Good Leaver)",
 };
 
 List<InlineSpan> _buildRichTextWithTerms(
@@ -868,7 +894,7 @@ List<InlineSpan> _buildTermSpans(
 }) {
   final List<InlineSpan> result = [];
   final termsPattern =
-      r"(베스팅\(Vesting\)|베스팅|클리프\(Cliff\)|데드락\(Deadlock\)|캐스팅 보트\(Casting Vote\)|콜옵션\(Call Option\)|Bad Leaver|Good Leaver)";
+      r"(베스팅\(Vesting\)|베스팅|클리프\(Cliff\)|Cliff|데드락\(Deadlock\)|캐스팅 보트\(Casting Vote\)|최종 결정권\(Casting Vote\)|Casting Vote|콜옵션\(Call Option\)|Call Option|Bad Leaver|Good Leaver)";
   final reg = RegExp(termsPattern);
 
   int last = 0;
@@ -887,7 +913,13 @@ List<InlineSpan> _buildTermSpans(
           child: TermTooltip(
             term: term,
             meaning: meaning,
-            style: style.copyWith(color: Colors.blue),
+            display: _termDisplay[term] ?? term,
+            style: style.copyWith(
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
+              decoration: TextDecoration.underline,
+              decorationStyle: TextDecorationStyle.solid,
+            ),
           ),
         ),
       );
