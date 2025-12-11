@@ -548,21 +548,6 @@ class SampleReportPage extends StatelessWidget {
     String? highlight,
     Color highlightColor,
   ) {
-    List<TextSpan> spans = [];
-    if (highlight != null && content.contains(highlight)) {
-      List<String> parts = content.split(highlight);
-      spans.add(TextSpan(text: parts[0]));
-      spans.add(
-        TextSpan(
-          text: highlight,
-          style: TextStyle(color: highlightColor, fontWeight: FontWeight.bold),
-        ),
-      );
-      if (parts.length > 1) spans.add(TextSpan(text: parts[1]));
-    } else {
-      spans.add(TextSpan(text: content));
-    }
-
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -592,7 +577,12 @@ class SampleReportPage extends StatelessWidget {
           RichText(
             text: TextSpan(
               style: const TextStyle(fontSize: 14, color: Color(0xFF374151)),
-              children: spans,
+              children: _buildRichTextWithTerms(
+                content,
+                baseStyle: const TextStyle(fontSize: 14, color: Color(0xFF374151)),
+                highlight: highlight,
+                highlightColor: highlightColor,
+              ),
             ),
           ),
         ],
@@ -609,46 +599,6 @@ class SampleReportPage extends StatelessWidget {
     required Color titleColor,
     bool isHtmlLike = false,
   }) {
-    // A simplified HTML-like parser for strong tags would be ideal, but for now we manually handle specific bold parts from the text if known,
-    // or just render as plain text for simplicity as full HTML parsing in Flutter isn't standard without packages.
-    // I will try to map the bold tags mentioned in the prompt if possible, or just render it.
-    // The prompt uses <strong> tags. I will simple remove them and bold the text if I can identify it,
-    // or more robustly, I'll just strip tags for now to keep it clean, OR simplistic replacement.
-
-    // Simplistic approach: just Clean tags for now to avoid showing <strong> to user.
-    // Ideally we'd use a package for this, but I'll try to manual parse simple <strong> if feasible.
-    // Actually, I'll allow a simple "highlight this part" logic if needed, but for the strings provided:
-    // "기술적 거부권(Veto)" is strong. "평균 3.4배" is strong.
-
-    List<InlineSpan> spans = [];
-    String workingContent = content;
-
-    if (isHtmlLike) {
-      // Very basic parser for <strong>...</strong>
-      RegExp exp = RegExp(r"<strong>(.*?)<\/strong>");
-
-      int lastIndex = 0;
-      for (Match m in exp.allMatches(workingContent)) {
-        if (m.start > lastIndex) {
-          spans.add(
-            TextSpan(text: workingContent.substring(lastIndex, m.start)),
-          );
-        }
-        spans.add(
-          TextSpan(
-            text: m.group(1),
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-        );
-        lastIndex = m.end;
-      }
-      if (lastIndex < workingContent.length) {
-        spans.add(TextSpan(text: workingContent.substring(lastIndex)));
-      }
-    } else {
-      spans.add(TextSpan(text: content));
-    }
-
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -686,7 +636,15 @@ class SampleReportPage extends StatelessWidget {
                 color: Color(0xFF4B5563),
                 height: 1.6,
               ), // text-gray-600
-              children: spans,
+              children: _buildRichTextWithTerms(
+                content,
+                baseStyle: const TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF4B5563),
+                  height: 1.6,
+                ),
+                parseStrong: isHtmlLike,
+              ),
             ),
           ),
         ],
@@ -809,4 +767,164 @@ class SampleReportPage extends StatelessWidget {
       ),
     );
   }
+}
+
+class TermTooltip extends StatelessWidget {
+  final String term;
+  final String meaning;
+  final TextStyle? style;
+
+  const TermTooltip({
+    super.key,
+    required this.term,
+    required this.meaning,
+    this.style,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = style ?? const TextStyle(color: Colors.blue);
+    return Tooltip(
+      message: meaning,
+      waitDuration: const Duration(milliseconds: 250),
+      child: InkWell(
+        onTap: () => showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: Text(term),
+            content: Text(meaning),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("닫기"),
+              ),
+            ],
+          ),
+        ),
+        child: Text(
+          term,
+          style: textStyle.copyWith(
+            decoration: TextDecoration.underline,
+            decorationStyle: TextDecorationStyle.solid,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+const Map<String, String> _termMeanings = {
+  "베스팅(Vesting)": "공동창업자의 지분을 한 번에 주지 않고, 일정 기간 일할 때마다 조금씩 내 지분이 확정되는 제도. 팀에 오래 남아 함께 하자는 안전장치.",
+  "클리프(Cliff)": "베스팅을 시작할 때 '최초 확정' 구간. 예를 들어 1년 클리프면 1년을 채워야 첫 25% 지분이 한 번에 확정되고, 이후 매달/매분기 조금씩 추가 확정.",
+  "데드락(Deadlock)": "의사결정이 완전히 막힌 상태. 서로 합의가 안 되어 회사가 멈춰버리는 상황.",
+  "캐스팅 보트(Casting Vote)": "표가 동률일 때 최종 결정권. 예를 들어 CEO가 캐스팅 보트를 가지면 의견이 반반일 때 CEO가 최종 결정.",
+  "콜옵션(Call Option)": "특정 조건에서 회사가 지분을 정해진 가격(주로 액면가)으로 사올 수 있는 권리. 문제가 있는 퇴사자 지분을 회수할 때 쓰임.",
+  "Bad Leaver": "배임·횡령 같은 중대한 잘못으로 퇴사한 사람. 보통 이 경우 지분을 싸게(액면가 등) 회수하는 조항을 둠.",
+  "Good Leaver": "정상적 사유(개인 사정, 건강, 성과 문제 아님 등)로 퇴사한 사람. 이미 근속하며 확정된 지분은 인정하되, 남은 미확정 지분만 회수하는 식으로 보호.",
+};
+
+List<InlineSpan> _buildRichTextWithTerms(
+  String text, {
+  TextStyle? baseStyle,
+  bool parseStrong = false,
+  String? highlight,
+  Color? highlightColor,
+}) {
+  final style = baseStyle ?? const TextStyle(color: Colors.black);
+  final List<InlineSpan> spans = [];
+
+  // handle <strong> ... </strong>
+  if (parseStrong) {
+    final exp = RegExp(r"<strong>(.*?)<\/strong>");
+    int lastIndex = 0;
+    for (final m in exp.allMatches(text)) {
+      if (m.start > lastIndex) {
+        spans.addAll(_buildTermSpans(text.substring(lastIndex, m.start), style));
+      }
+      spans.addAll(
+        _buildTermSpans(
+          m.group(1) ?? "",
+          style.copyWith(fontWeight: FontWeight.bold),
+        ),
+      );
+      lastIndex = m.end;
+    }
+    if (lastIndex < text.length) {
+      spans.addAll(_buildTermSpans(text.substring(lastIndex), style));
+    }
+  } else {
+    spans.addAll(_buildTermSpans(text, style,
+        highlight: highlight, highlightColor: highlightColor));
+  }
+
+  return spans;
+}
+
+List<InlineSpan> _buildTermSpans(
+  String text,
+  TextStyle style, {
+  String? highlight,
+  Color? highlightColor,
+}) {
+  final List<InlineSpan> result = [];
+  final termsPattern =
+      r"(베스팅\(Vesting\)|베스팅|클리프\(Cliff\)|데드락\(Deadlock\)|캐스팅 보트\(Casting Vote\)|콜옵션\(Call Option\)|Bad Leaver|Good Leaver)";
+  final reg = RegExp(termsPattern);
+
+  int last = 0;
+  for (final m in reg.allMatches(text)) {
+    if (m.start > last) {
+      result.add(_maybeHighlightSpan(text.substring(last, m.start), style,
+          highlight: highlight, highlightColor: highlightColor));
+    }
+    final term = m.group(0)!;
+    final meaning = _termMeanings[term];
+    if (meaning != null) {
+      result.add(
+        WidgetSpan(
+          alignment: PlaceholderAlignment.baseline,
+          baseline: TextBaseline.alphabetic,
+          child: TermTooltip(
+            term: term,
+            meaning: meaning,
+            style: style.copyWith(color: Colors.blue),
+          ),
+        ),
+      );
+    } else {
+      result.add(TextSpan(text: term, style: style));
+    }
+    last = m.end;
+  }
+  if (last < text.length) {
+    result.add(_maybeHighlightSpan(text.substring(last), style,
+        highlight: highlight, highlightColor: highlightColor));
+  }
+  return result;
+}
+
+InlineSpan _maybeHighlightSpan(
+  String text,
+  TextStyle style, {
+  String? highlight,
+  Color? highlightColor,
+}) {
+  if (highlight != null && text.contains(highlight)) {
+    final parts = text.split(highlight);
+    final spans = <InlineSpan>[];
+    for (int i = 0; i < parts.length; i++) {
+      spans.add(TextSpan(text: parts[i], style: style));
+      if (i != parts.length - 1) {
+        spans.add(TextSpan(
+          text: highlight,
+          style: style.copyWith(
+            fontWeight: FontWeight.bold,
+            color: highlightColor ?? style.color,
+          ),
+        ));
+      }
+    }
+    return TextSpan(children: spans);
+  }
+  return TextSpan(text: text, style: style);
 }
