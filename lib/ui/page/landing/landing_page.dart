@@ -24,6 +24,7 @@ class LandingPage extends StatelessWidget {
         children: [
           // Main Scroll View
           SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
