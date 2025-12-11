@@ -22,23 +22,22 @@ class LandingPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Main Page View
-          PageView(
-            pageSnapping: false,
-            scrollDirection: Axis.vertical,
-            children: [
-              const HeroSection(),
-              _buildCenteredPage(const ProcessSection()),
-              _buildCenteredPage(const DemoSection()),
-              _buildCenteredPage(const RadarSection()),
-              _buildCenteredPage(const RulebookSection()),
-              _buildCenteredScrollablePage(
+          // Main Scroll View
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const HeroSection(),
+                const ProcessSection(),
+                const DemoSection(),
+                const RadarSection(),
+                const RulebookSection(),
                 const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [CtaSection(), FooterSection()],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
 
           // Navbar (Fixed on top)
@@ -46,13 +45,5 @@ class LandingPage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Widget _buildCenteredPage(Widget child) {
-    return Center(child: SingleChildScrollView(child: child));
-  }
-
-  Widget _buildCenteredScrollablePage(Widget child) {
-    return Center(child: SingleChildScrollView(child: child));
   }
 }

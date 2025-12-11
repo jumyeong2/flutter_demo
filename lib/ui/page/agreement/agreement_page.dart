@@ -717,6 +717,7 @@ class AgreementPage extends StatelessWidget {
     // Only text selection change logic inside TextField needs care, but for brevity/cleanliness
     // we just return the widget. The layout is handled by parent.
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isUserA

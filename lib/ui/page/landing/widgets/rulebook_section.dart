@@ -5,59 +5,70 @@ class RulebookSection extends StatelessWidget {
   const RulebookSection({super.key});
 
   @override
+  @override
   Widget build(BuildContext context) {
-    // This uses the Super Compact layout I just implemented
+    final isMobile = ResponsiveLayout.isMobile(context);
+
     // This uses the Super Compact layout I just implemented
     return Container(
       color: Colors.grey[50],
-      padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 24),
+      // Increased top padding to prevent content from being cut off by the navbar
+      padding: EdgeInsets.fromLTRB(
+        24,
+        isMobile ? 100 : 80,
+        24,
+        isMobile ? 32 : 80,
+      ),
       child: Center(
         child: Wrap(
           spacing: 60,
-          runSpacing: 40,
+          // Reduced runSpacing to minimize gap between text and card on mobile
+          runSpacing: isMobile ? 16 : 40,
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             // Text Content
             SizedBox(
-              width: 540,
+              width: isMobile ? double.infinity : 540,
               child: Column(
+                // Ensure text block is vertically centered if it has extra space
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     "FINAL OUTPUT",
                     style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.2,
-                      fontSize: 14,
+                      fontSize: isMobile ? 12 : 14,
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  const Text(
+                  SizedBox(height: isMobile ? 12 : 16),
+                  Text(
                     "말뿐인 약속은 잊혀집니다.\n'공동창업자 Rulebook'으로 기록하세요.",
                     style: TextStyle(
-                      fontSize: 36,
+                      fontSize: isMobile ? 28 : 36,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF0F172A),
+                      color: const Color(0xFF0F172A),
                       height: 1.2,
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  const Text(
+                  SizedBox(height: isMobile ? 16 : 24),
+                  Text(
                     "동업계약서 쓰기엔 너무 딱딱하고, 말로만 하기엔 불안하신가요? CoSync는 합의된 내용을 바탕으로 우리 팀만의 헌법, [Rulebook.pdf]를 생성해 드립니다.",
                     style: TextStyle(
-                      fontSize: 18,
-                      color: Color(0xFF475569),
+                      fontSize: isMobile ? 15 : 18,
+                      color: const Color(0xFF475569),
                       height: 1.6,
                     ),
                   ),
-                  const SizedBox(height: 32),
-                  _checkItem("Mission & Vision (우리가 모인 이유)"),
-                  _checkItem("R&R (명확한 역할과 책임)"),
-                  _checkItem("Compensation (지분 및 급여)"),
-                  _checkItem("Decision Making (의사결정 구조)"),
-                  _checkItem("Exit Plan (아름다운 이별의 조건)"),
+                  SizedBox(height: isMobile ? 24 : 32),
+                  _checkItem("Mission & Vision (우리가 모인 이유)", isMobile),
+                  _checkItem("R&R (명확한 역할과 책임)", isMobile),
+                  _checkItem("Compensation (지분 및 급여)", isMobile),
+                  _checkItem("Decision Making (의사결정 구조)", isMobile),
+                  _checkItem("Exit Plan (아름다운 이별의 조건)", isMobile),
                 ],
               ),
             ),
@@ -65,11 +76,9 @@ class RulebookSection extends StatelessWidget {
             Transform.rotate(
               angle: -0.05,
               child: Container(
-                width: ResponsiveLayout.isMobile(context)
-                    ? double.infinity
-                    : 460,
-                constraints: const BoxConstraints(minHeight: 500),
-                padding: const EdgeInsets.all(32),
+                width: isMobile ? double.infinity : 460,
+                constraints: BoxConstraints(minHeight: isMobile ? 400 : 500),
+                padding: EdgeInsets.all(isMobile ? 24 : 32),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(24),
@@ -87,18 +96,18 @@ class RulebookSection extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Column(
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               "Co-founder Rulebook",
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: isMobile ? 18 : 20,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Serif',
                               ),
                             ),
-                            Text(
+                            const Text(
                               "Ver 1.0 | 2025.05.20",
                               style: TextStyle(
                                 fontSize: 12,
@@ -110,11 +119,11 @@ class RulebookSection extends StatelessWidget {
                         Icon(
                           Icons.description,
                           color: Colors.grey[300],
-                          size: 32,
+                          size: isMobile ? 24 : 32,
                         ),
                       ],
                     ),
-                    const Divider(height: 24),
+                    Divider(height: isMobile ? 16 : 24),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -122,12 +131,14 @@ class RulebookSection extends StatelessWidget {
                           "Chapter 3. Equity & Vesting",
                           "제3조 (지분 및 베스팅)",
                           "공동창업자 김민준, 이강인은 총 4년의 베스팅 기간을 설정하며...",
+                          isMobile,
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: isMobile ? 12 : 16),
                         _docSection(
                           "Chapter 5. Exit Plan",
                           "제5조 (이탈 조건)",
                           "자발적 퇴사의 경우 보유 지분의 50%를 액면가로 회사에 반환하며...",
+                          isMobile,
                         ),
                       ],
                     ),
@@ -141,19 +152,25 @@ class RulebookSection extends StatelessWidget {
     );
   }
 
-  Widget _checkItem(String text) {
+  Widget _checkItem(String text, bool isMobile) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
-          const Icon(Icons.check_circle, color: Colors.blue, size: 20),
+          Icon(
+            Icons.check_circle,
+            color: Colors.blue,
+            size: isMobile ? 18 : 20,
+          ),
           const SizedBox(width: 12),
-          Text(
-            text,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Color(0xFF334155),
-              fontWeight: FontWeight.w500,
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: isMobile ? 14 : 16,
+                color: const Color(0xFF334155),
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],
@@ -161,7 +178,12 @@ class RulebookSection extends StatelessWidget {
     );
   }
 
-  Widget _docSection(String subtitle, String title, String content) {
+  Widget _docSection(
+    String subtitle,
+    String title,
+    String content,
+    bool isMobile,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -176,15 +198,15 @@ class RulebookSection extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 18,
+          style: TextStyle(
+            fontSize: isMobile ? 16 : 18,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF1E293B),
+            color: const Color(0xFF1E293B),
           ),
         ),
         const SizedBox(height: 8),
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(isMobile ? 12 : 16),
           decoration: BoxDecoration(
             color: Colors.grey[50],
             borderRadius: BorderRadius.circular(8),
@@ -192,9 +214,9 @@ class RulebookSection extends StatelessWidget {
           ),
           child: Text(
             content,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Color(0xFF64748B),
+            style: TextStyle(
+              fontSize: isMobile ? 13 : 14,
+              color: const Color(0xFF64748B),
               height: 1.5,
             ),
           ),
