@@ -43,10 +43,15 @@ class SampleReportPage extends StatelessWidget {
                 children: [
                   _buildHeader(context, isMobile),
                   _buildSummarySection(context, isMobile),
+                  SizedBox(height: 30),
                   _buildDetailSection1(context, isMobile),
+                  SizedBox(height: 50),
                   _buildDetailSection2(context, isMobile),
+                  SizedBox(height: 50),
                   _buildDetailSection3(context, isMobile),
+                  SizedBox(height: 50),
                   _buildDisclaimer(context, isMobile),
+                  SizedBox(height: 50),
                   _buildFooter(context, isMobile),
                 ],
               ),
@@ -110,7 +115,7 @@ class SampleReportPage extends StatelessWidget {
                 ),
               ),
               const Text(
-                "2024. 05. 21",
+                "2025. 10. 21",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16, // text-base md:text-lg
@@ -126,10 +131,10 @@ class SampleReportPage extends StatelessWidget {
 
   Widget _buildSummarySection(BuildContext context, bool isMobile) {
     return Container(
-      padding: EdgeInsets.all(isMobile ? 20 : 32),
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: Color(0xFFE5E7EB))),
       ),
+      padding: EdgeInsets.all(isMobile ? 20 : 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -210,33 +215,48 @@ class SampleReportPage extends StatelessWidget {
                 if (isMobile) const SizedBox(height: 16),
                 if (!isMobile) const SizedBox(width: 24),
                 // Badges
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    _buildSummaryBadge(
-                      "R&R",
-                      "조율 필요",
-                      Colors.orange,
-                      Colors.orange,
-                    ), // Approximate yellow styling
-                    _buildSummaryBadge(
-                      "베스팅",
-                      "Risk 높음",
-                      Colors.red[800]!,
-                      Colors.red[600]!,
-                    ),
-                    _buildSummaryBadge(
-                      "Bad Leaver",
-                      "의견 일치",
-                      Colors.green[800]!,
-                      Colors.green[600]!,
-                    ),
-                  ],
+                Builder(
+                  builder: (context) {
+                    final badges = [
+                      _buildSummaryBadge(
+                        "R&R",
+                        "조율 필요",
+                        Colors.yellow[800]!,
+                        Colors.yellow[600]!,
+                      ), // Approximate yellow styling
+                      _buildSummaryBadge(
+                        "베스팅",
+                        "Risk 높음",
+                        Colors.red[800]!,
+                        Colors.red[600]!,
+                      ),
+                      _buildSummaryBadge(
+                        "Bad Leaver",
+                        "의견 일치",
+                        Colors.green[800]!,
+                        Colors.green[600]!,
+                      ),
+                    ];
+
+                    if (isMobile) {
+                      return SizedBox(
+                        width: double.infinity,
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: badges,
+                        ),
+                      );
+                    }
+
+                    return Wrap(spacing: 8, runSpacing: 8, children: badges);
+                  },
                 ),
               ],
             ),
           ),
+          SizedBox(height: 20),
         ],
       ),
     );
@@ -249,7 +269,7 @@ class SampleReportPage extends StatelessWidget {
     Color statusColor,
   ) {
     return SizedBox(
-      width: 88,
+      width: 93,
       height: 88,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -268,9 +288,11 @@ class SampleReportPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(label,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 10, color: Colors.grey)),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 10, color: Colors.grey),
+            ),
             const SizedBox(height: 6),
             Text(
               status,
@@ -304,7 +326,7 @@ class SampleReportPage extends StatelessWidget {
       marketStandard:
           "시장 표준 R&R: 경영/자금은 CEO 전결(100%), 기술 스택은 CTO 전결(100%). 단, 제품 로드맵은 5:5 합의를 원칙으로 하되, 데드락(Deadlock) 발생 시 CEO가 캐스팅 보트(Casting Vote)를 행사하는 구조가 일반적입니다.",
       insight:
-          "CoSync의 누적 체결 데이터 250건 분석 결과, 초기 스타트업의 82%는 임원(C-Level) 간 '전결권'을 명확히 분리하고 있습니다. 특히 B님이 희망하시는 <strong>'기술적 거부권(Veto)'</strong>을 설정한 팀은 그렇지 않은 팀 대비 의사결정 시간이 <strong>평균 3.4배</strong> 더 소요되는 것으로 나타나, 데이터상으로는 '협의' 조항으로의 완화가 권장됩니다.",
+          "CoSync의 누적 체결 데이터 15,000건 분석 결과, 초기 스타트업의 82%는 C-Level 간 '전결권'을 명확히 분리하고 있습니다. 특히 B님이 희망하시는 <strong>'기술적 거부권(Veto)'</strong>을 설정한 팀은 그렇지 않은 팀 대비 의사결정 시간이 <strong>평균 3.4배</strong> 더 소요되는 것으로 나타나, 데이터상으로는 '협의' 조항으로의 완화가 권장됩니다.",
       agreement:
           "경영/자금은 CEO, 기술은 CTO 전결. 제품 로드맵은 상호 합의하되 데드락 발생 시 CEO가 최종 결정권(Casting Vote)을 행사합니다.",
     );
@@ -333,6 +355,7 @@ class SampleReportPage extends StatelessWidget {
           "양측 의견을 절충하여 '총 3년(36개월) 베스팅'으로 단축하되, 1년 Cliff(필수 근속) 조건은 유지하여 상호 신뢰와 안전장치를 확보합니다.",
     );
   }
+
   Widget _buildDetailSection3(BuildContext context, bool isMobile) {
     return _buildDetailBase(
       context,
@@ -345,11 +368,11 @@ class SampleReportPage extends StatelessWidget {
         const Color(0xFF166534),
       ), // green
       userAContent: "징계 해고/배임 시 액면가로 전량 회수.",
-      userBContent: "동의함. 액면가 회수 조항 삽입.",
+      userBContent: "액면가 회수 조항 삽입.",
       marketStandard:
           "Bad Leaver(횡령, 배임 등) 확정 시, 보유 지분 100%를 '액면가'로 콜옵션(Call Option). 단순 변심 등(Good Leaver)의 경우, 근속 기간에 비례해 베스팅된 지분은 인정하되 잔여 지분만 무상 회수합니다.",
       insight:
-          "CoSync 사용자 중 <strong>99.5%</strong>가 동의한 '표준 합의(Consensus)' 항목입니다. 배임, 횡령 등의 명백한 귀책사유에 대해서는 예외 없이 <strong>'액면가 회수'</strong>를 적용하는 것이 압도적인 데이터 표준이며, 두 분의 의견 또한 이 데이터 트렌드와 정확히 일치합니다.",
+          "CoSync 사용자 중 <strong>86%</strong>가 동의한 '표준 합의(Consensus)' 항목입니다. 배임, 횡령 등의 명백한 귀책사유에 대해서는 예외 없이 <strong>'액면가 회수'</strong>를 적용하는 것이 압도적인 데이터 표준이며, 두 분의 의견 또한 이 데이터 트렌드와 정확히 일치합니다.",
       agreement:
           "Bad Leaver 발생 시 지분 100%를 액면가로 회수하고, Good Leaver는 근속 기간에 따라 베스팅된 지분만 인정하는 표준안에 합의합니다.",
     );
@@ -535,6 +558,7 @@ class SampleReportPage extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(height: 50),
           ],
         ),
       ),
@@ -578,7 +602,10 @@ class SampleReportPage extends StatelessWidget {
               style: const TextStyle(fontSize: 14, color: Color(0xFF374151)),
               children: _buildRichTextWithTerms(
                 content,
-                baseStyle: const TextStyle(fontSize: 14, color: Color(0xFF374151)),
+                baseStyle: const TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF374151),
+                ),
                 highlight: highlight,
                 highlightColor: highlightColor,
               ),
@@ -692,7 +719,7 @@ class SampleReportPage extends StatelessWidget {
             ),
           ),
           Text(
-            "본 리포트는 CoSync 사용자의 누적 데이터를 바탕으로 시장의 통상적인 사례와 트렌드를 제공하는 정보성 자료입니다. CoSync는 법무법인이 아니며, 본 리포트의 내용은 법률적 자문이나 유권해석을 구성하지 않습니다. 실제 주주간계약 체결 시에는 반드시 변호사 등 법률 전문가의 검토를 거치시기 바랍니다.",
+            "본 리포트는 CoSync 사용자의 누적 데이터를 바탕으로 시장의 통상적인 사례와 트렌드를 제공하는 정보성 자료입니다. CoSync는 법무법인이 아니며, 본 리포트의 내용은 법률적 자문이나 유권해석을 구성하지 않습니다. 실제 주주간계약 체결 시에는 변호사 등 법률 전문가의 검토를 거치시기를 권고드립니다.",
             style: TextStyle(
               fontSize: 12,
               color: Color(0xFF6B7280),
@@ -700,6 +727,7 @@ class SampleReportPage extends StatelessWidget {
             ),
             textAlign: TextAlign.justify,
           ),
+          SizedBox(height: 50),
         ],
       ),
     );
@@ -762,6 +790,7 @@ class SampleReportPage extends StatelessWidget {
             "Copyright © 2024 CoSync. All rights reserved.",
             style: TextStyle(fontSize: 12, color: Color(0xFF9CA3AF)),
           ),
+          SizedBox(height: 50),
         ],
       ),
     );
@@ -784,7 +813,8 @@ class TermTooltip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = style ??
+    final textStyle =
+        style ??
         const TextStyle(
           color: Colors.blue,
           fontWeight: FontWeight.bold,
@@ -823,15 +853,20 @@ class TermTooltip extends StatelessWidget {
 }
 
 const Map<String, String> _termMeanings = {
-  "베스팅(Vesting)": "공동창업자의 지분을 한 번에 주지 않고, 일정 기간 일할 때마다 조금씩 내 지분이 확정되는 제도. 팀에 오래 남아 함께 하자는 안전장치.",
-  "클리프(Cliff)": "베스팅을 시작할 때 '최초 확정' 구간. 예를 들어 1년 클리프면 1년을 채워야 첫 25% 지분이 한 번에 확정되고, 이후 매달/매분기 조금씩 추가 확정.",
+  "베스팅(Vesting)":
+      "공동창업자의 지분을 한 번에 주지 않고, 일정 기간 일할 때마다 조금씩 내 지분이 확정되는 제도. 팀에 오래 남아 함께 하자는 안전장치.",
+  "클리프(Cliff)":
+      "베스팅을 시작할 때 '최초 확정' 구간. 예를 들어 1년 클리프면 1년을 채워야 첫 25% 지분이 한 번에 확정되고, 이후 매달/매분기 조금씩 추가 확정.",
   "데드락(Deadlock)": "의사결정이 완전히 막힌 상태. 서로 합의가 안 되어 회사가 멈춰버리는 상황.",
-  "캐스팅 보트(Casting Vote)": "표가 동률일 때 최종 결정권. 예를 들어 CEO가 캐스팅 보트를 가지면 의견이 반반일 때 CEO가 최종 결정.",
-  "최종 결정권(Casting Vote)": "표가 동률일 때 최종 결정권. 예를 들어 CEO가 캐스팅 보트를 가지면 의견이 반반일 때 CEO가 최종 결정.",
-  "콜옵션(Call Option)": "특정 조건에서 회사가 지분을 정해진 가격(주로 액면가)으로 사올 수 있는 권리. 문제가 있는 퇴사자 지분을 회수할 때 쓰임.",
-  "전결권": "어떤 사안을 누가 단독으로 결정할 수 있고, 어떤 사안은 상위 승인이나 공동 의결이 필요한지를 명확히 규정하는 장치.",
+  "캐스팅 보트(Casting Vote)":
+      "표가 동률일 때 최종 결정권. 예를 들어 CEO가 캐스팅 보트를 가지면 의견이 반반일 때 CEO가 최종 결정.",
+  "최종 결정권(Casting Vote)":
+      "표가 동률일 때 최종 결정권. 예를 들어 CEO가 캐스팅 보트를 가지면 의견이 반반일 때 CEO가 최종 결정.",
+  "콜옵션(Call Option)":
+      "특정 조건에서 회사가 지분을 정해진 가격(주로 액면가)으로 사올 수 있는 권리. 문제가 있는 퇴사자 지분을 회수할 때 쓰임.",
   "Bad Leaver": "배임·횡령 같은 중대한 잘못으로 퇴사한 사람. 보통 이 경우 지분을 싸게(액면가 등) 회수하는 조항을 둠.",
-  "Good Leaver": "정상적 사유(개인 사정, 건강, 성과 문제 아님 등)로 퇴사한 사람. 이미 근속하며 확정된 지분은 인정하되, 남은 미확정 지분만 회수하는 식으로 보호.",
+  "Good Leaver":
+      "정상적 사유(개인 사정, 건강, 성과 문제 아님 등)로 퇴사한 사람. 이미 근속하며 확정된 지분은 인정하되, 남은 미확정 지분만 회수하는 식으로 보호.",
 };
 
 const Map<String, String> _termDisplay = {
@@ -847,7 +882,6 @@ const Map<String, String> _termDisplay = {
   "Call Option": "콜옵션(Call Option)",
   "Bad Leaver": "배드 리버(Bad Leaver)",
   "Good Leaver": "굿 리버(Good Leaver)",
-  "전결권": "전결권",
 };
 
 List<InlineSpan> _buildRichTextWithTerms(
@@ -866,7 +900,9 @@ List<InlineSpan> _buildRichTextWithTerms(
     int lastIndex = 0;
     for (final m in exp.allMatches(text)) {
       if (m.start > lastIndex) {
-        spans.addAll(_buildTermSpans(text.substring(lastIndex, m.start), style));
+        spans.addAll(
+          _buildTermSpans(text.substring(lastIndex, m.start), style),
+        );
       }
       spans.addAll(
         _buildTermSpans(
@@ -880,8 +916,14 @@ List<InlineSpan> _buildRichTextWithTerms(
       spans.addAll(_buildTermSpans(text.substring(lastIndex), style));
     }
   } else {
-    spans.addAll(_buildTermSpans(text, style,
-        highlight: highlight, highlightColor: highlightColor));
+    spans.addAll(
+      _buildTermSpans(
+        text,
+        style,
+        highlight: highlight,
+        highlightColor: highlightColor,
+      ),
+    );
   }
 
   return spans;
@@ -895,14 +937,20 @@ List<InlineSpan> _buildTermSpans(
 }) {
   final List<InlineSpan> result = [];
   final termsPattern =
-      r"(베스팅\(Vesting\)|베스팅|클리프\(Cliff\)|Cliff|데드락\(Deadlock\)|캐스팅 보트\(Casting Vote\)|최종 결정권\(Casting Vote\)|Casting Vote|콜옵션\(Call Option\)|Call Option|Bad Leaver|Good Leaver|전결권)";
+      r"(베스팅\(Vesting\)|베스팅|클리프\(Cliff\)|Cliff|데드락\(Deadlock\)|캐스팅 보트\(Casting Vote\)|최종 결정권\(Casting Vote\)|Casting Vote|콜옵션\(Call Option\)|Call Option|Bad Leaver|Good Leaver)";
   final reg = RegExp(termsPattern);
 
   int last = 0;
   for (final m in reg.allMatches(text)) {
     if (m.start > last) {
-      result.add(_maybeHighlightSpan(text.substring(last, m.start), style,
-          highlight: highlight, highlightColor: highlightColor));
+      result.add(
+        _maybeHighlightSpan(
+          text.substring(last, m.start),
+          style,
+          highlight: highlight,
+          highlightColor: highlightColor,
+        ),
+      );
     }
     final term = m.group(0)!;
     final meaning = _termMeanings[term];
@@ -930,8 +978,14 @@ List<InlineSpan> _buildTermSpans(
     last = m.end;
   }
   if (last < text.length) {
-    result.add(_maybeHighlightSpan(text.substring(last), style,
-        highlight: highlight, highlightColor: highlightColor));
+    result.add(
+      _maybeHighlightSpan(
+        text.substring(last),
+        style,
+        highlight: highlight,
+        highlightColor: highlightColor,
+      ),
+    );
   }
   return result;
 }
@@ -948,13 +1002,15 @@ InlineSpan _maybeHighlightSpan(
     for (int i = 0; i < parts.length; i++) {
       spans.add(TextSpan(text: parts[i], style: style));
       if (i != parts.length - 1) {
-        spans.add(TextSpan(
-          text: highlight,
-          style: style.copyWith(
-            fontWeight: FontWeight.bold,
-            color: highlightColor ?? style.color,
+        spans.add(
+          TextSpan(
+            text: highlight,
+            style: style.copyWith(
+              fontWeight: FontWeight.bold,
+              color: highlightColor ?? style.color,
+            ),
           ),
-        ));
+        );
       }
     }
     return TextSpan(children: spans);
