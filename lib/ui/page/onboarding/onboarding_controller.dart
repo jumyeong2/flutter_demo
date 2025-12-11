@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../agreement/agreement_page.dart';
+import '../agreement/agreement_adjust_intro.dart';
 
 class OnboardingController extends GetxController {
   void goBack() {
@@ -7,6 +7,6 @@ class OnboardingController extends GetxController {
   }
 
   void startExperience() {
-    Get.to(() => const AgreementPage());
+    Get.to(() => const AgreementAdjustIntroPage());
   }
 }
