@@ -262,17 +262,32 @@ class AgreementAdjustPage extends StatelessWidget {
   List<Color> _getCategoryGradient(String categoryId) {
     switch (categoryId) {
       case "mission":
-        return [const Color(0xFF6366F1), const Color(0xFF8B5CF6)];
+        return [
+          const Color(0xFF64B5F6),
+          const Color(0xFFBA68C8),
+        ]; // 선명한 파랑-보라 (Blue 300 - Purple 300)
       case "roles":
-        return [const Color(0xFF0EA5E9), const Color(0xFF06B6D4)];
+        return [
+          const Color(0xFF4DD0E1),
+          const Color(0xFF4DB6AC),
+        ]; // 선명한 청록 (Cyan 300 - Teal 300)
       case "equity":
-        return [const Color(0xFF10B981), const Color(0xFF059669)];
+        return [
+          const Color(0xFF81C784),
+          const Color(0xFF66BB6A),
+        ]; // 선명한 초록 (Green 300 - Green 400)
       case "decision":
-        return [const Color(0xFFF59E0B), const Color(0xFFEF4444)];
+        return [
+          const Color(0xFFFFB74D),
+          const Color(0xFFFF8A65),
+        ]; // 선명한 주황 (Orange 300 - DeepOrange 300)
       case "exit":
-        return [const Color(0xFFEC4899), const Color(0xFFF43F5E)];
+        return [
+          const Color(0xFFF06292),
+          const Color(0xFFE57373),
+        ]; // 선명한 핑크 (Pink 300 - Red 300)
       default:
-        return [const Color(0xFF6B7280), const Color(0xFF4B5563)];
+        return [const Color(0xFF9E9E9E), const Color(0xFF757575)]; // 선명한 회색
     }
   }
 
