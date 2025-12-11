@@ -10,36 +10,42 @@ class SampleReportPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.grey[100], // bg-gray-100
-      body: SingleChildScrollView(
-        child: Center(
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 896), // max-w-4xl
-            margin: isMobile ? null : const EdgeInsets.symmetric(vertical: 32),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
-                ), // shadow-xl
-              ],
-              borderRadius: isMobile
-                  ? null
-                  : BorderRadius.circular(8), // md:rounded-lg
-            ),
-            clipBehavior: Clip.hardEdge, // overflow-hidden
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildHeader(context, isMobile),
-                _buildSummarySection(context, isMobile),
-                _buildDetailSection1(context, isMobile),
-                _buildDetailSection2(context, isMobile),
-                _buildDetailSection3(context, isMobile),
-                _buildDisclaimer(context, isMobile),
-                _buildFooter(context, isMobile),
-              ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: SingleChildScrollView(
+            child: Center(
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 896), // max-w-4xl
+                margin:
+                    isMobile ? const EdgeInsets.only(bottom: 16) : const EdgeInsets.symmetric(vertical: 32),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ), // shadow-xl
+                  ],
+                  borderRadius: isMobile
+                      ? BorderRadius.circular(8)
+                      : BorderRadius.circular(8), // md:rounded-lg
+                ),
+                clipBehavior: Clip.hardEdge, // overflow-hidden
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildHeader(context, isMobile),
+                    _buildSummarySection(context, isMobile),
+                    _buildDetailSection1(context, isMobile),
+                    _buildDetailSection2(context, isMobile),
+                    _buildDetailSection3(context, isMobile),
+                    _buildDisclaimer(context, isMobile),
+                    _buildFooter(context, isMobile),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -238,34 +244,41 @@ class SampleReportPage extends StatelessWidget {
     Color textColor,
     Color statusColor,
   ) {
-    return Container(
-      width: 80,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: Colors.grey[100]!), // border-gray-100
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            offset: const Offset(0, 1),
-            blurRadius: 2,
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
-          const SizedBox(height: 2),
-          Text(
-            status,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-              color: statusColor,
+    return SizedBox(
+      width: 88,
+      height: 88,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: Colors.grey[100]!), // border-gray-100
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              offset: const Offset(0, 1),
+              blurRadius: 2,
             ),
-          ),
-        ],
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(label,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 10, color: Colors.grey)),
+            const SizedBox(height: 6),
+            Text(
+              status,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                color: statusColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -353,149 +366,174 @@ class SampleReportPage extends StatelessWidget {
     required String insight,
     required String agreement,
   }) {
-    return Container(
-      padding: EdgeInsets.all(isMobile ? 20 : 32),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Color(0xFFE5E7EB))),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Flex(
-            direction: isMobile ? Axis.vertical : Axis.horizontal,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE2E8F0), // bg-slate-200
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      topic,
-                      style: const TextStyle(
-                        fontSize: 10,
-                        color: Color(0xFF334155), // text-slate-700
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: isMobile ? 16 : 20,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF1F2937),
-                    ),
-                  ),
-                ],
-              ),
-              if (isMobile) const SizedBox(height: 8),
-              badge,
-            ],
-          ),
-          const SizedBox(height: 24),
-          // User Inputs
-          Flex(
-            direction: isMobile ? Axis.vertical : Axis.horizontal,
-            children: [
-              Expanded(
-                flex: isMobile ? 0 : 1,
-                child: _buildUserInputBox(
-                  "User A (CEO) 의견",
-                  userAContent,
-                  userAHighlight,
-                  Colors.red,
-                ),
-              ),
-              SizedBox(width: isMobile ? 0 : 16, height: isMobile ? 16 : 0),
-              Expanded(
-                flex: isMobile ? 0 : 1,
-                child: _buildUserInputBox(
-                  "User B (CTO) 의견",
-                  userBContent,
-                  userBHighlight,
-                  title == "역할 및 책임 (R&R)" ? Colors.red : Colors.blue,
-                ), // logic based on content
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          // Market Standard
-          _buildInfoBox(
-            title: "시장 표준 제안 (Reference)",
-            icon: Icons.balance,
-            content: marketStandard,
-            bgColor: const Color(0xFFF8FAFC),
-            borderColor: const Color(0xFF64748B),
-            titleColor: const Color(0xFF475569),
-          ),
-          const SizedBox(height: 16),
-          // Insight
-          _buildInfoBox(
-            title: "CoSync 룰북 데이터 분석",
-            icon: Icons.storage,
-            content: insight,
-            bgColor: const Color(0xFFEFF6FF), // bg-blue-50
-            borderColor: const Color(0xFF3B82F6), // border-blue-500
-            titleColor: const Color(0xFF1E40AF),
-            isHtmlLike: true, // simplified rich text handling
-          ),
-          const SizedBox(height: 16),
-          // Agreement
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(
-              color: Color(0xFFF0FDF4),
-              border: Border(
-                left: BorderSide(color: Color(0xFF16A34A), width: 4),
-              ),
-              borderRadius: BorderRadius.all(
-                Radius.circular(4),
-              ), // slightly rounded
-            ),
-            child: Column(
+    return ConstrainedBox(
+      constraints: BoxConstraints(minHeight: isMobile ? 360 : 340),
+      child: Container(
+        padding: EdgeInsets.all(isMobile ? 20 : 32),
+        decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(color: Color(0xFFE5E7EB))),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Flex(
+              direction: isMobile ? Axis.vertical : Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(
-                      Icons.check_circle,
-                      size: 16,
-                      color: Color(0xFF166534),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE2E8F0), // bg-slate-200
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        topic,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Color(0xFF334155), // text-slate-700
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
-                      "최종 합의안 (Ver 1.0)",
+                      title,
                       style: TextStyle(
+                        fontSize: isMobile ? 16 : 20,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF166534),
-                        fontSize: 14,
+                        color: const Color(0xFF1F2937),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  agreement,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF374151),
-                    fontWeight: FontWeight.w500,
-                    height: 1.5,
-                  ),
-                ),
+                if (isMobile) const SizedBox(height: 8),
+                badge,
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 24),
+            // User Inputs
+            if (isMobile)
+              Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: _buildUserInputBox(
+                      "User A (CEO) 의견",
+                      userAContent,
+                      userAHighlight,
+                      Colors.red,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: _buildUserInputBox(
+                      "User B (CTO) 의견",
+                      userBContent,
+                      userBHighlight,
+                      title == "역할 및 책임 (R&R)" ? Colors.red : Colors.blue,
+                    ),
+                  ),
+                ],
+              )
+            else
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildUserInputBox(
+                      "User A (CEO) 의견",
+                      userAContent,
+                      userAHighlight,
+                      Colors.red,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _buildUserInputBox(
+                      "User B (CTO) 의견",
+                      userBContent,
+                      userBHighlight,
+                      title == "역할 및 책임 (R&R)" ? Colors.red : Colors.blue,
+                    ),
+                  ),
+                ],
+              ),
+            const SizedBox(height: 16),
+            // Market Standard
+            _buildInfoBox(
+              title: "시장 표준 제안 (Reference)",
+              icon: Icons.balance,
+              content: marketStandard,
+              bgColor: const Color(0xFFF8FAFC),
+              borderColor: const Color(0xFF64748B),
+              titleColor: const Color(0xFF475569),
+            ),
+            const SizedBox(height: 16),
+            // Insight
+            _buildInfoBox(
+              title: "CoSync 룰북 데이터 분석",
+              icon: Icons.storage,
+              content: insight,
+              bgColor: const Color(0xFFEFF6FF), // bg-blue-50
+              borderColor: const Color(0xFF3B82F6), // border-blue-500
+              titleColor: const Color(0xFF1E40AF),
+              isHtmlLike: true, // simplified rich text handling
+            ),
+            const SizedBox(height: 16),
+            // Agreement
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: const BoxDecoration(
+                color: Color(0xFFF0FDF4),
+                border: Border(
+                  left: BorderSide(color: Color(0xFF16A34A), width: 4),
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(4),
+                ), // slightly rounded
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.check_circle,
+                        size: 16,
+                        color: Color(0xFF166534),
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        "최종 합의안 (Ver 1.0)",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF166534),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    agreement,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF374151),
+                      fontWeight: FontWeight.w500,
+                      height: 1.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
