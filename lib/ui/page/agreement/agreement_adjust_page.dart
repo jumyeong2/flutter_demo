@@ -260,35 +260,8 @@ class AgreementAdjustPage extends StatelessWidget {
 
   // 카테고리별 그라디언트 색상
   List<Color> _getCategoryGradient(String categoryId) {
-    switch (categoryId) {
-      case "mission":
-        return [
-          const Color(0xFF64B5F6),
-          const Color(0xFFBA68C8),
-        ]; // 선명한 파랑-보라 (Blue 300 - Purple 300)
-      case "roles":
-        return [
-          const Color(0xFF4DD0E1),
-          const Color(0xFF4DB6AC),
-        ]; // 선명한 청록 (Cyan 300 - Teal 300)
-      case "equity":
-        return [
-          const Color(0xFF81C784),
-          const Color(0xFF66BB6A),
-        ]; // 선명한 초록 (Green 300 - Green 400)
-      case "decision":
-        return [
-          const Color(0xFFFFB74D),
-          const Color(0xFFFF8A65),
-        ]; // 선명한 주황 (Orange 300 - DeepOrange 300)
-      case "exit":
-        return [
-          const Color(0xFFF06292),
-          const Color(0xFFE57373),
-        ]; // 선명한 핑크 (Pink 300 - Red 300)
-      default:
-        return [const Color(0xFF9E9E9E), const Color(0xFF757575)]; // 선명한 회색
-    }
+    // 모든 카테고리에 통일된 하늘색 적용
+    return [Colors.lightBlue, Colors.lightBlue]; // Sky 400 -> Sky 500
   }
 
   // 카테고리 리스트 (모바일)
@@ -713,9 +686,12 @@ class AgreementAdjustPage extends StatelessWidget {
             const SizedBox(height: 32),
             Container(
               decoration: BoxDecoration(
-                color: const Color(0xFFF0F9FF),
+                color: const Color(0xFFE1F5FE), // Slightly darker background
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFE0F2FE), width: 1),
+                border: Border.all(
+                  color: const Color(0xFFB3E5FC), // Slightly darker border
+                  width: 1,
+                ),
               ),
               child: TextField(
                 controller: answerController,
@@ -857,10 +833,12 @@ class AgreementAdjustPage extends StatelessWidget {
                 const SizedBox(height: 24),
                 Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF0F9FF),
+                    color: const Color(
+                      0xFFE1F5FE,
+                    ), // Slightly darker background
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: const Color(0xFFE0F2FE),
+                      color: const Color(0xFFB3E5FC), // Slightly darker border
                       width: 1,
                     ),
                   ),

@@ -111,7 +111,7 @@ class AgreementPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "공동창업자 주주 간 계약(SHA) 조율",
+                      "공동창업자 주주 간 계약 조율",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

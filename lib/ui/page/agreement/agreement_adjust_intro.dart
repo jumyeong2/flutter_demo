@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/services.dart';
 
 import '../../widgets/responsive_layout.dart';
 import 'agreement_adjust_intro_step2.dart';
@@ -125,11 +126,23 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
                           ),
                           const SizedBox(height: 16),
                           _buildField(
-                            label: "연락처 / Mobile number (+Country code)",
+                            label: "연락처 / Mobile number",
                             controller: _phoneController,
-                            hintText: "+82 10 1234 5678",
-                            keyboardType: TextInputType.phone,
-                            prefixText: "+",
+                            hintText: "010-1234-5678",
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              _PhoneNumberFormatter(),
+                            ],
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return "연락처를 입력해주세요.";
+                              }
+                              if (!RegExp(r'^010-\d{4}-\d{4}$').hasMatch(val)) {
+                                return "010-XXXX-XXXX 형식으로 입력해주세요.";
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 28),
                           Row(
@@ -139,9 +152,7 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
                                   onPressed: () => Get.back(),
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor: Colors.blue[700],
-                                    side: BorderSide(
-                                      color: Colors.blue[200]!,
-                                    ),
+                                    side: BorderSide(color: Colors.blue[200]!),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
@@ -210,6 +221,7 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
     TextInputType keyboardType = TextInputType.text,
     String? prefixText,
     String? Function(String?)? validator,
+    List<TextInputFormatter>? inputFormatters,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,7 +238,9 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
-          validator: validator ??
+          inputFormatters: inputFormatters,
+          validator:
+              validator ??
               (val) {
                 if (val == null || val.isEmpty) {
                   return "필수 입력 항목입니다.";
@@ -238,8 +252,10 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
             prefixText: prefixText,
             filled: true,
             fillColor: Colors.grey[50],
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 14,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(color: Colors.grey[300]!),
@@ -264,3 +280,31 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
   }
 }
 
+class _PhoneNumberFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    // 숫자만 남기기
+    final text = newValue.text.replaceAll(RegExp(r'\D'), '');
+
+    if (text.isEmpty) return newValue;
+
+    // 010-XXXX-XXXX 포맷팅 로직
+    String formatted = "";
+    if (text.length <= 3) {
+      formatted = text;
+    } else if (text.length <= 7) {
+      formatted = "${text.substring(0, 3)}-${text.substring(3)}";
+    } else {
+      formatted =
+          "${text.substring(0, 3)}-${text.substring(3, 7)}-${text.substring(7, text.length > 11 ? 11 : text.length)}";
+    }
+
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+}
