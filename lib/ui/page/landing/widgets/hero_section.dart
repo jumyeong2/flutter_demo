@@ -49,7 +49,9 @@ class HeroSection extends StatelessWidget {
           // Content
           Center(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 80),
+              // Increased top padding to clear fixed Navbar (approx 80px) + spacing
+              // Reduced bottom padding to balance centering relative to visible area
+              padding: const EdgeInsets.fromLTRB(24, 120, 24, 40),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
