@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_demo/ui/widgets/responsive_layout.dart';
+import '../../sample/sample_report.dart';
 import '../landing_controller.dart';
 
 class HeroSection extends StatelessWidget {
@@ -168,7 +169,8 @@ class HeroSection extends StatelessWidget {
                         width: 280,
                         height: 60,
                         child: OutlinedButton.icon(
-                          onPressed: () {},
+                          onPressed: () =>
+                              Get.to(() => const SampleReportPage()),
                           icon: const Icon(
                             Icons.description,
                             color: Colors.grey,

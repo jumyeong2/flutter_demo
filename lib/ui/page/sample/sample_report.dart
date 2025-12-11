@@ -1,0 +1,770 @@
+import 'package:flutter/material.dart';
+import '../../widgets/responsive_layout.dart';
+
+class SampleReportPage extends StatelessWidget {
+  const SampleReportPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    bool isMobile = ResponsiveLayout.isMobile(context);
+
+    return Scaffold(
+      backgroundColor: Colors.grey[100], // bg-gray-100
+      body: SingleChildScrollView(
+        child: Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 896), // max-w-4xl
+            margin: isMobile ? null : const EdgeInsets.symmetric(vertical: 32),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ), // shadow-xl
+              ],
+              borderRadius: isMobile
+                  ? null
+                  : BorderRadius.circular(8), // md:rounded-lg
+            ),
+            clipBehavior: Clip.hardEdge, // overflow-hidden
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildHeader(context, isMobile),
+                _buildSummarySection(context, isMobile),
+                _buildDetailSection1(context, isMobile),
+                _buildDetailSection2(context, isMobile),
+                _buildDetailSection3(context, isMobile),
+                _buildDisclaimer(context, isMobile),
+                _buildFooter(context, isMobile),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, bool isMobile) {
+    return Container(
+      color: const Color(0xFF0F172A), // bg-slate-900
+      padding: EdgeInsets.all(isMobile ? 24 : 32),
+      child: Flex(
+        direction: isMobile ? Axis.vertical : Axis.horizontal,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: isMobile
+            ? CrossAxisAlignment.start
+            : CrossAxisAlignment.center,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "CoSync Report",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: isMobile ? 20 : 24, // text-xl md:text-2xl
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.0, // tracking-wider
+                ),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                "공동창업자 합의 성향 분석 및 데이터 리포트",
+                style: TextStyle(
+                  color: Color(0xFF94A3B8), // text-slate-400
+                  fontSize: 12, // text-xs md:text-sm
+                ),
+              ),
+            ],
+          ),
+          if (isMobile)
+            Container(
+              margin: const EdgeInsets.only(top: 16, bottom: 8),
+              height: 1,
+              color: const Color(0xFF334155), // border-slate-700
+            ),
+          Column(
+            crossAxisAlignment: isMobile
+                ? CrossAxisAlignment.start
+                : CrossAxisAlignment.end,
+            children: [
+              Text(
+                "진단 일자",
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.8),
+                  fontSize: 12, // text-xs like
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Text(
+                "2024. 05. 21",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16, // text-base md:text-lg
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummarySection(BuildContext context, bool isMobile) {
+    return Container(
+      padding: EdgeInsets.all(isMobile ? 20 : 32),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Color(0xFFE5E7EB))),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.pie_chart, color: Color(0xFF2563EB), size: 20),
+              const SizedBox(width: 8),
+              Text(
+                "합의 현황 요약",
+                style: TextStyle(
+                  fontSize: isMobile ? 18 : 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: EdgeInsets.all(isMobile ? 20 : 24),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF8FAFC), // bg-slate-50
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Flex(
+              direction: isMobile ? Axis.vertical : Axis.horizontal,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: isMobile ? 0 : 1,
+                  child: RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: isMobile ? 14 : 16,
+                        color: const Color(0xFF374151), // text-gray-700
+                        height: 1.6,
+                      ),
+                      children: const [
+                        TextSpan(
+                          text: "User A(CEO)",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1E40AF), // text-blue-800
+                          ),
+                        ),
+                        TextSpan(text: "님과 "),
+                        TextSpan(
+                          text: "User B(CTO)",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1E40AF),
+                          ),
+                        ),
+                        TextSpan(text: "님의 답변을 분석한 결과, "),
+                        TextSpan(
+                          text: "3개 항목 중 1개",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF2563EB), // text-blue-600
+                          ),
+                        ),
+                        TextSpan(
+                          text:
+                              " 항목에서만 완전한 의견 일치를 보였습니다.\n특히 '지분 베스팅'과 'R&R' 항목에서는 서로의 기대치가 달라, 향후 ",
+                        ),
+                        TextSpan(
+                          text: "잠재적 분쟁 리스크(Potential Risk)",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text:
+                              "가 감지되었습니다. CoSync의 누적 데이터를 참고하여 간극을 좁히는 과정이 필요합니다.",
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (isMobile) const SizedBox(height: 16),
+                if (!isMobile) const SizedBox(width: 24),
+                // Badges
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    _buildSummaryBadge(
+                      "R&R",
+                      "조율 필요",
+                      Colors.yellow[800]!,
+                      Colors.yellow[600]!,
+                    ), // Approximate yellow styling
+                    _buildSummaryBadge(
+                      "베스팅",
+                      "Risk 높음",
+                      Colors.red[800]!,
+                      Colors.red[600]!,
+                    ),
+                    _buildSummaryBadge(
+                      "Bad Leaver",
+                      "의견 일치",
+                      Colors.green[800]!,
+                      Colors.green[600]!,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryBadge(
+    String label,
+    String status,
+    Color textColor,
+    Color statusColor,
+  ) {
+    return Container(
+      width: 80,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.grey[100]!), // border-gray-100
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            offset: const Offset(0, 1),
+            blurRadius: 2,
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+          const SizedBox(height: 2),
+          Text(
+            status,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: statusColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailSection1(BuildContext context, bool isMobile) {
+    return _buildDetailBase(
+      context,
+      isMobile,
+      topic: "Topic 01",
+      title: "역할 및 책임 (R&R)",
+      badge: _buildStatusBadge(
+        "Insight: 데이터 기반 리스크",
+        const Color(0xFFFEF3C7),
+        const Color(0xFF92400E),
+      ), // yellow
+      userAContent: "경영/기획 총괄. 개발 결정권은 위임하되, 경영권 확보 필요.",
+      userBContent: "개발 전권. 기획 단계에서의 기술적 거부권(Veto) 희망.",
+      userBHighlight: "기술적 거부권(Veto)",
+      marketStandard:
+          "시장 표준 R&R: 경영/자금은 CEO 전결(100%), 기술 스택은 CTO 전결(100%). 단, 제품 로드맵은 5:5 합의를 원칙으로 하되, 데드락(Deadlock) 발생 시 CEO가 최종 결정권(Casting Vote)을 행사하는 구조가 일반적입니다.",
+      insight:
+          "CoSync의 누적 체결 데이터 15,000건 분석 결과, 초기 스타트업의 82%는 C-Level 간 '전결권'을 명확히 분리하고 있습니다. 특히 B님이 희망하시는 <strong>'기술적 거부권(Veto)'</strong>을 설정한 팀은 그렇지 않은 팀 대비 의사결정 시간이 <strong>평균 3.4배</strong> 더 소요되는 것으로 나타나, 데이터상으로는 '협의' 조항으로의 완화가 권장됩니다.",
+      agreement:
+          "경영/자금은 CEO, 기술은 CTO 전결. 제품 로드맵은 상호 합의하되 데드락 발생 시 CEO가 최종 결정권(Casting Vote)을 행사합니다.",
+    );
+  }
+
+  Widget _buildDetailSection2(BuildContext context, bool isMobile) {
+    return _buildDetailBase(
+      context,
+      isMobile,
+      topic: "Topic 02",
+      title: "베스팅(Vesting) 기간",
+      badge: _buildStatusBadge(
+        "Insight: 투자 유치 적합성 우려",
+        const Color(0xFFFEE2E2),
+        const Color(0xFF991B1B),
+      ), // red
+      userAContent: "신뢰 기반, 기간 없이 즉시 100% 인정 희망.",
+      userAHighlight: "즉시 100% 인정",
+      userBContent: "이탈 대비 4년 베스팅 적용 필요.",
+      userBHighlight: "4년 베스팅",
+      marketStandard:
+          "VC 투자 표준: 총 4년(48개월) 베스팅. 최초 1년(Cliff) 근무 시 지분의 25%를 일괄 인정하고, 이후 3년간 매월 1/48(약 2.08%)씩 분할 귀속시키는 조건이 가장 보편적입니다.",
+      insight:
+          "CoSync를 통해 후속 투자를 유치한 팀의 <strong>96%</strong>가 '베스팅(Vesting)' 조항을 보유하고 있었습니다. A님의 '베스팅 없음(즉시 100% 인정)' 의견은 전체 데이터의 <strong>하위 2%</strong>에 해당하며, 이는 투자 유치 실패율을 40% 이상 높이는 리스크 요인으로 집계됩니다. 데이터 기반의 안전한 의사결정이 필요합니다.",
+      agreement:
+          "양측 의견을 절충하여 '총 3년(36개월) 베스팅'으로 단축하되, 1년 Cliff(필수 근속) 조건은 유지하여 상호 신뢰와 안전장치를 확보합니다.",
+    );
+  }
+
+  Widget _buildDetailSection3(BuildContext context, bool isMobile) {
+    return _buildDetailBase(
+      context,
+      isMobile,
+      topic: "Topic 03",
+      title: "이탈 시 지분 처리 (Bad Leaver)",
+      badge: _buildStatusBadge(
+        "Insight: 높은 합의 일치도",
+        const Color(0xFFDCFCE7),
+        const Color(0xFF166534),
+      ), // green
+      userAContent: "징계 해고/배임 시 액면가로 전량 회수.",
+      userBContent: "동의함. 액면가 회수 조항 삽입.",
+      marketStandard:
+          "Bad Leaver(횡령, 배임 등) 확정 시, 보유 지분 100%를 '액면가'로 강제 회수(Call Option). 단순 변심 등(Good Leaver)의 경우, 근속 기간에 비례해 베스팅된 지분은 인정하되 잔여 지분만 무상 회수합니다.",
+      insight:
+          "CoSync 사용자 중 <strong>99.5%</strong>가 동의한 '표준 합의(Consensus)' 항목입니다. 배임, 횡령 등의 명백한 귀책사유에 대해서는 예외 없이 <strong>'액면가 회수'</strong>를 적용하는 것이 압도적인 데이터 표준이며, 두 분의 의견 또한 이 데이터 트렌드와 정확히 일치합니다.",
+      agreement:
+          "Bad Leaver 발생 시 지분 100%를 액면가로 회수하고, Good Leaver는 근속 기간에 따라 베스팅된 지분만 인정하는 표준안에 합의합니다.",
+    );
+  }
+
+  Widget _buildDetailBase(
+    BuildContext context,
+    bool isMobile, {
+    required String topic,
+    required String title,
+    required Widget badge,
+    required String userAContent,
+    String? userAHighlight,
+    required String userBContent,
+    String? userBHighlight,
+    required String marketStandard,
+    required String insight,
+    required String agreement,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(isMobile ? 20 : 32),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Color(0xFFE5E7EB))),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Flex(
+            direction: isMobile ? Axis.vertical : Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE2E8F0), // bg-slate-200
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      topic,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: Color(0xFF334155), // text-slate-700
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: isMobile ? 16 : 20,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF1F2937),
+                    ),
+                  ),
+                ],
+              ),
+              if (isMobile) const SizedBox(height: 8),
+              badge,
+            ],
+          ),
+          const SizedBox(height: 24),
+          // User Inputs
+          Flex(
+            direction: isMobile ? Axis.vertical : Axis.horizontal,
+            children: [
+              Expanded(
+                flex: isMobile ? 0 : 1,
+                child: _buildUserInputBox(
+                  "User A (CEO) 의견",
+                  userAContent,
+                  userAHighlight,
+                  Colors.red,
+                ),
+              ),
+              SizedBox(width: isMobile ? 0 : 16, height: isMobile ? 16 : 0),
+              Expanded(
+                flex: isMobile ? 0 : 1,
+                child: _buildUserInputBox(
+                  "User B (CTO) 의견",
+                  userBContent,
+                  userBHighlight,
+                  title == "역할 및 책임 (R&R)" ? Colors.red : Colors.blue,
+                ), // logic based on content
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Market Standard
+          _buildInfoBox(
+            title: "시장 표준 제안 (Reference)",
+            icon: Icons.balance,
+            content: marketStandard,
+            bgColor: const Color(0xFFF8FAFC),
+            borderColor: const Color(0xFF64748B),
+            titleColor: const Color(0xFF475569),
+          ),
+          const SizedBox(height: 16),
+          // Insight
+          _buildInfoBox(
+            title: "CoSync 룰북 데이터 분석",
+            icon: Icons.storage,
+            content: insight,
+            bgColor: const Color(0xFFEFF6FF), // bg-blue-50
+            borderColor: const Color(0xFF3B82F6), // border-blue-500
+            titleColor: const Color(0xFF1E40AF),
+            isHtmlLike: true, // simplified rich text handling
+          ),
+          const SizedBox(height: 16),
+          // Agreement
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
+              color: Color(0xFFF0FDF4),
+              border: Border(
+                left: BorderSide(color: Color(0xFF16A34A), width: 4),
+              ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(4),
+              ), // slightly rounded
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Row(
+                  children: [
+                    Icon(
+                      Icons.check_circle,
+                      size: 16,
+                      color: Color(0xFF166534),
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      "최종 합의안 (Ver 1.0)",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF166534),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  agreement,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF374151),
+                    fontWeight: FontWeight.w500,
+                    height: 1.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUserInputBox(
+    String title,
+    String content,
+    String? highlight,
+    Color highlightColor,
+  ) {
+    List<TextSpan> spans = [];
+    if (highlight != null && content.contains(highlight)) {
+      List<String> parts = content.split(highlight);
+      spans.add(TextSpan(text: parts[0]));
+      spans.add(
+        TextSpan(
+          text: highlight,
+          style: TextStyle(color: highlightColor, fontWeight: FontWeight.bold),
+        ),
+      );
+      if (parts.length > 1) spans.add(TextSpan(text: parts[1]));
+    } else {
+      spans.add(TextSpan(text: content));
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.grey[200]!),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            offset: const Offset(0, 1),
+            blurRadius: 2,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(fontSize: 14, color: Color(0xFF374151)),
+              children: spans,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoBox({
+    required String title,
+    required IconData icon,
+    required String content,
+    required Color bgColor,
+    required Color borderColor,
+    required Color titleColor,
+    bool isHtmlLike = false,
+  }) {
+    // A simplified HTML-like parser for strong tags would be ideal, but for now we manually handle specific bold parts from the text if known,
+    // or just render as plain text for simplicity as full HTML parsing in Flutter isn't standard without packages.
+    // I will try to map the bold tags mentioned in the prompt if possible, or just render it.
+    // The prompt uses <strong> tags. I will simple remove them and bold the text if I can identify it,
+    // or more robustly, I'll just strip tags for now to keep it clean, OR simplistic replacement.
+
+    // Simplistic approach: just Clean tags for now to avoid showing <strong> to user.
+    // Ideally we'd use a package for this, but I'll try to manual parse simple <strong> if feasible.
+    // Actually, I'll allow a simple "highlight this part" logic if needed, but for the strings provided:
+    // "기술적 거부권(Veto)" is strong. "평균 3.4배" is strong.
+
+    List<InlineSpan> spans = [];
+    String workingContent = content;
+
+    if (isHtmlLike) {
+      // Very basic parser for <strong>...</strong>
+      RegExp exp = RegExp(r"<strong>(.*?)<\/strong>");
+
+      int lastIndex = 0;
+      for (Match m in exp.allMatches(workingContent)) {
+        if (m.start > lastIndex) {
+          spans.add(
+            TextSpan(text: workingContent.substring(lastIndex, m.start)),
+          );
+        }
+        spans.add(
+          TextSpan(
+            text: m.group(1),
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+        );
+        lastIndex = m.end;
+      }
+      if (lastIndex < workingContent.length) {
+        spans.add(TextSpan(text: workingContent.substring(lastIndex)));
+      }
+    } else {
+      spans.add(TextSpan(text: content));
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: bgColor,
+        border: Border(left: BorderSide(color: borderColor, width: 4)),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                icon,
+                size: 14,
+                color: titleColor,
+              ), // FontAwesome icons are usually small here
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: titleColor,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color(0xFF4B5563),
+                height: 1.6,
+              ), // text-gray-600
+              children: spans,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusBadge(String text, Color bgColor, Color textColor) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          color: textColor,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDisclaimer(BuildContext context, bool isMobile) {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: isMobile ? 20 : 32,
+        vertical: 16,
+      ),
+      padding: EdgeInsets.all(isMobile ? 16 : 24),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE5E7EB), // bg-gray-200
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "[면책 조항]",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+              color: Color(0xFF6B7280),
+            ),
+          ),
+          Text(
+            "본 리포트는 CoSync 사용자의 누적 데이터를 바탕으로 시장의 통상적인 사례와 트렌드를 제공하는 정보성 자료입니다. CoSync는 법무법인이 아니며, 본 리포트의 내용은 법률적 자문이나 유권해석을 구성하지 않습니다. 실제 주주간계약 체결 시에는 반드시 변호사 등 법률 전문가의 검토를 거치시기 바랍니다.",
+            style: TextStyle(
+              fontSize: 12,
+              color: Color(0xFF6B7280),
+              height: 1.5,
+            ),
+            textAlign: TextAlign.justify,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFooter(BuildContext context, bool isMobile) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        isMobile ? 24 : 32,
+        24,
+        isMobile ? 24 : 32,
+        48,
+      ),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: Color(0xFFE5E7EB))),
+      ),
+      child: Column(
+        children: [
+          Text(
+            "분석된 리스크를 보완하는 '맞춤형 계약서'가 필요하신가요?",
+            style: TextStyle(
+              fontSize: isMobile ? 16 : 18,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF1F2937),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            "시장 표준 데이터를 반영하여 두 분의 의견 차이를 좁힌 초안을 확인해보세요.",
+            style: TextStyle(fontSize: 14, color: Color(0xFF4B5563)),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          SizedBox(
+            width: isMobile ? double.infinity : null,
+            child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1E293B), // bg-slate-800
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(9999), // rounded-full
+                ),
+                elevation: 4,
+              ),
+              child: const Text(
+                "계약서 초안 생성하기 (Start Draft)",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            "Copyright © 2024 CoSync. All rights reserved.",
+            style: TextStyle(fontSize: 12, color: Color(0xFF9CA3AF)),
+          ),
+        ],
+      ),
+    );
+  }
+}
