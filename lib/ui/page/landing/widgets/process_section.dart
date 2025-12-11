@@ -36,7 +36,7 @@ class ProcessSection extends StatelessWidget {
         children: [
           const Text(
             "감정 싸움 없이 합의하는\n4단계 프로세스",
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,

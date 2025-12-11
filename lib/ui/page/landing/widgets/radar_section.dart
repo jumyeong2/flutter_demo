@@ -82,7 +82,7 @@ class RadarSection extends StatelessWidget {
                         height: 1.2,
                       ),
                       children: [
-                        const TextSpan(text: "팀의 안정성을 점수로 관리하세요.\n"),
+                        const TextSpan(text: "팀 안정성을 점수로 관리하세요.\n", ),
                         TextSpan(
                           text: "Team Stability Score",
                           style: TextStyle(
@@ -95,7 +95,7 @@ class RadarSection extends StatelessWidget {
                   ),
                   SizedBox(height: isMobile ? 16 : 24),
                   Text(
-                    "'그냥 느낌이 좀 쎄한데?'라는 감을 데이터로 확인시켜 드립니다.\n자금, 비전, 역할, 이탈 조건 등 5가지 핵심 영역을 시각화하여 어디서 갈등이 터질지 미리 예측하고 방어합니다.",
+                    "'그냥 느낌이 좀 쎄한데?'라는 감을 데이터로 확인시켜 드립니다. 자금, 비전, 역할, 이탈 조건 등 5가지 핵심 영역을 시각화하여 어디서 갈등이 터질지 미리 예측하고 방어합니다.",
                     style: TextStyle(
                       fontSize: isMobile ? 15 : 18,
                       color: const Color(0xFF475569),
