@@ -18,36 +18,38 @@ class LandingPage extends StatelessWidget {
     // Controller 주입 (Dependency Injection)
     Get.put(LandingController());
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          // Main Scroll View
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const HeroSection(),
-                const SizedBox(height: 100),
-                const ProcessSection(),
-                const SizedBox(height: 100),
-                const DemoSection(),
-                const SizedBox(height: 50),
-                const RadarSection(),
-                const SizedBox(height: 100),
-                const RulebookSection(),
-                const SizedBox(height: 50),
-                const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [CtaSection(), FooterSection()],
-                ),
-              ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: [
+            // Main Scroll View
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const HeroSection(),
+                  const SizedBox(height: 100),
+                  const ProcessSection(),
+                  const SizedBox(height: 100),
+                  const DemoSection(),
+                  const SizedBox(height: 50),
+                  const RadarSection(),
+                  const SizedBox(height: 100),
+                  const RulebookSection(),
+                  const SizedBox(height: 50),
+                  const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [CtaSection(), FooterSection()],
+                  ),
+                ],
+              ),
             ),
-          ),
-
-          // Navbar (Fixed on top)
-          const Positioned(top: 0, left: 0, right: 0, child: LandingNavbar()),
-        ],
+      
+            // Navbar (Fixed on top)
+            const Positioned(top: 0, left: 0, right: 0, child: LandingNavbar()),
+          ],
+        ),
       ),
     );
   }
