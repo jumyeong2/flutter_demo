@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import '../../../data/model/adjustment_question.dart';
-import '../sample/sample_report.dart';
+import 'agreement_page.dart';
 
 class AgreementAdjustController extends GetxController {
   final RxList<AdjustmentCategory> categories = <AdjustmentCategory>[
@@ -164,7 +164,7 @@ class AgreementAdjustController extends GetxController {
         }
       } else {
         // 모든 질문 완료
-        Get.to(() => const SampleReportPage());
+        Get.to(() => const AgreementPage());
       }
     }
   }

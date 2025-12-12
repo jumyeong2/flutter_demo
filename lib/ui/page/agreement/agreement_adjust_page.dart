@@ -727,20 +727,18 @@ class AgreementAdjustPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                OutlinedButton(
+                ElevatedButton(
                   onPressed: controller.goToPreviousQuestion,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFF0369A1),
-                    side: const BorderSide(
-                      color: Color(0xFF0EA5E9),
-                      width: 1.5,
-                    ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0EA5E9),
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 32,
                       vertical: 16,
                     ),
+                    elevation: 2,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(30),
                     ),
                   ),
                   child: const Text(
@@ -759,7 +757,7 @@ class AgreementAdjustPage extends StatelessWidget {
                     ),
                     elevation: 2,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(30),
                     ),
                   ),
                   child: const Text(
@@ -892,17 +890,15 @@ class AgreementAdjustPage extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: OutlinedButton(
+                child: ElevatedButton(
                   onPressed: controller.goToPreviousQuestion,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFF0369A1),
-                    side: const BorderSide(
-                      color: Color(0xFF0EA5E9),
-                      width: 1.5,
-                    ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0EA5E9),
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
+                    elevation: 2,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(30),
                     ),
                   ),
                   child: const Text(
@@ -921,7 +917,7 @@ class AgreementAdjustPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     elevation: 2,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(30),
                     ),
                   ),
                   child: const Text(
