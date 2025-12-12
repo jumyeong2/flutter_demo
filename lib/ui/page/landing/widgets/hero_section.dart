@@ -180,7 +180,7 @@ class HeroSection extends StatelessWidget {
                           label: const Text(
                             "샘플 리포트 보기",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
