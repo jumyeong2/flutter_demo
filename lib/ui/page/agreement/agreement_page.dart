@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/responsive_layout.dart';
 import 'agreement_controller.dart';
+import 'agreement_popup.dart';
 
 class AgreementPage extends StatelessWidget {
   const AgreementPage({super.key});
@@ -546,7 +547,22 @@ class AgreementPage extends StatelessWidget {
           const SizedBox(width: 16),
           Expanded(
             child: ElevatedButton(
-              onPressed: controller.goToNextPage,
+              onPressed: () {
+                if (controller.currentPage.value < controller.totalPages - 1) {
+                  controller.goToNextPage();
+                } else {
+                  if (!controller.isCurrentPageComplete) {
+                    Get.snackbar(
+                      "알림",
+                      "모든 질문에 대한 합의안을 작성해주세요.",
+                      snackPosition: SnackPosition.BOTTOM,
+                      margin: const EdgeInsets.all(16),
+                    );
+                    return;
+                  }
+                  Get.dialog(const AgreementPopup());
+                }
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.indigo,
                 foregroundColor: Colors.white,
