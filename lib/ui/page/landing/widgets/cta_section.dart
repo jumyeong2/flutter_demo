@@ -49,7 +49,7 @@ class CtaSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text("질문 3개로 Rulebook 체험하기 (무료)"),
+            child: const Text("공동창업 합의서 (Draft) 만들기"),
           ),
         ],
       ),

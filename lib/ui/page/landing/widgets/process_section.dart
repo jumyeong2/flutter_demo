@@ -24,8 +24,8 @@ class ProcessSection extends StatelessWidget {
       },
       {
         "icon": Icons.description_outlined,
-        "title": "4. Rulebook",
-        "desc": "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 룰북을 생성합니다.",
+        "title": "4. 공동창업 합의서",
+        "desc": "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 합의서를 생성합니다.",
       },
     ];
 

@@ -46,7 +46,7 @@ class RulebookSection extends StatelessWidget {
                   ),
                   SizedBox(height: isMobile ? 12 : 16),
                   Text(
-                    "말뿐인 약속은 잊혀집니다.\n'공동창업자 Rulebook'으로 기록하세요.",
+                    "말뿐인 약속은 잊혀집니다.\n'공동창업 합의서'로 기록하세요.",
                     style: TextStyle(
                       fontSize: isMobile ? 28 : 36,
                       fontWeight: FontWeight.bold,
@@ -56,7 +56,7 @@ class RulebookSection extends StatelessWidget {
                   ),
                   SizedBox(height: isMobile ? 16 : 24),
                   Text(
-                    "동업계약서 쓰기엔 너무 딱딱하고, 말로만 하기엔 불안하신가요? CoSync는 합의된 내용을 바탕으로 우리 팀만의 헌법, [Rulebook.pdf]를 생성해 드립니다.",
+                    "동업계약서 쓰기엔 너무 딱딱하고, 말로만 하기엔 불안하신가요? CoSync는 합의된 내용을 바탕으로 우리 팀만의 헌법, [Co-Founder Agreement.pdf]를 생성해 드립니다.",
                     style: TextStyle(
                       fontSize: isMobile ? 15 : 18,
                       color: const Color(0xFF475569),
@@ -100,7 +100,7 @@ class RulebookSection extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Co-founder Rulebook",
+                              "Co-Founder Agreement (Draft)",
                               style: TextStyle(
                                 fontSize: isMobile ? 18 : 20,
                                 fontWeight: FontWeight.bold,

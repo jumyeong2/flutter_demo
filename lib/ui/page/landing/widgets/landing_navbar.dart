@@ -50,7 +50,7 @@ class LandingNavbar extends StatelessWidget {
               children: [
                 _navLink("프로세스"),
                 _navLink("리스크 진단"),
-                _navLink("Rulebook이란?"),
+                _navLink("공동창업 합의서란?"),
                 const SizedBox(width: 16),
                 ElevatedButton(
                   onPressed: controller.startTrial,

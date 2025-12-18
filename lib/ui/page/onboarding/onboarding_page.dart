@@ -51,7 +51,7 @@ class _OnboardingPageState extends State<OnboardingPage>
           onPressed: controller.goBack,
         ),
         title: const Text(
-          "Rulebook 체험",
+          "공동창업 합의서 만들기",
           style: TextStyle(
             color: Color(0xFF0F172A),
             fontWeight: FontWeight.bold,
@@ -83,7 +83,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                       child: Column(
                         children: [
                           const Text(
-                            "Rulebook 체험을\n시작해보세요!",
+                            "불편한 이야기를\n지금 정리해보세요!",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 24,
