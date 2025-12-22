@@ -133,12 +133,13 @@ class AgreementAdjustPage extends StatelessWidget {
     BuildContext context,
     AgreementAdjustController controller,
   ) {
-    return Obx(
-      () => ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        itemCount: controller.categories.length,
-        itemBuilder: (context, index) {
-          final category = controller.categories[index];
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      itemCount: controller.categories.length,
+      itemBuilder: (context, index) {
+        final category = controller.categories[index];
+
+        return Obx(() {
           final isSelected =
               controller.selectedCategory.value?.id == category.id;
           final answeredCount = category.questions
@@ -151,92 +152,99 @@ class AgreementAdjustPage extends StatelessWidget {
           final totalCount = category.questions.length;
           final isComplete = answeredCount == totalCount;
 
-          return InkWell(
-            onTap: () => controller.selectCategory(category),
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? const Color(0xFFE0F2FE)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: isSelected
-                      ? const Color(0xFF0EA5E9)
-                      : Colors.transparent,
-                  width: 2,
-                ),
-              ),
-              child: Row(
-                children: [
-                  if (isComplete)
-                    Container(
-                      width: 24,
-                      height: 24,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF10B981),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.check,
-                        size: 16,
-                        color: Colors.white,
-                      ),
-                    )
-                  else
-                    Container(
-                      width: 24,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          "${index + 1}",
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                      ),
-                    ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          category.label,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.w600,
-                            color: isSelected
-                                ? const Color(0xFF0369A1)
-                                : Colors.black87,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          "$answeredCount/$totalCount 완료",
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            child: Material(
+              color: isSelected ? const Color(0xFFE0F2FE) : Colors.transparent,
+              borderRadius: BorderRadius.circular(12),
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: () => controller.selectCategory(category),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 18,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isSelected
+                          ? const Color(0xFF0EA5E9)
+                          : Colors.transparent,
+                      width: 2,
                     ),
                   ),
-                ],
+                  child: Row(
+                    children: [
+                      if (isComplete)
+                        Container(
+                          width: 24,
+                          height: 24,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF10B981),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.check,
+                            size: 16,
+                            color: Colors.white,
+                          ),
+                        )
+                      else
+                        Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Text(
+                              "${index + 1}",
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                          ),
+                        ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              category.label,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.w600,
+                                color: isSelected
+                                    ? const Color(0xFF0369A1)
+                                    : Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "$answeredCount/$totalCount 완료",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           );
-        },
-      ),
+        });
+      },
     );
   }
 
@@ -284,26 +292,25 @@ class AgreementAdjustPage extends StatelessWidget {
         itemCount: controller.categories.length,
         itemBuilder: (context, index) {
           final category = controller.categories[index];
-          final answeredCount = category.questions
-              .where(
-                (q) =>
-                    controller.answers.containsKey(q.id) &&
-                    controller.answers[q.id]!.isNotEmpty,
-              )
-              .length;
-          final totalCount = category.questions.length;
-          final isComplete = answeredCount == totalCount;
-          final progress = totalCount > 0 ? answeredCount / totalCount : 0.0;
-          final gradientColors = _getCategoryGradient(category.id);
 
-          return InkWell(
-            onTap: () => controller.selectCategory(category),
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
+          return Obx(() {
+            final answeredCount = category.questions
+                .where(
+                  (q) =>
+                      controller.answers.containsKey(q.id) &&
+                      controller.answers[q.id]!.isNotEmpty,
+                )
+                .length;
+            final totalCount = category.questions.length;
+            final isComplete = answeredCount == totalCount;
+            final progress = totalCount > 0 ? answeredCount / totalCount : 0.0;
+            final gradientColors = _getCategoryGradient(category.id);
+            final isSelected =
+                controller.selectedCategory.value?.id == category.id;
+
+            return Container(
               decoration: BoxDecoration(
-                color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.04),
@@ -312,123 +319,147 @@ class AgreementAdjustPage extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // 상단 아이콘 영역
-                  Container(
-                    height: 100,
+              child: Material(
+                color: isSelected ? const Color(0xFFE0F2FE) : Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  onTap: () => controller.selectCategory(category),
+                  child: Container(
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: gradientColors,
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: isSelected
+                            ? const Color(0xFF0EA5E9)
+                            : const Color(0xFFE5E7EB),
+                        width: isSelected ? 2 : 1,
                       ),
                     ),
-                    child: Stack(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // 배경 패턴
-                        Positioned(
-                          right: -10,
-                          top: -10,
-                          child: Icon(
-                            _getCategoryIcon(category.id),
-                            size: 80,
-                            color: Colors.white.withOpacity(0.2),
-                          ),
-                        ),
-                        // 메인 아이콘
-                        Center(
-                          child: Icon(
-                            _getCategoryIcon(category.id),
-                            size: 40,
-                            color: Colors.white,
-                          ),
-                        ),
-                        // 완료 배지
-                        if (isComplete)
-                          Positioned(
-                            top: 8,
-                            right: 8,
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 4,
-                                  ),
-                                ],
-                              ),
-                              child: const Icon(
-                                Icons.check_rounded,
-                                size: 16,
-                                color: Color(0xFF10B981),
-                              ),
+                        // 상단 아이콘 영역
+                        Container(
+                          height: 100,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: gradientColors,
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20),
                             ),
                           ),
+                          child: Stack(
+                            children: [
+                              // 배경 패턴
+                              Positioned(
+                                right: -10,
+                                top: -10,
+                                child: Icon(
+                                  _getCategoryIcon(category.id),
+                                  size: 80,
+                                  color: Colors.white.withOpacity(0.2),
+                                ),
+                              ),
+                              // 메인 아이콘
+                              Center(
+                                child: Icon(
+                                  _getCategoryIcon(category.id),
+                                  size: 40,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              // 완료 배지
+                              if (isComplete)
+                                Positioned(
+                                  top: 8,
+                                  right: 8,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 4,
+                                        ),
+                                      ],
+                                    ),
+                                    child: const Icon(
+                                      Icons.check_rounded,
+                                      size: 16,
+                                      color: Color(0xFF10B981),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        // 하단 텍스트 영역
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  category.label,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: isSelected
+                                        ? const Color(0xFF0369A1)
+                                        : const Color(0xFF1F2937),
+                                    height: 1.3,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // 진행률 바
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(4),
+                                      child: LinearProgressIndicator(
+                                        value: progress,
+                                        backgroundColor: const Color(
+                                          0xFFE5E7EB,
+                                        ),
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              gradientColors[0],
+                                            ),
+                                        minHeight: 6,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      "$answeredCount/$totalCount 완료",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[600],
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  // 하단 텍스트 영역
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            category.label,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1F2937),
-                              height: 1.3,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // 진행률 바
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(4),
-                                child: LinearProgressIndicator(
-                                  value: progress,
-                                  backgroundColor: const Color(0xFFE5E7EB),
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    gradientColors[0],
-                                  ),
-                                  minHeight: 6,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                "$answeredCount/$totalCount 완료",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          );
+            );
+          });
         },
       );
     });
