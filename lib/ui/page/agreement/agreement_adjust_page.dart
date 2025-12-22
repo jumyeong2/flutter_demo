@@ -445,13 +445,14 @@ class AgreementAdjustPage extends StatelessWidget {
       itemCount: category.questions.length,
       itemBuilder: (context, index) {
         final question = category.questions[index];
-        final isSelected = controller.selectedQuestion.value?.id == question.id;
-        final isAnswered =
-            controller.answers.containsKey(question.id) &&
-            controller.answers[question.id]!.isNotEmpty;
+        return Obx(() {
+          final isSelected =
+              controller.selectedQuestion.value?.id == question.id;
+          final isAnswered =
+              controller.answers.containsKey(question.id) &&
+              controller.answers[question.id]!.isNotEmpty;
 
-        return Obx(
-          () => InkWell(
+          return InkWell(
             onTap: () => controller.selectQuestion(question),
             child: Container(
               padding: const EdgeInsets.all(16),
@@ -520,8 +521,8 @@ class AgreementAdjustPage extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-        );
+          );
+        });
       },
     );
   }

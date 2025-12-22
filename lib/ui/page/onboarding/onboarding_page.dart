@@ -112,38 +112,28 @@ class _OnboardingPageState extends State<OnboardingPage>
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          Positioned(
-                            left: 19,
-                            top: 20,
-                            bottom: 40,
-                            child: Container(width: 2, color: Colors.grey[100]),
+                          _buildStep(
+                            1,
+                            "3대 핵심 진단",
+                            "돈(지분), 권력(의사결정), 이별(안전장치)에\n대해 핵심 질문을 던집니다.",
+                            true,
+                            _animations[1],
                           ),
-                          Column(
-                            children: [
-                              _buildStep(
-                                1,
-                                "3대 핵심 진단",
-                                "돈(지분), 권력(의사결정), 이별(안전장치)에\n대해 핵심 질문을 던집니다.",
-                                true,
-                                _animations[1],
-                              ),
-                              const SizedBox(height: 32),
-                              _buildStep(
-                                2,
-                                "AI 리스크 분석",
-                                "입력된 데이터를 바탕으로 잠재적 분쟁\n요소를 찾습니다.",
-                                false,
-                                _animations[2],
-                              ),
-                              const SizedBox(height: 32),
-                              _buildStep(
-                                3,
-                                "솔루션 리포트 발급",
-                                "진단 결과와 개선 가이드북(PDF)을\n제공합니다.",
-                                false,
-                                _animations[3],
-                              ),
-                            ],
+                          const SizedBox(height: 32),
+                          _buildStep(
+                            2,
+                            "AI 리스크 분석",
+                            "입력된 데이터를 바탕으로 잠재적 분쟁\n요소를 찾습니다.",
+                            false,
+                            _animations[2],
+                          ),
+                          const SizedBox(height: 32),
+                          _buildStep(
+                            3,
+                            "솔루션 리포트 발급",
+                            "진단 결과와 개선 가이드북(PDF)을\n제공합니다.",
+                            false,
+                            _animations[3],
                           ),
                         ],
                       ),
