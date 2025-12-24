@@ -2,6 +2,9 @@
 
 ---
 
+## 요청사항
+- 요청 시, 진행 상황과 결과를 한글로 표시해줘.
+
 ## 개발 컨벤션 (Development Conventions)
 
 ### 1. 네이밍 규칙 (Naming Conventions)
