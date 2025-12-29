@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_demo/ui/widgets/responsive_layout.dart';
-import '../landing_controller.dart';
+import '../x_landing_controller.dart';
 import 'demo_step_1.dart';
 import 'demo_step_2.dart';
 import 'demo_step_3.dart';

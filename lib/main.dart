@@ -4,10 +4,10 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/firebase_options.dart';
+import 'package:flutter_demo/ui/page/landing/landing_page.dart';
 import 'package:get/get.dart';
 import 'data/repository/user_repository.dart';
 import 'service/auth_service.dart';
-import 'ui/page/landing/landing_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
