@@ -8,9 +8,10 @@ class Description2 extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isSmallScreen = screenWidth <= 1024;
+    final isSmallMobile = screenWidth <= 480;
 
     return LandingSectionLayout(
-      height: isSmallScreen ? 1100 : 750,
+      height: isSmallMobile ? 960 : (isSmallScreen ? 1100 : 750),
       backgroundColor: const Color(0xFFF8FAFC),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -19,7 +20,7 @@ class Description2 extends StatelessWidget {
           Text.rich(
             TextSpan(
               style: TextStyle(
-                fontSize: isSmallScreen ? 24 : 32,
+                fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
                 fontWeight: FontWeight.w900,
                 color: Colors.black,
               ),
@@ -29,27 +30,27 @@ class Description2 extends StatelessWidget {
                   text: '500만 원',
                   style: TextStyle(color: Color(0xFF1D4ED8)),
                 ),
-                const TextSpan(text: ',\n그 대가는 얼마일까요?'),
+                TextSpan(text: isSmallMobile ? ',\n그 대가는?' : ',\n그 대가는 얼마일까요?'),
               ],
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 18),
           Text(
-            "많은 팀이 비용을 아끼려다 더 큰 기회를 놓치고 있습니다.",
+            "비용을 아끼려다 더 큰 기회를 놓치고 있습니다.",
             style: TextStyle(
-              fontSize: isSmallScreen ? 16 : 18,
+              fontSize: isSmallMobile ? 14 : (isSmallScreen ? 16 : 18),
               fontWeight: FontWeight.w900,
               color: Colors.black54,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 38),
+          SizedBox(height: isSmallMobile ? 28 : 38),
           // 카드 영역
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            padding: EdgeInsets.symmetric(horizontal: isSmallMobile ? 0 : 30.0),
             child: isSmallScreen
-                ? _buildVerticalLayout()
+                ? _buildVerticalLayout(isSmallMobile)
                 : _buildHorizontalLayout(),
           ),
         ],
@@ -58,13 +59,13 @@ class Description2 extends StatelessWidget {
   }
 
   // 세로 배치 (1024px 이하)
-  Widget _buildVerticalLayout() {
+  Widget _buildVerticalLayout(bool isSmallMobile) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildHiddenCostCard(),
+        _buildHiddenCostCard(isSmallMobile),
         const SizedBox(height: 40),
-        _buildCoSyncEffectCard(),
+        _buildCoSyncEffectCard(isSmallMobile),
       ],
     );
   }
@@ -77,14 +78,14 @@ class Description2 extends StatelessWidget {
         Expanded(
           child: Align(
             alignment: Alignment.centerRight,
-            child: _buildHiddenCostCard(),
+            child: _buildHiddenCostCard(false),
           ),
         ),
         const SizedBox(width: 40),
         Expanded(
           child: Align(
             alignment: Alignment.centerLeft,
-            child: _buildCoSyncEffectCard(),
+            child: _buildCoSyncEffectCard(false),
           ),
         ),
       ],
@@ -92,11 +93,14 @@ class Description2 extends StatelessWidget {
   }
 
   // 왼쪽 카드: Hidden Cost
-  Widget _buildHiddenCostCard() {
+  Widget _buildHiddenCostCard(bool isSmallMobile) {
     return Container(
-      constraints: const BoxConstraints(minWidth: 400, maxWidth: 500),
-      height: 370,
-      padding: const EdgeInsets.all(40),
+      constraints: BoxConstraints(
+        minWidth: isSmallMobile ? 0 : 400,
+        maxWidth: 500,
+      ),
+      height: isSmallMobile ? 320 : 370,
+      padding: EdgeInsets.all(isSmallMobile ? 20 : 40),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(32),
@@ -127,33 +131,36 @@ class Description2 extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
+              Text(
                 '숨겨진 비용 (Hidden Cost)',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: isSmallMobile ? 18 : 24,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFFE11D48),
+                  color: const Color(0xFFE11D48),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 40),
+          SizedBox(height: isSmallMobile ? 24 : 40),
           _buildHiddenCostItem(
             icon: Icons.hourglass_empty_rounded,
             title: '의사결정 지연',
             subtitle: '평균 3~6개월 성장 정체',
+            isSmallMobile: isSmallMobile,
           ),
           const SizedBox(height: 24),
           _buildHiddenCostItem(
             icon: Icons.cancel_outlined,
-            title: '투자 미팅 종료 (Deal Breaker)',
+            title: '투자 미팅 종료',
             subtitle: '합의 구조 불명확 시 탈락',
+            isSmallMobile: isSmallMobile,
           ),
           const SizedBox(height: 24),
           _buildHiddenCostItem(
             icon: Icons.payments_outlined,
             title: '법적 분쟁 비용',
             subtitle: '수천만 원 ~ 수억 원 소모',
+            isSmallMobile: isSmallMobile,
           ),
         ],
       ),
@@ -161,11 +168,14 @@ class Description2 extends StatelessWidget {
   }
 
   // 오른쪽 카드: CoSync Effect
-  Widget _buildCoSyncEffectCard() {
+  Widget _buildCoSyncEffectCard(bool isSmallMobile) {
     return Container(
-      constraints: const BoxConstraints(minWidth: 400, maxWidth: 500),
-      height: 370,
-      padding: const EdgeInsets.all(40),
+      constraints: BoxConstraints(
+        minWidth: isSmallMobile ? 0 : 400,
+        maxWidth: 500,
+      ),
+      height: isSmallMobile ? 320 : 370,
+      padding: EdgeInsets.all(isSmallMobile ? 20 : 40),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
@@ -192,17 +202,17 @@ class Description2 extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
+              Text(
                 'CoSync 도입 효과',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: isSmallMobile ? 18 : 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 40),
+          SizedBox(height: isSmallMobile ? 24 : 40),
           Expanded(
             child: Column(
               children: [
@@ -256,36 +266,48 @@ class Description2 extends StatelessWidget {
     required IconData icon,
     required String title,
     required String subtitle,
+    required bool isSmallMobile,
   }) {
     return Row(
       children: [
         Container(
-          width: 48,
-          height: 48,
+          width: isSmallMobile ? 40 : 48,
+          height: isSmallMobile ? 40 : 48,
           decoration: BoxDecoration(
             color: Colors.red[50],
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, color: Colors.red[400], size: 24),
+          child: Icon(
+            icon,
+            color: Colors.red[400],
+            size: isSmallMobile ? 20 : 24,
+          ),
         ),
         const SizedBox(width: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E293B),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: isSmallMobile ? 14 : 16,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF1E293B),
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-            ),
-          ],
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontSize: isSmallMobile ? 12 : 14,
+                  color: Colors.grey[600],
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
       ],
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/ui/page/onboarding/onboarding_page.dart';
 import 'package:get/get.dart';
 import '../landing_controller.dart';
 
@@ -60,25 +61,28 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                 const SizedBox(width: 30),
               ],
             ),
-          const SizedBox(width: 30),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text(
-              "팀 Rulebook 만들기",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+          if (!isMobileScreen) const SizedBox(width: 30),
+          if (!isMobileScreen)
+            ElevatedButton(
+              onPressed: () {
+                Get.to(() => const OnboardingPage());
+              },
+              child: const Text(
+                "팀 Rulebook 만들기",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF0F172A),
+                fixedSize: const Size(200, 40),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF0F172A),
-              fixedSize: const Size(200, 40),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
           const SizedBox(width: 16),
         ],
       ),

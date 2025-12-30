@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class LandingSectionLayout extends StatelessWidget {
   final Color backgroundColor;
   final Widget child;
-  final double height;
+  final double? height;
 
   const LandingSectionLayout({
     super.key,
@@ -14,11 +14,17 @@ class LandingSectionLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isVerySmallMobile = screenWidth <= 480;
+
     return Container(
       width: double.infinity,
       height: height,
       color: backgroundColor,
-      child: child,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: isVerySmallMobile ? 20 : 0),
+        child: child,
+      ),
     );
   }
 }

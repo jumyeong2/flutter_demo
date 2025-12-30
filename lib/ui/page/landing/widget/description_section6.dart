@@ -9,16 +9,17 @@ class Description6 extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final isSmallScreen = screenWidth <= 1180;
     final isMediumScreen = screenWidth <= 763;
+    final isSmallMobile = screenWidth <= 480;
 
     return LandingSectionLayout(
-      height: isSmallScreen ? 1650 : 900,
+      height: isSmallMobile ? 1100 : (isSmallScreen ? 1650 : 900),
       backgroundColor: const Color(0xFFF8FAFC),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 20 : 40),
+        padding: EdgeInsets.symmetric(horizontal: isSmallMobile ? 0 : 20),
         child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 80),
+          margin: EdgeInsets.symmetric(vertical: isSmallMobile ? 40 : 80),
           child: isSmallScreen
-              ? _buildVerticalLayout(isMediumScreen)
+              ? _buildVerticalLayout(isMediumScreen, isSmallMobile)
               : _buildHorizontalLayout(),
         ),
       ),
@@ -44,12 +45,20 @@ class Description6 extends StatelessWidget {
   }
 
   // 세로 배치 (1024px 이하)
-  Widget _buildVerticalLayout(bool isMediumScreen) {
+  Widget _buildVerticalLayout(bool isMediumScreen, bool isSmallMobile) {
     return Column(
       children: [
-        _buildTextContent(isSmallScreen: true, isMediumScreen: isMediumScreen),
-        const SizedBox(height: 80),
-        _buildMockup(),
+        _buildTextContent(
+          isSmallScreen: true,
+          isMediumScreen: isMediumScreen,
+          isSmallMobile: isSmallMobile,
+        ),
+        SizedBox(height: isSmallMobile ? 40 : 80),
+        isSmallMobile
+            ? FittedBox(fit: BoxFit.scaleDown, child: _buildMockup())
+            : _buildMockup(),
+        SizedBox(height: isSmallMobile ? 60 : 80),
+        _DownloadButton(isSmallMobile: isSmallMobile),
       ],
     );
   }
@@ -57,6 +66,7 @@ class Description6 extends StatelessWidget {
   Widget _buildTextContent({
     bool isSmallScreen = false,
     bool isMediumScreen = false,
+    bool isSmallMobile = false,
   }) {
     return Column(
       crossAxisAlignment: isSmallScreen
@@ -69,14 +79,16 @@ class Description6 extends StatelessWidget {
               ? MainAxisAlignment.center
               : MainAxisAlignment.start,
           children: [
-            Container(width: 24, height: 2, color: const Color(0xFF2563EB)),
-            const SizedBox(width: 8),
-            const Text(
+            if (!isSmallMobile) ...[
+              Container(width: 24, height: 2, color: const Color(0xFF2563EB)),
+              const SizedBox(width: 8),
+            ],
+            Text(
               "FINAL OUTPUT",
               style: TextStyle(
-                fontSize: 14,
+                fontSize: isSmallMobile ? 12 : 14,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF2563EB),
+                color: const Color(0xFF2563EB),
                 letterSpacing: 1.2,
               ),
             ),
@@ -84,42 +96,49 @@ class Description6 extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Text(
-          "말뿐인 약속은 잊혀집니다.\n'공동창업자 Rulebook'으로 기록하세요.",
+          "말뿐인 약속은 잊혀집니다.\n'Rulebook'으로 기록하세요.",
           textAlign: isSmallScreen ? TextAlign.center : TextAlign.start,
           style: TextStyle(
-            fontSize: isMediumScreen ? 24 : 32,
+            fontSize: isSmallMobile ? 20 : (isMediumScreen ? 24 : 32),
             fontWeight: FontWeight.w900,
-            color: Color(0xFF1E293B),
+            color: const Color(0xFF1E293B),
             height: 1.3,
           ),
         ),
         const SizedBox(height: 24),
         Text(
-          "동업계약서 쓰기엔 너무 딱딱하고, 말로만 하기엔 불안하신가요?\nCo-founder Sync는 합의된 내용을 바탕으로 우리 팀만의 헌법,\n[Rulebook.pdf]를 생성해 드립니다.",
+          isSmallMobile
+              ? "합의된 내용을 바탕으로 우리 팀만의 헌법,\n[Rulebook.pdf]를 생성해 드립니다."
+              : "동업계약서 쓰기엔 너무 딱딱하고, 말로만 하기엔 불안하신가요?\nCo-founder Sync는 우리 팀만의 헌법,\n[Rulebook.pdf]를 생성해 드립니다.",
           textAlign: isSmallScreen ? TextAlign.center : TextAlign.start,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Color(0xFF64748B),
+          style: TextStyle(
+            fontSize: isSmallMobile ? 13 : 16,
+            color: const Color(0xFF64748B),
             height: 1.6,
           ),
         ),
         const SizedBox(height: 40),
-        _buildListItem("Mission & Vision (우리가 모인 이유)"),
-        _buildListItem("R&R (명확한 역할과 책임)"),
-        _buildListItem("Compensation (지분 및 급여)"),
-        _buildListItem("Decision Making (의사결정 구조)"),
-        _buildListItem("Exit Plan (아름다운 이별의 조건)"),
-        const SizedBox(height: 30),
-        const _DownloadButton(),
+        _buildListItem("Mission & Vision", isSmallMobile),
+        _buildListItem("R&R (역할과 책임)", isSmallMobile),
+        _buildListItem("Compensation (지분)", isSmallMobile),
+        _buildListItem("Decision Making", isSmallMobile),
+        _buildListItem("Exit Plan (이탈 조건)", isSmallMobile),
+        if (!isSmallScreen) ...[
+          SizedBox(height: isSmallMobile ? 20 : 30),
+          _DownloadButton(isSmallMobile: isSmallMobile),
+        ],
       ],
     );
   }
 
-  Widget _buildListItem(String text) {
+  Widget _buildListItem(String text, bool isSmallMobile) {
     return Container(
-      width: 560,
+      width: isSmallMobile ? double.infinity : 560,
       margin: const EdgeInsets.only(bottom: 6),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: EdgeInsets.symmetric(
+        horizontal: isSmallMobile ? 12 : 20,
+        vertical: isSmallMobile ? 12 : 16,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -127,18 +146,18 @@ class Description6 extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(
+          Icon(
             Icons.check_circle_outline_rounded,
-            color: Color(0xFF2563EB),
-            size: 20,
+            color: const Color(0xFF2563EB),
+            size: isSmallMobile ? 16 : 20,
           ),
           const SizedBox(width: 12),
           Text(
             text,
-            style: const TextStyle(
-              fontSize: 15,
+            style: TextStyle(
+              fontSize: isSmallMobile ? 13 : 15,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF334155),
+              color: const Color(0xFF334155),
             ),
           ),
         ],
@@ -148,7 +167,8 @@ class Description6 extends StatelessWidget {
 }
 
 class _DownloadButton extends StatefulWidget {
-  const _DownloadButton();
+  final bool isSmallMobile;
+  const _DownloadButton({this.isSmallMobile = false});
 
   @override
   State<_DownloadButton> createState() => _DownloadButtonState();
@@ -201,7 +221,11 @@ class _DownloadButtonState extends State<_DownloadButton> {
               color: _isHovered ? activeColor : idleColor,
               fontFamily: 'Pretendard',
             ),
-            child: const Text("Rulebook 샘플 다운로드 (PDF)"),
+            child: Text(
+              widget.isSmallMobile
+                  ? "Rulebook 샘플(PDF)"
+                  : "Rulebook 샘플 다운로드 (PDF)",
+            ),
           ),
         ],
       ),

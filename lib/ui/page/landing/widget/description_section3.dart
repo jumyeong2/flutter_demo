@@ -8,9 +8,10 @@ class Description3 extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isSmallScreen = screenWidth <= 1024;
+    final isSmallMobile = screenWidth <= 480;
 
     return LandingSectionLayout(
-      height: isSmallScreen ? 1500 : 750,
+      height: isSmallMobile ? 1200 : (isSmallScreen ? 1400 : 750),
       backgroundColor: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -19,7 +20,7 @@ class Description3 extends StatelessWidget {
           Text(
             "가장 치명적인 3가지 리스크 해결",
             style: TextStyle(
-              fontSize: isSmallScreen ? 24 : 32,
+              fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
               fontWeight: FontWeight.w900,
             ),
           ),
@@ -30,16 +31,18 @@ class Description3 extends StatelessWidget {
                 : "공동창업팀이 겪는 현실적인 고민들, 이제 CoSync가 해결해 드립니다.",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: isSmallScreen ? 16 : 18,
+              fontSize: isSmallMobile ? 14 : (isSmallScreen ? 16 : 18),
               fontWeight: FontWeight.w500,
               color: Colors.black54,
             ),
           ),
-          const SizedBox(height: 60),
+          SizedBox(height: isSmallMobile ? 30 : 60),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: isSmallScreen ? _buildCardsColumn() : _buildCardsRow(),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: isSmallScreen
+                  ? _buildCardsColumn(isSmallMobile)
+                  : _buildCardsRow(),
             ),
           ),
         ],
@@ -54,32 +57,33 @@ class Description3 extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(child: _buildCostCard()),
+          _buildCostCard(false),
           const SizedBox(width: 24),
-          Expanded(child: _buildInvestmentCard()),
+          _buildInvestmentCard(false),
           const SizedBox(width: 24),
-          Expanded(child: _buildEmotionCard()),
+          _buildEmotionCard(false),
         ],
       ),
     );
   }
 
   // 세로 배치 (1024px 이하)
-  Widget _buildCardsColumn() {
+  Widget _buildCardsColumn(bool isSmallMobile) {
     return Column(
       children: [
-        _buildCostCard(),
+        _buildCostCard(isSmallMobile),
         const SizedBox(height: 24),
-        _buildInvestmentCard(),
+        _buildInvestmentCard(isSmallMobile),
         const SizedBox(height: 24),
-        _buildEmotionCard(),
+        _buildEmotionCard(isSmallMobile),
       ],
     );
   }
 
   // 비용 절감 카드
-  Widget _buildCostCard() {
+  Widget _buildCostCard(bool isSmallMobile) {
     return _RiskHoverCard(
+      isSmallMobile: isSmallMobile,
       borderColor: Colors.grey.withValues(alpha: 0.2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,25 +99,28 @@ class Description3 extends StatelessWidget {
                 ),
                 child: Icon(
                   Icons.savings_outlined,
-                  size: 28,
+                  size: isSmallMobile ? 24 : 28,
                   color: Colors.green[600],
                 ),
               ),
               const SizedBox(width: 16),
-              const Text(
+              Text(
                 '비용 절감',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: isSmallMobile ? 20 : 24,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF15803D),
+                  color: const Color(0xFF15803D),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 32),
-          const Text(
+          SizedBox(height: isSmallMobile ? 20 : 32),
+          Text(
             '주주간 계약서, 전문가에게 바로 맡기면 평균 300만원입니다.',
-            style: TextStyle(fontSize: 15, color: Colors.black87),
+            style: TextStyle(
+              fontSize: isSmallMobile ? 13 : 15,
+              color: Colors.black87,
+            ),
           ),
           const SizedBox(height: 12),
           Text.rich(
@@ -129,7 +136,10 @@ class Description3 extends StatelessWidget {
                 const TextSpan(text: '으로 쟁점을 정리하면 비용이 획기적으로 줍니다.'),
               ],
             ),
-            style: const TextStyle(fontSize: 15, color: Colors.black87),
+            style: TextStyle(
+              fontSize: isSmallMobile ? 13 : 15,
+              color: Colors.black87,
+            ),
           ),
           const Spacer(),
           Row(
@@ -146,7 +156,7 @@ class Description3 extends StatelessWidget {
               Text(
                 '-90%',
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: isSmallMobile ? 24 : 28,
                   fontWeight: FontWeight.w900,
                   color: Colors.green[700],
                 ),
@@ -169,8 +179,9 @@ class Description3 extends StatelessWidget {
   }
 
   // 투자 대비 카드
-  Widget _buildInvestmentCard() {
+  Widget _buildInvestmentCard(bool isSmallMobile) {
     return _RiskHoverCard(
+      isSmallMobile: isSmallMobile,
       borderColor: Colors.grey.withValues(alpha: 0.2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,22 +197,22 @@ class Description3 extends StatelessWidget {
                 ),
                 child: Icon(
                   Icons.trending_up_rounded,
-                  size: 28,
+                  size: isSmallMobile ? 24 : 28,
                   color: Colors.blue[600],
                 ),
               ),
               const SizedBox(width: 16),
-              const Text(
+              Text(
                 '투자 대비',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: isSmallMobile ? 20 : 24,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF1D4ED8),
+                  color: const Color(0xFF1D4ED8),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: isSmallMobile ? 20 : 32),
           Text.rich(
             TextSpan(
               children: [
@@ -216,23 +227,27 @@ class Description3 extends StatelessWidget {
                 const TextSpan(text: '입니다. 필수 항목을 미리 점검하세요.'),
               ],
             ),
-            style: const TextStyle(fontSize: 15, color: Colors.black87),
+            style: TextStyle(
+              fontSize: isSmallMobile ? 13 : 15,
+              color: Colors.black87,
+            ),
           ),
           const Spacer(),
-          const SizedBox(height: 32),
-          _buildCheckItem(Colors.blue[400]!, '주주명부(Cap Table)'),
+          SizedBox(height: isSmallMobile ? 20 : 32),
+          _buildCheckItem(Colors.blue[400]!, '주주명부(Cap Table)', isSmallMobile),
           const SizedBox(height: 12),
-          _buildCheckItem(Colors.blue[400]!, 'IP 양도 계약'),
+          _buildCheckItem(Colors.blue[400]!, 'IP 양도 계약', isSmallMobile),
           const SizedBox(height: 12),
-          _buildCheckItem(Colors.blue[400]!, '이탈 방지(Vesting)'),
+          _buildCheckItem(Colors.blue[400]!, '이탈 방지(Vesting)', isSmallMobile),
         ],
       ),
     );
   }
 
   // 감정 보호 카드
-  Widget _buildEmotionCard() {
+  Widget _buildEmotionCard(bool isSmallMobile) {
     return _RiskHoverCard(
+      isSmallMobile: isSmallMobile,
       borderColor: Colors.grey.withValues(alpha: 0.2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,22 +263,22 @@ class Description3 extends StatelessWidget {
                 ),
                 child: Icon(
                   Icons.handshake_outlined,
-                  size: 28,
+                  size: isSmallMobile ? 24 : 28,
                   color: const Color(0xFF7E22CE),
                 ),
               ),
               const SizedBox(width: 16),
-              const Text(
+              Text(
                 '감정 보호',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: isSmallMobile ? 20 : 24,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF7E22CE),
+                  color: const Color(0xFF7E22CE),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: isSmallMobile ? 20 : 32),
           Text.rich(
             TextSpan(
               children: [
@@ -278,7 +293,10 @@ class Description3 extends StatelessWidget {
                 const TextSpan(text: '라고 핑계 대세요. 악역은 시스템이 맡겠습니다.'),
               ],
             ),
-            style: const TextStyle(fontSize: 15, color: Colors.black87),
+            style: TextStyle(
+              fontSize: isSmallMobile ? 12 : 15,
+              color: Colors.black87,
+            ),
           ),
           const Spacer(),
           Container(
@@ -296,9 +314,12 @@ class Description3 extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       '의사결정 갈등 발생 시',
-                      style: TextStyle(fontSize: 12, color: Colors.black45),
+                      style: TextStyle(
+                        fontSize: isSmallMobile ? 10 : 12,
+                        color: Colors.black45,
+                      ),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -321,12 +342,12 @@ class Description3 extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
-                const Text(
+                Text(
                   '"CEO에게 최종 결정권 부여"',
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: isSmallMobile ? 13 : 15,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E293B),
+                    color: const Color(0xFF1E293B),
                   ),
                 ),
               ],
@@ -337,7 +358,7 @@ class Description3 extends StatelessWidget {
     );
   }
 
-  Widget _buildCheckItem(Color color, String text) {
+  Widget _buildCheckItem(Color color, String text, bool isSmallMobile) {
     return Row(
       children: [
         Container(
@@ -346,15 +367,15 @@ class Description3 extends StatelessWidget {
             color: color.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(Icons.check, color: color, size: 14),
+          child: Icon(Icons.check, color: color, size: isSmallMobile ? 12 : 14),
         ),
         const SizedBox(width: 12),
         Text(
           text,
-          style: const TextStyle(
-            fontSize: 15,
+          style: TextStyle(
+            fontSize: isSmallMobile ? 13 : 15,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF1E293B),
+            color: const Color(0xFF1E293B),
           ),
         ),
       ],
@@ -365,8 +386,13 @@ class Description3 extends StatelessWidget {
 class _RiskHoverCard extends StatefulWidget {
   final Widget child;
   final Color borderColor;
+  final bool isSmallMobile;
 
-  const _RiskHoverCard({required this.child, required this.borderColor});
+  const _RiskHoverCard({
+    required this.child,
+    required this.borderColor,
+    required this.isSmallMobile,
+  });
 
   @override
   State<_RiskHoverCard> createState() => _RiskHoverCardState();
@@ -384,9 +410,9 @@ class _RiskHoverCardState extends State<_RiskHoverCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
-        padding: const EdgeInsets.all(32),
-        height: 380,
-        constraints: const BoxConstraints(minWidth: 300, maxWidth: 500),
+        padding: EdgeInsets.all(widget.isSmallMobile ? 24 : 32),
+        height: widget.isSmallMobile ? 320 : 380,
+        width: widget.isSmallMobile ? double.infinity : 350,
         transform: _isHovered
             ? Matrix4.translationValues(0, -5, 0)
             : Matrix4.identity(),

@@ -5,9 +5,12 @@ class FooterSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallMobile = screenWidth <= 480;
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 60),
+      padding: EdgeInsets.symmetric(vertical: isSmallMobile ? 40 : 60),
       color: Colors.white,
       child: Column(
         children: [
@@ -17,17 +20,17 @@ class FooterSection extends StatelessWidget {
             children: [
               Image.asset(
                 'assets/CoSync.webp',
-                height: 28,
+                height: isSmallMobile ? 24 : 28,
                 color: const Color(0xFF94A3B8),
                 colorBlendMode: BlendMode.srcIn,
               ),
-              const SizedBox(width: 10),
-              const Text(
+              const SizedBox(width: 8),
+              Text(
                 "Co-founder Sync",
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: isSmallMobile ? 18 : 20,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF334155),
+                  color: const Color(0xFF334155),
                   letterSpacing: -0.5,
                 ),
               ),
@@ -35,26 +38,37 @@ class FooterSection extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           // 카피라이트
-          const Text(
+          Text(
             "© 2024 Co-founder Sync. All rights reserved.",
             style: TextStyle(
-              fontSize: 14,
-              color: Color(0xFF64748B),
+              fontSize: isSmallMobile ? 12 : 14,
+              color: const Color(0xFF64748B),
               fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 24),
           // 링크 영역
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildFooterLink("서비스 이용약관"),
-              _buildDivider(),
-              _buildFooterLink("개인정보 처리방침"),
-              _buildDivider(),
-              _buildFooterLink("문의하기"),
-            ],
-          ),
+          if (isSmallMobile)
+            Column(
+              children: [
+                _buildFooterLink("서비스 이용약관"),
+                const SizedBox(height: 12),
+                _buildFooterLink("개인정보 처리방침"),
+                const SizedBox(height: 12),
+                _buildFooterLink("문의하기"),
+              ],
+            )
+          else
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildFooterLink("서비스 이용약관"),
+                _buildDivider(),
+                _buildFooterLink("개인정보 처리방침"),
+                _buildDivider(),
+                _buildFooterLink("문의하기"),
+              ],
+            ),
         ],
       ),
     );
