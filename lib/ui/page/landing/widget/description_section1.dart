@@ -15,7 +15,7 @@ class Description1 extends StatelessWidget {
     final isSmallMobile = screenWidth <= 480;
 
     return LandingSectionLayout(
-      height: isSmallMobile ? 570 : (isMobileScreen ? 700 : 740),
+      height: isSmallMobile ? 570 : (isSmallScreen ? 650 : 740),
       backgroundColor: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

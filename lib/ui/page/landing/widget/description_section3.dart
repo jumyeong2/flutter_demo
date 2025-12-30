@@ -11,7 +11,7 @@ class Description3 extends StatelessWidget {
     final isSmallMobile = screenWidth <= 480;
 
     return LandingSectionLayout(
-      height: isSmallMobile ? 1200 : (isSmallScreen ? 1400 : 750),
+      height: isSmallMobile ? 1280 : (isSmallScreen ? 1530 : 750),
       backgroundColor: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -57,11 +57,11 @@ class Description3 extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildCostCard(false),
+          Flexible(child: _buildCostCard(false)),
           const SizedBox(width: 24),
-          _buildInvestmentCard(false),
+          Flexible(child: _buildInvestmentCard(false)),
           const SizedBox(width: 24),
-          _buildEmotionCard(false),
+          Flexible(child: _buildEmotionCard(false)),
         ],
       ),
     );
