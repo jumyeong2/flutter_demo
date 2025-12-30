@@ -109,7 +109,7 @@ class Description6 extends StatelessWidget {
         Text(
           isSmallMobile
               ? "합의된 내용을 바탕으로 우리 팀만의 헌법,\n[Rulebook.pdf]를 생성해 드립니다."
-              : "동업계약서 쓰기엔 너무 딱딱하고, 말로만 하기엔 불안하신가요?\nCo-founder Sync는 우리 팀만의 헌법,\n[Rulebook.pdf]를 생성해 드립니다.",
+              : "동업계약서 쓰기엔 너무 딱딱하고, 말로만 하기엔 불안하신가요?\nCoSync는 우리 팀만의 헌법,\n[Rulebook.pdf]를 생성해 드립니다.",
           textAlign: isSmallScreen ? TextAlign.center : TextAlign.start,
           style: TextStyle(
             fontSize: isSmallMobile ? 13 : 16,
@@ -216,7 +216,7 @@ class _DownloadButtonState extends State<_DownloadButton> {
           AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 200),
             style: TextStyle(
-              fontSize: 20,
+              fontSize: widget.isSmallMobile ? 16 : 14,
               fontWeight: FontWeight.w800,
               color: _isHovered ? activeColor : idleColor,
               fontFamily: 'Pretendard',

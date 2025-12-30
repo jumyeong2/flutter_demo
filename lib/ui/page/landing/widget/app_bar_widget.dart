@@ -28,7 +28,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
           ),
           const SizedBox(width: 8),
           Text(
-            isMobileScreen ? 'CoSync' : 'Co-founder Sync',
+            'CoSync',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
           ),
           Spacer(),

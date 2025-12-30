@@ -26,7 +26,7 @@ class FooterSection extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                "Co-founder Sync",
+                "CoSync",
                 style: TextStyle(
                   fontSize: isSmallMobile ? 18 : 20,
                   fontWeight: FontWeight.w800,
@@ -39,7 +39,7 @@ class FooterSection extends StatelessWidget {
           const SizedBox(height: 20),
           // 카피라이트
           Text(
-            "© 2024 Co-founder Sync. All rights reserved.",
+            "© 2025 CoSync. All rights reserved.",
             style: TextStyle(
               fontSize: isSmallMobile ? 12 : 14,
               color: const Color(0xFF64748B),

@@ -115,17 +115,10 @@ class Description3 extends StatelessWidget {
             ],
           ),
           SizedBox(height: isSmallMobile ? 20 : 32),
-          Text(
-            '주주간 계약서, 전문가에게 바로 맡기면 평균 300만원입니다.',
-            style: TextStyle(
-              fontSize: isSmallMobile ? 13 : 15,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 12),
           Text.rich(
             TextSpan(
               children: [
+                const TextSpan(text: '주주간 계약서, 전문가에게 바로 맡기면 평균 300만 원입니다. '),
                 TextSpan(
                   text: 'CoSync 연 구독',
                   style: TextStyle(

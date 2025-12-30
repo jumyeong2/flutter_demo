@@ -27,10 +27,10 @@ class Description2 extends StatelessWidget {
               children: [
                 const TextSpan(text: '계약서를 안 써서 아낀 '),
                 const TextSpan(
-                  text: '500만 원',
+                  text: '300만 원',
                   style: TextStyle(color: Color(0xFF1D4ED8)),
                 ),
-                TextSpan(text: isSmallMobile ? ',\n그 대가는?' : ',\n그 대가는 얼마일까요?'),
+                TextSpan(text: isSmallMobile ? ',\n그 대가는 얼마일까요?' : ',\n그 대가는 얼마일까요?'),
               ],
             ),
             textAlign: TextAlign.center,
@@ -225,13 +225,14 @@ class Description2 extends StatelessWidget {
                         '구두 합의만 존재',
                         isBefore: true,
                         strikethrough: true,
+                        isSmallMobile: isSmallMobile,
                       ),
                       const VerticalDivider(
                         color: Colors.white12,
                         indent: 10,
                         endIndent: 10,
                       ),
-                      _buildEffectSection('AFTER', 'Rulebook 12p', '핵심 조항 명문화'),
+                      _buildEffectSection('AFTER', 'Rulebook 12p', '핵심 조항 명문화', isSmallMobile: isSmallMobile),
                     ],
                   ),
                 ),
@@ -244,13 +245,14 @@ class Description2 extends StatelessWidget {
                         '위험 감지 불가',
                         '막연한 불안감',
                         isBefore: true,
+                        isSmallMobile: isSmallMobile,
                       ),
                       const VerticalDivider(
                         color: Colors.white12,
                         indent: 10,
                         endIndent: 10,
                       ),
-                      _buildEffectSection('AFTER', '안정성 78점', '데이터 기반 확신'),
+                      _buildEffectSection('AFTER', '안정성 78점', '데이터 기반 확신', isSmallMobile: isSmallMobile),
                     ],
                   ),
                 ),
@@ -319,6 +321,7 @@ class Description2 extends StatelessWidget {
     String subtitle, {
     bool isBefore = false,
     bool strikethrough = false,
+    bool isSmallMobile = false,
   }) {
     return Expanded(
       child: Padding(
@@ -339,7 +342,7 @@ class Description2 extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: isSmallMobile ? 14 : 16,
                 fontWeight: FontWeight.bold,
                 color: isBefore ? Colors.grey[400] : Colors.white,
                 decoration: strikethrough ? TextDecoration.lineThrough : null,
