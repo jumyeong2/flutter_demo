@@ -72,12 +72,12 @@ class Description1 extends StatelessWidget {
             "'CoSync Rulebook'",
             style: TextStyle(
               fontSize: isSmallMobile
-                  ? 20
+                  ? 24
                   : isMobileScreen
-                  ? 24
+                  ? 28
                   : isSmallScreen
-                  ? 24
-                  : 46,
+                  ? 38
+                  : 58,
               fontWeight: FontWeight.w900,
               color: const Color(0xFF1D4ED8),
             ),
@@ -113,7 +113,7 @@ class Description1 extends StatelessWidget {
               ? Column(
                   children: [
                     SizedBox(
-                      width: isSmallMobile ? double.infinity : 400,
+                      width: isSmallMobile ? 300 : 400,
                       height: 56,
                       child: ElevatedButton(
                         onPressed: () {
@@ -148,7 +148,7 @@ class Description1 extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     SizedBox(
-                      width: isSmallMobile ? double.infinity : 400,
+                      width: isSmallMobile ? 300 : 400,
                       height: 56,
                       child: ElevatedButton(
                         onPressed: () {
