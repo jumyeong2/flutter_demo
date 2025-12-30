@@ -32,9 +32,7 @@ class Description4 extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             isSmallScreen
-                ? (isSmallMobile
-                      ? "CoSync는 객관적인 \n합의를 이끌어냅니다."
-                      : "CoSync는 '중간 다리' 역할을 통해 객관적인 \n합의를 이끌어냅니다.")
+                ? "CoSync는 '중간 다리' 역할을 통해 \n객관적인 합의를 이끌어냅니다."
                 : "CoSync는 '중간 다리' 역할을 통해 객관적인 합의를 이끌어냅니다.",
             textAlign: TextAlign.center,
             style: TextStyle(
