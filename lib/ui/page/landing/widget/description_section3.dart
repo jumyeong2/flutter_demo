@@ -130,7 +130,7 @@ class Description3 extends StatelessWidget {
               ],
             ),
             style: TextStyle(
-              fontSize: isSmallMobile ? 13 : 15,
+              fontSize: isSmallMobile ? 15 : 17,
               color: Colors.black87,
             ),
           ),
@@ -221,7 +221,7 @@ class Description3 extends StatelessWidget {
               ],
             ),
             style: TextStyle(
-              fontSize: isSmallMobile ? 13 : 15,
+              fontSize: isSmallMobile ? 15 : 17,
               color: Colors.black87,
             ),
           ),
@@ -275,19 +275,19 @@ class Description3 extends StatelessWidget {
           Text.rich(
             TextSpan(
               children: [
-                const TextSpan(text: '껄끄러운 돈 이야기, '),
+                const TextSpan(text: '데이터 기반 의사결정으로 '),
                 TextSpan(
-                  text: '"데이터가 그렇다는데?"',
+                  text: '팀의 신뢰를 지키세요',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.purple[700],
                   ),
                 ),
-                const TextSpan(text: '라고 핑계 대세요. 악역은 시스템이 맡겠습니다.'),
+                const TextSpan(text: '. 객관적 기준이 감정적 갈등을 줄입니다.'),
               ],
             ),
             style: TextStyle(
-              fontSize: isSmallMobile ? 12 : 15,
+              fontSize: isSmallMobile ? 15 : 17,
               color: Colors.black87,
             ),
           ),

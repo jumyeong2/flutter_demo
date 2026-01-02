@@ -64,10 +64,10 @@ class Description4 extends StatelessWidget {
     final double iconBackgroundSize = isSmallMobile
         ? 48
         : (isMobileScreen ? 40 : 64);
-    final double stepFontSize = isSmallMobile ? 13 : (isMobileScreen ? 14 : 20);
+    final double stepFontSize = isSmallMobile ? 15 : (isMobileScreen ? 16 : 22);
     final double descriptionFontSize = isSmallMobile
-        ? 11
-        : (isMobileScreen ? 11 : 14);
+        ? 13
+        : (isMobileScreen ? 13 : 16);
     final double cardHeight = isSmallMobile
         ? 220
         : (isMobileScreen ? 260 : 320);
