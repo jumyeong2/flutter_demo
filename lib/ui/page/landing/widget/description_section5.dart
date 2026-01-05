@@ -11,360 +11,420 @@ class Description5 extends StatelessWidget {
     final isMobileScreen = screenWidth <= 763;
     final isSmallMobile = screenWidth <= 480;
 
-    // 반응형 패딩 설정
-    double horizontalPadding;
+    // 패딩 값 정의 (수정하기 쉽도록 변수로 분리)
+    final double horizontalPadding;
     if (isSmallMobile) {
       horizontalPadding = 0;
     } else if (isMobileScreen) {
-      horizontalPadding = 20;
+      horizontalPadding = 16;
     } else if (isSmallScreen) {
-      horizontalPadding = 40;
+      horizontalPadding = 30;
     } else {
-      horizontalPadding = 100;
+      horizontalPadding = 30;
     }
 
     return LandingSectionLayout(
-      height: isSmallMobile ? 1000 : (isSmallScreen ? 1080 : 720),
-      backgroundColor: Colors.white,
+      height: isSmallMobile ? 720 : (isSmallScreen ? 950 : 660),
+      backgroundColor: const Color(0xFFF8FAFC),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 80),
           Text(
-            "데이터가 증명하는 리스크 감소 효과",
+            "감정 싸움 없이 합의하는 4단계 프로세스",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
+              fontSize: isSmallMobile
+                  ? 18
+                  : (isMobileScreen ? 20 : (isSmallScreen ? 24 : 32)),
               fontWeight: FontWeight.w900,
               color: Color(0xFF1E293B),
             ),
           ),
           const SizedBox(height: 16),
           Text(
-            "막연한 불안감을 명확한 수치로 관리하세요.",
+            isSmallScreen
+                ? "CoSync는 '중간 다리' 역할을 통해 \n객관적인 합의를 이끌어냅니다."
+                : "CoSync는 '중간 다리' 역할을 통해 객관적인 합의를 이끌어냅니다.",
+            textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: isSmallMobile ? 14 : 18,
+              fontSize: isSmallMobile
+                  ? 13
+                  : (isMobileScreen ? 14 : (isSmallScreen ? 16 : 18)),
               fontWeight: FontWeight.w500,
               color: Colors.black54,
             ),
           ),
-          SizedBox(height: isSmallMobile ? 40 : 80),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-              child: isSmallScreen
-                  ? _buildVerticalLayout(isSmallMobile)
-                  : _buildHorizontalLayout(),
-            ),
+          SizedBox(height: isSmallMobile ? 40 : 60),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: _buildCards(isMobileScreen, isSmallScreen, isSmallMobile),
           ),
         ],
       ),
     );
   }
 
-  // 가로 배치 (1024px 초과)
-  Widget _buildHorizontalLayout() {
+  Widget _buildCards(
+    bool isMobileScreen,
+    bool isSmallScreen,
+    bool isSmallMobile,
+  ) {
+    final double iconSize = isSmallMobile ? 18 : (isMobileScreen ? 20 : 32);
+    final double iconBackgroundSize = isSmallMobile
+        ? 48
+        : (isMobileScreen ? 40 : 64);
+    final double stepFontSize = isSmallMobile ? 15 : (isMobileScreen ? 16 : 22);
+    final double descriptionFontSize = isSmallMobile
+        ? 13
+        : (isMobileScreen ? 13 : 16);
+    final double cardHeight = isSmallMobile
+        ? 220
+        : (isMobileScreen ? 260 : 320);
+
+    // 소형 모바일: 1열 배치
+    if (isSmallMobile) {
+      return Column(
+        children: [
+          _ProcessCard(
+            step: "1. 진단 (Sync)",
+            description: "꼭 필요한 질문에 각자 답변합니다.",
+            icon: Icons.chat_bubble_outline_rounded,
+            iconSize: iconSize,
+            iconBackgroundSize: iconBackgroundSize,
+            stepFontSize: stepFontSize,
+            descriptionFontSize: descriptionFontSize,
+            isSmallMobile: true,
+          ),
+          const SizedBox(height: 12),
+          _ProcessCard(
+            step: "2. 리스크 시각화",
+            description: "생각 차이를 데이터로 보여줍니다.",
+            icon: Icons.bar_chart_rounded,
+            iconSize: iconSize,
+            iconBackgroundSize: iconBackgroundSize,
+            stepFontSize: stepFontSize,
+            descriptionFontSize: descriptionFontSize,
+            isSmallMobile: true,
+          ),
+          const SizedBox(height: 12),
+          _ProcessCard(
+            step: "3. 시장 표준 제안",
+            description: "산업 관행 데이터를 제공합니다.",
+            icon: Icons.insights_rounded,
+            iconSize: iconSize,
+            iconBackgroundSize: iconBackgroundSize,
+            stepFontSize: stepFontSize,
+            descriptionFontSize: descriptionFontSize,
+            isSmallMobile: true,
+          ),
+          const SizedBox(height: 12),
+          _ProcessCard(
+            step: "4. Rulebook",
+            description: "공동창업자 룰북을 생성합니다.",
+            icon: Icons.description_outlined,
+            iconSize: iconSize,
+            iconBackgroundSize: iconBackgroundSize,
+            stepFontSize: stepFontSize,
+            descriptionFontSize: descriptionFontSize,
+            isSmallMobile: true,
+          ),
+        ],
+      );
+    }
+
+    // 1024px 이하: 2x2 배치 (모바일 포함)
+    if (isSmallScreen) {
+      return Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: _ProcessCard(
+                  step: "1. 진단 (Sync)",
+                  description: "단순한 설문이 아닙니다. 예민하지만 꼭 필요한 질문에 각자 답변합니다.",
+                  icon: Icons.chat_bubble_outline_rounded,
+                  iconSize: iconSize,
+                  stepFontSize: stepFontSize,
+                  descriptionFontSize: descriptionFontSize,
+                  height: cardHeight,
+                ),
+              ),
+              SizedBox(width: isMobileScreen ? 12 : 20),
+              Expanded(
+                child: _ProcessCard(
+                  step: "2. 리스크 시각화",
+                  description: "생각이 일치하는 부분과 조율이 필요한 부분을 데이터로 명확히 보여줍니다.",
+                  icon: Icons.bar_chart_rounded,
+                  iconSize: iconSize,
+                  iconBackgroundSize: iconBackgroundSize,
+                  stepFontSize: stepFontSize,
+                  descriptionFontSize: descriptionFontSize,
+                  height: cardHeight,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: isMobileScreen ? 12 : 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: _ProcessCard(
+                  step: "3. 시장 표준 제안",
+                  description:
+                      "정답이 아닌 '참고 프레임'을 제공합니다. 산업 관행과 데이터를 비교하여 감정 소모 없이 선택하세요.",
+                  icon: Icons.insights_rounded,
+                  iconSize: iconSize,
+                  iconBackgroundSize: iconBackgroundSize,
+                  stepFontSize: stepFontSize,
+                  descriptionFontSize: descriptionFontSize,
+                  height: cardHeight,
+                ),
+              ),
+              SizedBox(width: isMobileScreen ? 12 : 20),
+              Expanded(
+                child: _ProcessCard(
+                  step: "4. Rulebook",
+                  description: "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 룰북을 생성합니다.",
+                  icon: Icons.description_outlined,
+                  iconSize: iconSize,
+                  iconBackgroundSize: iconBackgroundSize,
+                  stepFontSize: stepFontSize,
+                  descriptionFontSize: descriptionFontSize,
+                  height: cardHeight,
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    }
+
+    // 1024px 초과: 4개 가로 배치
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Flexible(flex: 1, child: _buildMockup(false)),
-        const SizedBox(width: 80),
-        Flexible(flex: 1, child: _buildTextContent(isSmallMobile: false)),
+        Expanded(
+          child: _ProcessCard(
+            step: "1. 진단 (Sync)",
+            description: "단순한 설문이 아닙니다. 예민하지만 꼭 필요한 질문에 각자 답변합니다.",
+            icon: Icons.chat_bubble_outline_rounded,
+            iconSize: iconSize,
+            iconBackgroundSize: iconBackgroundSize,
+            stepFontSize: stepFontSize,
+            descriptionFontSize: descriptionFontSize,
+            height: cardHeight,
+          ),
+        ),
+        const SizedBox(width: 20),
+        Expanded(
+          child: _ProcessCard(
+            step: "2. 리스크 시각화",
+            description: "생각이 일치하는 부분과 조율이 필요한 부분을 데이터로 명확히 보여줍니다.",
+            icon: Icons.bar_chart_rounded,
+            iconSize: iconSize,
+            iconBackgroundSize: iconBackgroundSize,
+            stepFontSize: stepFontSize,
+            descriptionFontSize: descriptionFontSize,
+            height: cardHeight,
+          ),
+        ),
+        const SizedBox(width: 20),
+        Expanded(
+          child: _ProcessCard(
+            step: "3. 시장 표준 제안",
+            description:
+                "정답이 아닌 '참고 프레임'을 제공합니다. 산업 관행과 데이터를 비교하여 감정 소모 없이 선택하세요.",
+            icon: Icons.insights_rounded,
+            iconSize: iconSize,
+            iconBackgroundSize: iconBackgroundSize,
+            stepFontSize: stepFontSize,
+            descriptionFontSize: descriptionFontSize,
+            height: cardHeight,
+          ),
+        ),
+        const SizedBox(width: 20),
+        Expanded(
+          child: _ProcessCard(
+            step: "4. Rulebook",
+            description: "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 룰북을 생성합니다.",
+            icon: Icons.description_outlined,
+            iconSize: iconSize,
+            iconBackgroundSize: iconBackgroundSize,
+            stepFontSize: stepFontSize,
+            descriptionFontSize: descriptionFontSize,
+            height: cardHeight,
+          ),
+        ),
       ],
     );
   }
-
-  // 세로 배치 (1024px 이하)
-  Widget _buildVerticalLayout(bool isSmallMobile) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _buildMockup(isSmallMobile),
-          SizedBox(height: isSmallMobile ? 40 : 60),
-          _buildTextContent(isSmallScreen: true, isSmallMobile: isSmallMobile),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMockup(bool isSmallMobile) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: 500,
-        maxHeight: isSmallMobile ? 320 : 400,
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 40,
-              offset: const Offset(0, 20),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
-          child: Stack(
-            children: [
-              Positioned(
-                right: 0,
-                top: 0,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF2563EB),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(16),
-                    ),
-                  ),
-                  child: const Text(
-                    'LIVE DATA',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: isSmallMobile ? 16 : 24,
-                  horizontal: isSmallMobile ? 20 : 36,
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(height: isSmallMobile ? 0 : 10),
-                    Center(
-                      child: Icon(
-                        Icons.monitor_heart_outlined,
-                        size: isSmallMobile ? 50 : 80,
-                        color: const Color(0xFF93C5FD),
-                      ),
-                    ),
-                    SizedBox(height: isSmallMobile ? 12 : 20),
-                    _StabilityHoverItem(
-                      emoji: "💰",
-                      label: "보상/지분 합의",
-                      status: "안정적 (95점)",
-                      color: const Color(0xFF15803D),
-                      targetBgColor: const Color(0xFFF0FDF4),
-                      isSmallMobile: isSmallMobile,
-                    ),
-                    const SizedBox(height: 8),
-                    _StabilityHoverItem(
-                      emoji: "🚪",
-                      label: "Exit / 이탈 조건",
-                      status: "위험 (32점)",
-                      color: const Color(0xFFDC2626),
-                      targetBgColor: const Color(0xFFFEF2F2),
-                      isSmallMobile: isSmallMobile,
-                    ),
-                    const SizedBox(height: 8),
-                    _StabilityHoverItem(
-                      emoji: "🎯",
-                      label: "비전 일치도",
-                      status: "보통 (70점)",
-                      color: const Color(0xFFD97706),
-                      targetBgColor: const Color(0xFFFFFBEB),
-                      isSmallMobile: isSmallMobile,
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextContent({
-    bool isSmallScreen = false,
-    bool isSmallMobile = false,
-  }) {
-    return Container(
-      constraints: BoxConstraints(
-        maxWidth: 500,
-        maxHeight: isSmallMobile ? 450 : 400,
-      ),
-      child: Column(
-        crossAxisAlignment: isSmallScreen
-            ? CrossAxisAlignment.center
-            : CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            "RISK RADAR",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w800,
-              color: Color(0xFF2563EB),
-              letterSpacing: 1.2,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            "팀의 안정성을 점수로 관리하세요.",
-            textAlign: isSmallScreen ? TextAlign.center : TextAlign.start,
-            style: TextStyle(
-              fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
-              fontWeight: FontWeight.w900,
-              color: const Color(0xFF1E293B),
-              height: 1.2,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            "Team Stability Score",
-            style: TextStyle(
-              fontSize: isSmallMobile ? 18 : 24,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF94A3B8),
-            ),
-          ),
-          const SizedBox(height: 32),
-          Text(
-            "'그냥 느낌이 좀 쎄한데?'라는 감을 데이터로 확인시켜 드립니다.\n5가지 핵심 영역을 시각화하여 어디서 갈등이 터질지 미리 예측하고 방어합니다.",
-            textAlign: isSmallScreen ? TextAlign.center : TextAlign.start,
-            style: TextStyle(
-              fontSize: isSmallMobile ? 13 : (isSmallScreen ? 14 : 16),
-              color: const Color(0xFF64748B),
-              height: 1.6,
-            ),
-          ),
-          const SizedBox(height: 40),
-          const _CompareLink(),
-        ],
-      ),
-    );
-  }
 }
 
-class _StabilityHoverItem extends StatefulWidget {
-  final String emoji;
-  final String label;
-  final String status;
-  final Color color;
-  final Color targetBgColor;
+class _ProcessCard extends StatefulWidget {
+  final String step;
+  final String description;
+  final IconData icon;
+  final double iconSize;
+  final double iconBackgroundSize;
+  final double stepFontSize;
+  final double descriptionFontSize;
+  final double height;
   final bool isSmallMobile;
 
-  const _StabilityHoverItem({
-    required this.emoji,
-    required this.label,
-    required this.status,
-    required this.color,
-    required this.targetBgColor,
-    required this.isSmallMobile,
+  const _ProcessCard({
+    required this.step,
+    required this.description,
+    required this.icon,
+    this.iconSize = 32,
+    this.iconBackgroundSize = 64,
+    this.stepFontSize = 20,
+    this.descriptionFontSize = 14,
+    this.height = 320,
+    this.isSmallMobile = false,
   });
 
   @override
-  State<_StabilityHoverItem> createState() => _StabilityHoverItemState();
+  State<_ProcessCard> createState() => _ProcessCardState();
 }
 
-class _StabilityHoverItemState extends State<_StabilityHoverItem> {
+class _ProcessCardState extends State<_ProcessCard> {
   bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
+    final cardContent = MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
-      child: Container(
+      cursor: SystemMouseCursors.basic,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        height: widget.isSmallMobile ? null : widget.height,
+        width: widget.isSmallMobile ? double.infinity : null,
+        constraints: BoxConstraints(
+          maxWidth: widget.isSmallMobile ? double.infinity : 400,
+        ),
+        transform: _isHovered
+            ? Matrix4.translationValues(0, -5, 0)
+            : Matrix4.identity(),
         padding: EdgeInsets.symmetric(
-          horizontal: widget.isSmallMobile ? 12 : 20,
-          vertical: widget.isSmallMobile ? 12 : 16,
+          horizontal: widget.isSmallMobile
+              ? 20
+              : (widget.stepFontSize < 16 ? 12 : 24),
+          vertical: widget.isSmallMobile
+              ? 24
+              : (widget.stepFontSize < 16 ? 24 : 40),
         ),
         decoration: BoxDecoration(
-          color: _isHovered
-              ? widget.targetBgColor
-              : Colors.grey.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          children: [
-            Text(
-              widget.emoji,
-              style: TextStyle(fontSize: widget.isSmallMobile ? 16 : 20),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              widget.label,
-              style: TextStyle(
-                fontSize: widget.isSmallMobile ? 13 : 16,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF1E293B),
-              ),
-            ),
-            const Spacer(),
-            Text(
-              widget.status,
-              style: TextStyle(
-                fontSize: widget.isSmallMobile ? 13 : 16,
-                fontWeight: FontWeight.bold,
-                color: widget.color,
-              ),
+          color: Colors.white,
+          border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: _isHovered ? 0.08 : 0.04),
+              blurRadius: _isHovered ? 28 : 20,
+              offset: Offset(0, _isHovered ? 15 : 10),
             ),
           ],
         ),
+        child: widget.isSmallMobile
+            ? Row(
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: widget.iconBackgroundSize,
+                    height: widget.iconBackgroundSize,
+                    decoration: BoxDecoration(
+                      color: _isHovered
+                          ? const Color(0xFF1D4ED8)
+                          : const Color(0xFFF1F5F9),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Icon(
+                      widget.icon,
+                      color: _isHovered
+                          ? Colors.white
+                          : const Color(0xFF1D4ED8),
+                      size: widget.iconSize,
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.step,
+                          style: TextStyle(
+                            fontSize: widget.stepFontSize,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF1E293B),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          widget.description,
+                          style: TextStyle(
+                            fontSize: widget.descriptionFontSize,
+                            color: Colors.black54,
+                            height: 1.4,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: widget.iconBackgroundSize,
+                    height: widget.iconBackgroundSize,
+                    decoration: BoxDecoration(
+                      color: _isHovered
+                          ? const Color(0xFF1D4ED8)
+                          : const Color(0xFFF1F5F9),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Icon(
+                      widget.icon,
+                      color: _isHovered
+                          ? Colors.white
+                          : const Color(0xFF1D4ED8),
+                      size: widget.iconSize,
+                    ),
+                  ),
+                  SizedBox(height: widget.stepFontSize < 16 ? 16 : 32),
+                  Text(
+                    widget.step,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: widget.stepFontSize,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF1E293B),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    widget.description,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: widget.descriptionFontSize,
+                      color: Colors.black54,
+                      height: 1.5,
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
-  }
-}
 
-class _CompareLink extends StatefulWidget {
-  const _CompareLink();
-
-  @override
-  State<_CompareLink> createState() => _CompareLinkState();
-}
-
-class _CompareLinkState extends State<_CompareLink> {
-  bool _isHovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      cursor: SystemMouseCursors.click,
-      child: InkWell(
-        onTap: () {},
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "CoSync 도입 전후 비교 보기",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF2563EB),
-                  decoration: _isHovered
-                      ? TextDecoration.underline
-                      : TextDecoration.none,
-                ),
-              ),
-              const SizedBox(width: 8),
-              const Icon(
-                Icons.arrow_forward,
-                color: Color(0xFF2563EB),
-                size: 20,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    return cardContent;
   }
 }

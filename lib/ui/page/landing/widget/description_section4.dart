@@ -8,244 +8,367 @@ class Description4 extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isSmallScreen = screenWidth <= 1024;
-    final isMobileScreen = screenWidth <= 763;
     final isSmallMobile = screenWidth <= 480;
 
     return LandingSectionLayout(
-      height: isSmallMobile ? 720 : (isSmallScreen ? 950 : 660),
-      backgroundColor: const Color(0xFFF8FAFC),
+      height: isSmallMobile ? 1280 : (isSmallScreen ? 1530 : 750),
+      backgroundColor: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 80),
+          const SizedBox(height: 70),
           Text(
-            "감정 싸움 없이 합의하는 4단계 프로세스",
-            textAlign: TextAlign.center,
+            "가장 치명적인 3가지 리스크 해결",
             style: TextStyle(
-              fontSize: isSmallMobile
-                  ? 18
-                  : (isMobileScreen ? 20 : (isSmallScreen ? 24 : 32)),
+              fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
               fontWeight: FontWeight.w900,
-              color: Color(0xFF1E293B),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 18),
           Text(
             isSmallScreen
-                ? "CoSync는 '중간 다리' 역할을 통해 \n객관적인 합의를 이끌어냅니다."
-                : "CoSync는 '중간 다리' 역할을 통해 객관적인 합의를 이끌어냅니다.",
+                ? "공동창업팀이 겪는 현실적인 고민들,\n이제 CoSync가 해결해 드립니다."
+                : "공동창업팀이 겪는 현실적인 고민들, 이제 CoSync가 해결해 드립니다.",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: isSmallMobile
-                  ? 13
-                  : (isMobileScreen ? 14 : (isSmallScreen ? 16 : 18)),
+              fontSize: isSmallMobile ? 14 : (isSmallScreen ? 16 : 18),
               fontWeight: FontWeight.w500,
               color: Colors.black54,
             ),
           ),
-          SizedBox(height: isSmallMobile ? 40 : 60),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: isSmallMobile ? 0 : (isMobileScreen ? 16 : 30),
+          SizedBox(height: isSmallMobile ? 30 : 60),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: isSmallScreen
+                  ? _buildCardsColumn(isSmallMobile)
+                  : _buildCardsRow(),
             ),
-            child: _buildCards(isMobileScreen, isSmallScreen, isSmallMobile),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildCards(
-    bool isMobileScreen,
-    bool isSmallScreen,
-    bool isSmallMobile,
-  ) {
-    final double iconSize = isSmallMobile ? 18 : (isMobileScreen ? 20 : 32);
-    final double iconBackgroundSize = isSmallMobile
-        ? 48
-        : (isMobileScreen ? 40 : 64);
-    final double stepFontSize = isSmallMobile ? 15 : (isMobileScreen ? 16 : 22);
-    final double descriptionFontSize = isSmallMobile
-        ? 13
-        : (isMobileScreen ? 13 : 16);
-    final double cardHeight = isSmallMobile
-        ? 220
-        : (isMobileScreen ? 260 : 320);
-
-    // 소형 모바일: 1열 배치
-    if (isSmallMobile) {
-      return Column(
+  // 가로 배치 (1024px 초과)
+  Widget _buildCardsRow() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _ProcessCard(
-            step: "1. 진단 (Sync)",
-            description: "꼭 필요한 질문에 각자 답변합니다.",
-            icon: Icons.chat_bubble_outline_rounded,
-            iconSize: iconSize,
-            iconBackgroundSize: iconBackgroundSize,
-            stepFontSize: stepFontSize,
-            descriptionFontSize: descriptionFontSize,
-            isSmallMobile: true,
-          ),
-          const SizedBox(height: 12),
-          _ProcessCard(
-            step: "2. 리스크 시각화",
-            description: "생각 차이를 데이터로 보여줍니다.",
-            icon: Icons.bar_chart_rounded,
-            iconSize: iconSize,
-            iconBackgroundSize: iconBackgroundSize,
-            stepFontSize: stepFontSize,
-            descriptionFontSize: descriptionFontSize,
-            isSmallMobile: true,
-          ),
-          const SizedBox(height: 12),
-          _ProcessCard(
-            step: "3. 시장 표준 제안",
-            description: "산업 관행 데이터를 제공합니다.",
-            icon: Icons.insights_rounded,
-            iconSize: iconSize,
-            iconBackgroundSize: iconBackgroundSize,
-            stepFontSize: stepFontSize,
-            descriptionFontSize: descriptionFontSize,
-            isSmallMobile: true,
-          ),
-          const SizedBox(height: 12),
-          _ProcessCard(
-            step: "4. Rulebook",
-            description: "공동창업자 룰북을 생성합니다.",
-            icon: Icons.description_outlined,
-            iconSize: iconSize,
-            iconBackgroundSize: iconBackgroundSize,
-            stepFontSize: stepFontSize,
-            descriptionFontSize: descriptionFontSize,
-            isSmallMobile: true,
-          ),
+          Flexible(child: _buildCostCard(false)),
+          const SizedBox(width: 24),
+          Flexible(child: _buildInvestmentCard(false)),
+          const SizedBox(width: 24),
+          Flexible(child: _buildEmotionCard(false)),
         ],
-      );
-    }
+      ),
+    );
+  }
 
-    // 1024px 이하: 2x2 배치 (모바일 포함)
-    if (isSmallScreen) {
-      return Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: _ProcessCard(
-                  step: "1. 진단 (Sync)",
-                  description: "단순한 설문이 아닙니다. 예민하지만 꼭 필요한 질문에 각자 답변합니다.",
-                  icon: Icons.chat_bubble_outline_rounded,
-                  iconSize: iconSize,
-                  stepFontSize: stepFontSize,
-                  descriptionFontSize: descriptionFontSize,
-                  height: cardHeight,
-                ),
-              ),
-              SizedBox(width: isMobileScreen ? 12 : 20),
-              Expanded(
-                child: _ProcessCard(
-                  step: "2. 리스크 시각화",
-                  description: "생각이 일치하는 부분과 조율이 필요한 부분을 데이터로 명확히 보여줍니다.",
-                  icon: Icons.bar_chart_rounded,
-                  iconSize: iconSize,
-                  iconBackgroundSize: iconBackgroundSize,
-                  stepFontSize: stepFontSize,
-                  descriptionFontSize: descriptionFontSize,
-                  height: cardHeight,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: isMobileScreen ? 12 : 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: _ProcessCard(
-                  step: "3. 시장 표준 제안",
-                  description:
-                      "정답이 아닌 '참고 프레임'을 제공합니다. 산업 관행과 데이터를 비교하여 감정 소모 없이 선택하세요.",
-                  icon: Icons.insights_rounded,
-                  iconSize: iconSize,
-                  iconBackgroundSize: iconBackgroundSize,
-                  stepFontSize: stepFontSize,
-                  descriptionFontSize: descriptionFontSize,
-                  height: cardHeight,
-                ),
-              ),
-              SizedBox(width: isMobileScreen ? 12 : 20),
-              Expanded(
-                child: _ProcessCard(
-                  step: "4. Rulebook",
-                  description: "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 룰북을 생성합니다.",
-                  icon: Icons.description_outlined,
-                  iconSize: iconSize,
-                  iconBackgroundSize: iconBackgroundSize,
-                  stepFontSize: stepFontSize,
-                  descriptionFontSize: descriptionFontSize,
-                  height: cardHeight,
-                ),
-              ),
-            ],
-          ),
-        ],
-      );
-    }
-
-    // 1024px 초과: 4개 가로 배치
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+  // 세로 배치 (1024px 이하)
+  Widget _buildCardsColumn(bool isSmallMobile) {
+    return Column(
       children: [
-        Expanded(
-          child: _ProcessCard(
-            step: "1. 진단 (Sync)",
-            description: "단순한 설문이 아닙니다. 예민하지만 꼭 필요한 질문에 각자 답변합니다.",
-            icon: Icons.chat_bubble_outline_rounded,
-            iconSize: iconSize,
-            iconBackgroundSize: iconBackgroundSize,
-            stepFontSize: stepFontSize,
-            descriptionFontSize: descriptionFontSize,
-            height: cardHeight,
+        _buildCostCard(isSmallMobile),
+        const SizedBox(height: 24),
+        _buildInvestmentCard(isSmallMobile),
+        const SizedBox(height: 24),
+        _buildEmotionCard(isSmallMobile),
+      ],
+    );
+  }
+
+  // 비용 절감 카드
+  Widget _buildCostCard(bool isSmallMobile) {
+    return _RiskHoverCard(
+      isSmallMobile: isSmallMobile,
+      borderColor: Colors.grey.withValues(alpha: 0.2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                height: 48,
+                width: 48,
+                decoration: BoxDecoration(
+                  color: Colors.green[50],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.savings_outlined,
+                  size: isSmallMobile ? 24 : 28,
+                  color: Colors.green[600],
+                ),
+              ),
+              const SizedBox(width: 16),
+              Text(
+                '비용 절감',
+                style: TextStyle(
+                  fontSize: isSmallMobile ? 20 : 24,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF15803D),
+                ),
+              ),
+            ],
           ),
-        ),
-        const SizedBox(width: 20),
-        Expanded(
-          child: _ProcessCard(
-            step: "2. 리스크 시각화",
-            description: "생각이 일치하는 부분과 조율이 필요한 부분을 데이터로 명확히 보여줍니다.",
-            icon: Icons.bar_chart_rounded,
-            iconSize: iconSize,
-            iconBackgroundSize: iconBackgroundSize,
-            stepFontSize: stepFontSize,
-            descriptionFontSize: descriptionFontSize,
-            height: cardHeight,
+          SizedBox(height: isSmallMobile ? 20 : 32),
+          Text.rich(
+            TextSpan(
+              children: [
+                const TextSpan(text: '주주간 계약서, 전문가에게 바로 맡기면 평균 300만 원입니다. '),
+                TextSpan(
+                  text: 'CoSync 연 구독',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green[700],
+                  ),
+                ),
+                const TextSpan(text: '으로 쟁점을 정리하면 비용이 획기적으로 줍니다.'),
+              ],
+            ),
+            style: TextStyle(
+              fontSize: isSmallMobile ? 15 : 17,
+              color: Colors.black87,
+            ),
           ),
-        ),
-        const SizedBox(width: 20),
-        Expanded(
-          child: _ProcessCard(
-            step: "3. 시장 표준 제안",
-            description:
-                "정답이 아닌 '참고 프레임'을 제공합니다. 산업 관행과 데이터를 비교하여 감정 소모 없이 선택하세요.",
-            icon: Icons.insights_rounded,
-            iconSize: iconSize,
-            iconBackgroundSize: iconBackgroundSize,
-            stepFontSize: stepFontSize,
-            descriptionFontSize: descriptionFontSize,
-            height: cardHeight,
+          const Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '법무비 절감 효과',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green[700],
+                ),
+              ),
+              Text(
+                '-90%',
+                style: TextStyle(
+                  fontSize: isSmallMobile ? 24 : 28,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.green[700],
+                ),
+              ),
+            ],
           ),
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: LinearProgressIndicator(
+              value: 0.9,
+              backgroundColor: Colors.green[100],
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.green[400]!),
+              minHeight: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 투자 대비 카드
+  Widget _buildInvestmentCard(bool isSmallMobile) {
+    return _RiskHoverCard(
+      isSmallMobile: isSmallMobile,
+      borderColor: Colors.grey.withValues(alpha: 0.2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                height: 48,
+                width: 48,
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.trending_up_rounded,
+                  size: isSmallMobile ? 24 : 28,
+                  color: Colors.blue[600],
+                ),
+              ),
+              const SizedBox(width: 16),
+              Text(
+                '투자 대비',
+                style: TextStyle(
+                  fontSize: isSmallMobile ? 20 : 24,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF1D4ED8),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: isSmallMobile ? 20 : 32),
+          Text.rich(
+            TextSpan(
+              children: [
+                const TextSpan(text: '투자 심사(Due Diligence)에서 '),
+                TextSpan(
+                  text: '지분 리스크는 탈락 1순위',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1D4ED8),
+                  ),
+                ),
+                const TextSpan(text: '입니다. 필수 항목을 미리 점검하세요.'),
+              ],
+            ),
+            style: TextStyle(
+              fontSize: isSmallMobile ? 15 : 17,
+              color: Colors.black87,
+            ),
+          ),
+          const Spacer(),
+          SizedBox(height: isSmallMobile ? 20 : 32),
+          _buildCheckItem(Colors.blue[400]!, '주주명부(Cap Table)', isSmallMobile),
+          const SizedBox(height: 12),
+          _buildCheckItem(Colors.blue[400]!, 'IP 양도 계약', isSmallMobile),
+          const SizedBox(height: 12),
+          _buildCheckItem(Colors.blue[400]!, '이탈 방지(Vesting)', isSmallMobile),
+        ],
+      ),
+    );
+  }
+
+  // 감정 보호 카드
+  Widget _buildEmotionCard(bool isSmallMobile) {
+    return _RiskHoverCard(
+      isSmallMobile: isSmallMobile,
+      borderColor: Colors.grey.withValues(alpha: 0.2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                height: 48,
+                width: 48,
+                decoration: BoxDecoration(
+                  color: Colors.purple[50],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.handshake_outlined,
+                  size: isSmallMobile ? 24 : 28,
+                  color: const Color(0xFF7E22CE),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Text(
+                '감정 보호',
+                style: TextStyle(
+                  fontSize: isSmallMobile ? 20 : 24,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF7E22CE),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: isSmallMobile ? 20 : 32),
+          Text.rich(
+            TextSpan(
+              children: [
+                const TextSpan(text: '데이터 기반 의사결정으로 '),
+                TextSpan(
+                  text: '팀의 신뢰를 지키세요',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.purple[700],
+                  ),
+                ),
+                const TextSpan(text: '. 객관적 기준이 감정적 갈등을 줄입니다.'),
+              ],
+            ),
+            style: TextStyle(
+              fontSize: isSmallMobile ? 15 : 17,
+              color: Colors.black87,
+            ),
+          ),
+          const Spacer(),
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: Colors.purple[100]!.withValues(alpha: 0.5),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '의사결정 갈등 발생 시',
+                      style: TextStyle(
+                        fontSize: isSmallMobile ? 10 : 12,
+                        color: Colors.black45,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.purple[50],
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        'CoSync 해결',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.purple[700],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  '"CEO에게 최종 결정권 부여"',
+                  style: TextStyle(
+                    fontSize: isSmallMobile ? 13 : 15,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1E293B),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCheckItem(Color color, String text, bool isSmallMobile) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(Icons.check, color: color, size: isSmallMobile ? 12 : 14),
         ),
-        const SizedBox(width: 20),
-        Expanded(
-          child: _ProcessCard(
-            step: "4. Rulebook",
-            description: "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 룰북을 생성합니다.",
-            icon: Icons.description_outlined,
-            iconSize: iconSize,
-            iconBackgroundSize: iconBackgroundSize,
-            stepFontSize: stepFontSize,
-            descriptionFontSize: descriptionFontSize,
-            height: cardHeight,
+        const SizedBox(width: 12),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: isSmallMobile ? 13 : 15,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF1E293B),
           ),
         ),
       ],
@@ -253,168 +376,53 @@ class Description4 extends StatelessWidget {
   }
 }
 
-class _ProcessCard extends StatefulWidget {
-  final String step;
-  final String description;
-  final IconData icon;
-  final double iconSize;
-  final double iconBackgroundSize;
-  final double stepFontSize;
-  final double descriptionFontSize;
-  final double height;
+class _RiskHoverCard extends StatefulWidget {
+  final Widget child;
+  final Color borderColor;
   final bool isSmallMobile;
 
-  const _ProcessCard({
-    required this.step,
-    required this.description,
-    required this.icon,
-    this.iconSize = 32,
-    this.iconBackgroundSize = 64,
-    this.stepFontSize = 20,
-    this.descriptionFontSize = 14,
-    this.height = 320,
-    this.isSmallMobile = false,
+  const _RiskHoverCard({
+    required this.child,
+    required this.borderColor,
+    required this.isSmallMobile,
   });
 
   @override
-  State<_ProcessCard> createState() => _ProcessCardState();
+  State<_RiskHoverCard> createState() => _RiskHoverCardState();
 }
 
-class _ProcessCardState extends State<_ProcessCard> {
+class _RiskHoverCardState extends State<_RiskHoverCard> {
   bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    final cardContent = MouseRegion(
+    return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       cursor: SystemMouseCursors.basic,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
-        height: widget.isSmallMobile ? null : widget.height,
-        width: widget.isSmallMobile ? double.infinity : null,
-        constraints: BoxConstraints(
-          maxWidth: widget.isSmallMobile ? double.infinity : 400,
-        ),
+        padding: EdgeInsets.all(widget.isSmallMobile ? 24 : 32),
+        height: widget.isSmallMobile ? 320 : 380,
+        width: widget.isSmallMobile ? double.infinity : 350,
         transform: _isHovered
             ? Matrix4.translationValues(0, -5, 0)
             : Matrix4.identity(),
-        padding: EdgeInsets.symmetric(
-          horizontal: widget.isSmallMobile
-              ? 20
-              : (widget.stepFontSize < 16 ? 12 : 24),
-          vertical: widget.isSmallMobile
-              ? 24
-              : (widget.stepFontSize < 16 ? 24 : 40),
-        ),
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
-          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: widget.borderColor),
+          borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: _isHovered ? 0.08 : 0.04),
-              blurRadius: _isHovered ? 28 : 20,
-              offset: Offset(0, _isHovered ? 15 : 10),
+              color: Colors.black.withValues(alpha: _isHovered ? 0.08 : 0.0),
+              blurRadius: _isHovered ? 28 : 0,
+              offset: Offset(0, _isHovered ? 15 : 0),
             ),
           ],
         ),
-        child: widget.isSmallMobile
-            ? Row(
-                children: [
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    width: widget.iconBackgroundSize,
-                    height: widget.iconBackgroundSize,
-                    decoration: BoxDecoration(
-                      color: _isHovered
-                          ? const Color(0xFF1D4ED8)
-                          : const Color(0xFFF1F5F9),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Icon(
-                      widget.icon,
-                      color: _isHovered
-                          ? Colors.white
-                          : const Color(0xFF1D4ED8),
-                      size: widget.iconSize,
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.step,
-                          style: TextStyle(
-                            fontSize: widget.stepFontSize,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF1E293B),
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          widget.description,
-                          style: TextStyle(
-                            fontSize: widget.descriptionFontSize,
-                            color: Colors.black54,
-                            height: 1.4,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    width: widget.iconBackgroundSize,
-                    height: widget.iconBackgroundSize,
-                    decoration: BoxDecoration(
-                      color: _isHovered
-                          ? const Color(0xFF1D4ED8)
-                          : const Color(0xFFF1F5F9),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Icon(
-                      widget.icon,
-                      color: _isHovered
-                          ? Colors.white
-                          : const Color(0xFF1D4ED8),
-                      size: widget.iconSize,
-                    ),
-                  ),
-                  SizedBox(height: widget.stepFontSize < 16 ? 16 : 32),
-                  Text(
-                    widget.step,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: widget.stepFontSize,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF1E293B),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    widget.description,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: widget.descriptionFontSize,
-                      color: Colors.black54,
-                      height: 1.5,
-                    ),
-                  ),
-                ],
-              ),
+        child: widget.child,
       ),
     );
-
-    return cardContent;
   }
 }

@@ -10,355 +10,139 @@ class Description2 extends StatelessWidget {
     final isSmallScreen = screenWidth <= 1024;
     final isSmallMobile = screenWidth <= 480;
 
+    // 패딩 값 정의
+    final horizontalPadding = isSmallMobile ? 20.0 : isSmallScreen ? 40.0 : 100.0;
+    final sectionHeight = isSmallMobile ? 750.0 : isSmallScreen ? 850.0 : 650.0;
+
     return LandingSectionLayout(
-      height: isSmallMobile ? 960 : (isSmallScreen ? 1100 : 750),
-      backgroundColor: const Color(0xFFF8FAFC),
+      height: sectionHeight,
+      backgroundColor: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 70),
+          // THE REALITY 섹션
+          _buildRealitySection(isSmallMobile, isSmallScreen, horizontalPadding),
+        ],
+      ),
+    );
+  }
+
+  // THE REALITY 섹션
+  Widget _buildRealitySection(bool isSmallMobile, bool isSmallScreen, double horizontalPadding) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // THE REALITY 헤더
+          Text(
+            'THE REALITY',
+            style: TextStyle(
+              fontSize: isSmallMobile ? 12 : (isSmallScreen ? 14 : 16),
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF1D4ED8),
+              letterSpacing: 1.2,
+            ),
+          ),
+          SizedBox(height: isSmallMobile ? 16 : 24),
+          // 43% 통계
+          Text(
+            '43%',
+            style: TextStyle(
+              fontSize: isSmallMobile ? 48 : (isSmallScreen ? 64 : 80),
+              fontWeight: FontWeight.w900,
+              color: const Color(0xFF1E293B),
+              height: 1.0,
+            ),
+          ),
+          SizedBox(height: isSmallMobile ? 24 : 32),
+          // 첫 번째 문단
           Text.rich(
             TextSpan(
               style: TextStyle(
-                fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
-                fontWeight: FontWeight.w900,
+                fontSize: isSmallMobile ? 16 : (isSmallScreen ? 18 : 20),
+                fontWeight: FontWeight.w500,
                 color: Colors.black,
+                height: 1.6,
               ),
               children: [
-                const TextSpan(text: '계약서를 안 써서 아낀 '),
-                const TextSpan(
-                  text: '300만 원',
-                  style: TextStyle(color: Color(0xFF1D4ED8)),
+                const TextSpan(text: '공동창업자 갈등으로 스타트업 10곳 중 4곳은 '),
+                TextSpan(
+                  text: '결국 문을 닫거나 쪼개집니다.',
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    decorationColor: Colors.red,
+                    decorationThickness: 2.0,
+                  ),
                 ),
-                TextSpan(text: isSmallMobile ? ',\n그 대가는 얼마일까요?' : ',\n그 대가는 얼마일까요?'),
               ],
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 18),
+          SizedBox(height: isSmallMobile ? 32 : 40),
+          // 두 번째 문단 (인용구)
           Text(
-            "비용을 아끼려다 더 큰 기회를 놓치고 있습니다.",
+            '"이건 개인의 성격 문제가 아니라 구조의 문제입니다."',
             style: TextStyle(
-              fontSize: isSmallMobile ? 14 : (isSmallScreen ? 16 : 18),
-              fontWeight: FontWeight.w900,
-              color: Colors.black54,
+              fontSize: isSmallMobile ? 16 : (isSmallScreen ? 18 : 20),
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+              height: 1.6,
+              fontStyle: FontStyle.italic,
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: isSmallMobile ? 28 : 38),
-          // 카드 영역
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: isSmallMobile ? 0 : 30.0),
-            child: isSmallScreen
-                ? _buildVerticalLayout(isSmallMobile)
-                : _buildHorizontalLayout(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 세로 배치 (1024px 이하)
-  Widget _buildVerticalLayout(bool isSmallMobile) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildHiddenCostCard(isSmallMobile),
-        const SizedBox(height: 40),
-        _buildCoSyncEffectCard(isSmallMobile),
-      ],
-    );
-  }
-
-  // 가로 배치 (1024px 초과)
-  Widget _buildHorizontalLayout() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: _buildHiddenCostCard(false),
-          ),
-        ),
-        const SizedBox(width: 40),
-        Expanded(
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: _buildCoSyncEffectCard(false),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // 왼쪽 카드: Hidden Cost
-  Widget _buildHiddenCostCard(bool isSmallMobile) {
-    return Container(
-      constraints: BoxConstraints(
-        minWidth: isSmallMobile ? 0 : 400,
-        maxWidth: 500,
-      ),
-      height: isSmallMobile ? 320 : 370,
-      padding: EdgeInsets.all(isSmallMobile ? 20 : 40),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.error_outline,
-                  color: Colors.red,
-                  size: 24,
-                ),
+          SizedBox(height: isSmallMobile ? 32 : 40),
+          // 세 번째 문단
+          Text.rich(
+            TextSpan(
+              style: TextStyle(
+                fontSize: isSmallMobile ? 16 : (isSmallScreen ? 18 : 20),
+                fontWeight: FontWeight.w400,
+                color: Colors.black,
+                height: 1.6,
               ),
-              const SizedBox(width: 12),
-              Text(
-                '숨겨진 비용 (Hidden Cost)',
-                style: TextStyle(
-                  fontSize: isSmallMobile ? 18 : 24,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFFE11D48),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: isSmallMobile ? 24 : 40),
-          _buildHiddenCostItem(
-            icon: Icons.hourglass_empty_rounded,
-            title: '의사결정 지연',
-            subtitle: '평균 3~6개월 성장 정체',
-            isSmallMobile: isSmallMobile,
-          ),
-          const SizedBox(height: 24),
-          _buildHiddenCostItem(
-            icon: Icons.cancel_outlined,
-            title: '투자 미팅 종료',
-            subtitle: '합의 구조 불명확 시 탈락',
-            isSmallMobile: isSmallMobile,
-          ),
-          const SizedBox(height: 24),
-          _buildHiddenCostItem(
-            icon: Icons.payments_outlined,
-            title: '법적 분쟁 비용',
-            subtitle: '수천만 원 ~ 수억 원 소모',
-            isSmallMobile: isSmallMobile,
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 오른쪽 카드: CoSync Effect
-  Widget _buildCoSyncEffectCard(bool isSmallMobile) {
-    return Container(
-      constraints: BoxConstraints(
-        minWidth: isSmallMobile ? 0 : 400,
-        maxWidth: 500,
-      ),
-      height: isSmallMobile ? 320 : 370,
-      padding: EdgeInsets.all(isSmallMobile ? 20 : 40),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF1E293B), Color(0xFF0F172A)],
-        ),
-        borderRadius: BorderRadius.circular(32),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.check_circle_outline,
-                  color: Color(0xFF60A5FA),
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                'CoSync 도입 효과',
-                style: TextStyle(
-                  fontSize: isSmallMobile ? 18 : 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: isSmallMobile ? 24 : 40),
-          Expanded(
-            child: Column(
               children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      _buildEffectSection(
-                        'BEFORE',
-                        '문서 0장',
-                        '구두 합의만 존재',
-                        isBefore: true,
-                        strikethrough: true,
-                        isSmallMobile: isSmallMobile,
-                      ),
-                      const VerticalDivider(
-                        color: Colors.white12,
-                        indent: 10,
-                        endIndent: 10,
-                      ),
-                      _buildEffectSection('AFTER', 'Rulebook 12p', '핵심 조항 명문화', isSmallMobile: isSmallMobile),
-                    ],
-                  ),
+                const TextSpan(
+                  text: '우리는 수많은 팀이 \'좋은 관계\'로 시작했지만, 불편한 질문을 미룬 대가로 무너지는 것을 목격했습니다. 서로 믿지 못해서가 아니라, ',
                 ),
-                const Divider(color: Colors.white12, height: 1),
-                Expanded(
-                  child: Row(
-                    children: [
-                      _buildEffectSection(
-                        'BEFORE',
-                        '위험 감지 불가',
-                        '막연한 불안감',
-                        isBefore: true,
-                        isSmallMobile: isSmallMobile,
-                      ),
-                      const VerticalDivider(
-                        color: Colors.white12,
-                        indent: 10,
-                        endIndent: 10,
-                      ),
-                      _buildEffectSection('AFTER', '안정성 78점', '데이터 기반 확신', isSmallMobile: isSmallMobile),
-                    ],
-                  ),
+                const TextSpan(
+                  text: '합의하는 법을',
+                  style: TextStyle(fontWeight: FontWeight.w700),
                 ),
+                const TextSpan(text: ' 몰랐기 때문입니다.'),
               ],
             ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: isSmallMobile ? 32 : 40),
+          // 네 번째 문단 (솔루션)
+          Text.rich(
+            TextSpan(
+              style: TextStyle(
+                fontSize: isSmallMobile ? 16 : (isSmallScreen ? 18 : 20),
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF1D4ED8),
+                height: 1.6,
+              ),
+              children: [
+                const TextSpan(text: '"그래서 CoSync는 합의 이후가 아니라, '),
+                TextSpan(
+                  text: '합의 이전을 구조화합니다.',
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    decorationColor: const Color(0xFF1D4ED8),
+                    decorationStyle: TextDecorationStyle.wavy,
+                    decorationThickness: 2.0,
+                  ),
+                ),
+                const TextSpan(text: '"'),
+              ],
+            ),
+            textAlign: TextAlign.center,
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildHiddenCostItem({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required bool isSmallMobile,
-  }) {
-    return Row(
-      children: [
-        Container(
-          width: isSmallMobile ? 40 : 48,
-          height: isSmallMobile ? 40 : 48,
-          decoration: BoxDecoration(
-            color: Colors.red[50],
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(
-            icon,
-            color: Colors.red[400],
-            size: isSmallMobile ? 20 : 24,
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: isSmallMobile ? 14 : 16,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1E293B),
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                subtitle,
-                style: TextStyle(
-                  fontSize: isSmallMobile ? 12 : 14,
-                  color: Colors.grey[600],
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildEffectSection(
-    String label,
-    String title,
-    String subtitle, {
-    bool isBefore = false,
-    bool strikethrough = false,
-    bool isSmallMobile = false,
-  }) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: isBefore ? Colors.grey[500] : const Color(0xFF60A5FA),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: isSmallMobile ? 14 : 16,
-                fontWeight: FontWeight.bold,
-                color: isBefore ? Colors.grey[400] : Colors.white,
-                decoration: strikethrough ? TextDecoration.lineThrough : null,
-                decorationColor: Colors.grey[400],
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 13,
-                color: isBefore ? Colors.grey[500] : Colors.grey[400],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
