@@ -15,15 +15,20 @@ class Description7 extends StatelessWidget {
     final double horizontalPadding = isSmallMobile ? 0 : 20;
 
     return LandingSectionLayout(
-      height: isSmallMobile ? 1100 : (isSmallScreen ? 1650 : 900),
+      height: null,
       backgroundColor: const Color(0xFFF8FAFC),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: isSmallMobile ? 40 : 80),
-          child: isSmallScreen
-              ? _buildVerticalLayout(isMediumScreen, isSmallMobile)
-              : _buildHorizontalLayout(),
+        child: Column(
+          children: [
+            const SizedBox(height: 80),
+            Container(
+              child: isSmallScreen
+                  ? _buildVerticalLayout(isMediumScreen, isSmallMobile)
+                  : _buildHorizontalLayout(),
+            ),
+            const SizedBox(height: 80),
+          ],
         ),
       ),
     );

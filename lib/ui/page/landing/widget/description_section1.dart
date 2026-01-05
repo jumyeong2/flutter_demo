@@ -15,7 +15,6 @@ class Description1 extends StatelessWidget {
     final isSmallMobile = screenWidth <= 480;
 
     // 반응형 값 정의 (각 요소별로 수정 가능)
-    final sectionHeight = isSmallMobile ? 600.0 : isSmallScreen ? 650.0 : 550.0;
     final horizontalPadding = isSmallMobile ? 20.0 : isMobileScreen ? 40.0 : isSmallScreen ? 60.0 : 100.0;
     
     final badgeHeight = isSmallMobile ? 32.0 : 36.0;
@@ -34,18 +33,15 @@ class Description1 extends StatelessWidget {
     
     final ctaButtonHeight = isSmallMobile ? 56.0 : 60.0;
     final ctaPrimaryFontSize = isSmallMobile ? 15.0 : 16.0;
-    final ctaSecondaryFontSize = isSmallMobile ? 14.0 : 15.0;
     final ctaIconSize = isSmallMobile ? 14.0 : 16.0;
-    
-    final bottomSpacing = isSmallMobile ? 50.0 : 70.0;
 
     return LandingSectionLayout(
-      height: sectionHeight,
-      backgroundColor: Colors.white,
+      height: null,
+      backgroundColor: const Color(0xFFF8FAFC),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 70),
+          const SizedBox(height: 80),
           // 배지 - 텍스트 너비에 맞춤
           Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
@@ -114,11 +110,100 @@ class Description1 extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: isMobileScreen
-                ? Column(
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: SizedBox(
+                          width: 150,
+                          height: ctaButtonHeight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Get.to(() => const OnboardingPage());
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF0F172A),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "지금 바로 진단 시작",
+                                    style: TextStyle(
+                                      fontSize: isSmallMobile ? 13 : 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    maxLines: 1,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: isSmallMobile ? 12 : 14,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: SizedBox(
+                          width: 150,
+                          height: ctaButtonHeight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Get.to(() => const SampleReportPage());
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: Colors.black,
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              elevation: 0,
+                              side: BorderSide(color: Colors.grey[300]!),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "결과 화면 미리보기",
+                                    style: TextStyle(
+                                      fontSize: isSmallMobile ? 13 : 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    maxLines: 1,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Icon(Icons.arrow_forward_ios, size: isSmallMobile ? 12 : 14),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
                     children: [
                       SizedBox(
-                        width: double.infinity,
-                        height: ctaButtonHeight,
+                        width: 500,
+                        height: 60,
                         child: ElevatedButton(
                           onPressed: () {
                             Get.to(() => const OnboardingPage());
@@ -126,6 +211,7 @@ class Description1 extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF0F172A),
                             foregroundColor: Colors.white,
+                            padding: EdgeInsets.zero,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -134,26 +220,27 @@ class Description1 extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                "지금 바로 진단 시작",
-                                style: TextStyle(
-                                  fontSize: ctaPrimaryFontSize,
-                                  fontWeight: FontWeight.bold,
+                              Flexible(
+                                child: Text(
+                                  "지금 바로 진단 시작",
+                                  style: TextStyle(
+                                    fontSize: ctaPrimaryFontSize,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              const SizedBox(width: 8),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                size: ctaIconSize,
-                              ),
+                              const SizedBox(width: 4),
+                              Icon(Icons.arrow_forward_ios, size: ctaIconSize),
                             ],
                           ),
                         ),
                       ),
                       const SizedBox(height: 12),
                       SizedBox(
-                        width: double.infinity,
-                        height: ctaButtonHeight,
+                        width: 500,
+                        height: 60,
                         child: ElevatedButton(
                           onPressed: () {
                             Get.to(() => const SampleReportPage());
@@ -161,6 +248,7 @@ class Description1 extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             foregroundColor: Colors.black,
+                            padding: EdgeInsets.zero,
                             elevation: 0,
                             side: BorderSide(color: Colors.grey[300]!),
                             shape: RoundedRectangleBorder(
@@ -171,87 +259,19 @@ class Description1 extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(Icons.description_outlined, size: 20),
-                              const SizedBox(width: 8),
-                              Text(
-                                "결과 화면 미리보기 (무료)",
-                                style: TextStyle(
-                                  fontSize: ctaSecondaryFontSize,
-                                  fontWeight: FontWeight.bold,
+                              Flexible(
+                                child: Text(
+                                  "결과 화면 미리보기",
+                                  style: TextStyle(
+                                    fontSize: ctaPrimaryFontSize,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              const SizedBox(width: 8),
-                              const Icon(Icons.arrow_forward_ios, size: 16),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Get.to(() => const OnboardingPage());
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0F172A),
-                            foregroundColor: Colors.white,
-                            minimumSize: const Size(0, 60),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "지금 바로 진단 시작",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                              Icon(Icons.arrow_forward_ios, size: 16),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Get.to(() => const SampleReportPage());
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black,
-                            minimumSize: const Size(0, 60),
-                            elevation: 0,
-                            side: BorderSide(color: Colors.grey[300]!),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.description_outlined, size: 20),
-                              const SizedBox(width: 8),
-                              const Text(
-                                "결과 화면 미리보기 (무료)",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Icon(Icons.arrow_forward_ios, size: 16),
+                              const SizedBox(width: 4),
+                              Icon(Icons.arrow_forward_ios, size: ctaIconSize),
                             ],
                           ),
                         ),
@@ -259,7 +279,7 @@ class Description1 extends StatelessWidget {
                     ],
                   ),
           ),
-          SizedBox(height: bottomSpacing),
+          const SizedBox(height: 80),
         ],
       ),
     );

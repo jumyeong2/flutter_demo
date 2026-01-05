@@ -12,15 +12,14 @@ class Description2 extends StatelessWidget {
 
     // 패딩 값 정의
     final horizontalPadding = isSmallMobile ? 20.0 : isSmallScreen ? 40.0 : 100.0;
-    final sectionHeight = isSmallMobile ? 750.0 : isSmallScreen ? 850.0 : 650.0;
 
     return LandingSectionLayout(
-      height: sectionHeight,
+      height: null,
       backgroundColor: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 70),
+          const SizedBox(height: 80),
           // THE REALITY 섹션
           _buildRealitySection(isSmallMobile, isSmallScreen, horizontalPadding),
         ],
@@ -105,7 +104,7 @@ class Description2 extends StatelessWidget {
               ),
               children: [
                 const TextSpan(
-                  text: '우리는 수많은 팀이 \'좋은 관계\'로 시작했지만, 불편한 질문을 미룬 대가로 무너지는 것을 목격했습니다. 서로 믿지 못해서가 아니라, ',
+                  text: '우리는 수많은 팀이 \'좋은 관계\'로 시작했지만, 불편한 질문을 미룬 대가로 무너지는 것을 목격했습니다.\n서로 믿지 못해서가 아니라, ',
                 ),
                 const TextSpan(
                   text: '합의하는 법을',
@@ -142,6 +141,7 @@ class Description2 extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
+          const SizedBox(height: 80),
         ],
       ),
     );

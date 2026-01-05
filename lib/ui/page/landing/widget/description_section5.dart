@@ -24,7 +24,7 @@ class Description5 extends StatelessWidget {
     }
 
     return LandingSectionLayout(
-      height: isSmallMobile ? 720 : (isSmallScreen ? 950 : 660),
+      height: null,
       backgroundColor: const Color(0xFFF8FAFC),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -60,6 +60,7 @@ class Description5 extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: _buildCards(isMobileScreen, isSmallScreen, isSmallMobile),
           ),
+          const SizedBox(height: 80),
         ],
       ),
     );

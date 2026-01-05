@@ -11,12 +11,12 @@ class Description4 extends StatelessWidget {
     final isSmallMobile = screenWidth <= 480;
 
     return LandingSectionLayout(
-      height: isSmallMobile ? 1280 : (isSmallScreen ? 1530 : 750),
+      height: null,
       backgroundColor: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 70),
+          const SizedBox(height: 80),
           Text(
             "가장 치명적인 3가지 리스크 해결",
             style: TextStyle(
@@ -37,14 +37,13 @@ class Description4 extends StatelessWidget {
             ),
           ),
           SizedBox(height: isSmallMobile ? 30 : 60),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: isSmallScreen
-                  ? _buildCardsColumn(isSmallMobile)
-                  : _buildCardsRow(),
-            ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: isSmallScreen
+                ? _buildCardsColumn(isSmallMobile)
+                : _buildCardsRow(),
           ),
+          const SizedBox(height: 80),
         ],
       ),
     );

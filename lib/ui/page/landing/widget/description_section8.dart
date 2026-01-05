@@ -14,25 +14,13 @@ class Description8 extends StatelessWidget {
     final isSmallMobile = screenWidth <= 480;
 
     return LandingSectionLayout(
-      height: isSmallMobile ? 380 : 560,
+      height: isSmallMobile ? 460 : 640,
       backgroundColor: const Color(0xFF0F172A), // 깊은 네이비 배경
-      child: Stack(
+      child: Column(
         children: [
-          // 배경 패턴 효과 (간단한 그리드 또는 그라데이션으로 대체)
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  center: Alignment.center,
-                  radius: 1.5,
-                  colors: [
-                    const Color(0xFF1E293B).withValues(alpha: 0.5),
-                    const Color(0xFF0F172A),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          Expanded(
+            child: Stack(
+              children: [
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -98,6 +86,9 @@ class Description8 extends StatelessWidget {
                     ),
                   ],
                 ),
+              ],
+            ),
+          ),
               ],
             ),
           ),

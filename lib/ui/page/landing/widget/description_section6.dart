@@ -24,7 +24,7 @@ class Description6 extends StatelessWidget {
     }
 
     return LandingSectionLayout(
-      height: isSmallMobile ? 1000 : (isSmallScreen ? 1080 : 720),
+      height: null,
       backgroundColor: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,13 +49,11 @@ class Description6 extends StatelessWidget {
             ),
           ),
           SizedBox(height: isSmallMobile ? 40 : 80),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-              child: isSmallScreen
-                  ? _buildVerticalLayout(isSmallMobile)
-                  : _buildHorizontalLayout(),
-            ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: isSmallScreen
+                ? _buildVerticalLayout(isSmallMobile)
+                : _buildHorizontalLayout(),
           ),
         ],
       ),

@@ -11,12 +11,12 @@ class Description3 extends StatelessWidget {
     final isSmallMobile = screenWidth <= 480;
 
     return LandingSectionLayout(
-      height: isSmallMobile ? 960 : (isSmallScreen ? 1100 : 750),
+      height: null,
       backgroundColor: const Color(0xFFF8FAFC),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 70),
+          const SizedBox(height: 80),
           Text.rich(
             TextSpan(
               style: TextStyle(
@@ -53,6 +53,7 @@ class Description3 extends StatelessWidget {
                 ? _buildVerticalLayout(isSmallMobile)
                 : _buildHorizontalLayout(),
           ),
+          const SizedBox(height: 80),
         ],
       ),
     );

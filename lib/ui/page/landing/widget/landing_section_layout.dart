@@ -17,14 +17,22 @@ class LandingSectionLayout extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final isVerySmallMobile = screenWidth <= 480;
 
-    return Container(
+    Widget container = Container(
       width: double.infinity,
-      height: height,
       color: backgroundColor,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: isVerySmallMobile ? 20 : 0),
         child: child,
       ),
     );
+
+    if (height != null) {
+      return SizedBox(
+        height: height,
+        child: container,
+      );
+    }
+
+    return container;
   }
 }
