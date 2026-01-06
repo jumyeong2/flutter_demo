@@ -110,7 +110,7 @@ class Description2 extends StatelessWidget {
               ),
               children: [
                 const TextSpan(
-                  text: '우리는 수많은 팀이 \'좋은 관계\'로 시작했지만, 불편한 질문을 미룬 대가로,\n팀이 무너지는 것을 목격했습니다.\n',
+                  text: '우리는 수많은 팀이 \'좋은 관계\'로 시작했지만,\n불편한 질문을 미룬 대가로, 팀이 무너지는 것을 목격했습니다.\n',
                 ),
                 const TextSpan(
                   text: '서로 믿지 못해서가 아니라,\n',

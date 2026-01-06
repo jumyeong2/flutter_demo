@@ -129,34 +129,36 @@ class _CTAButtonState extends State<_CTAButton> {
         hoverColor: Colors.transparent,
         splashColor: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: EdgeInsets.symmetric(
-            horizontal: widget.isSmallMobile ? 24 : 48,
-            vertical: widget.isSmallMobile ? 16 : 24,
-          ),
-          decoration: BoxDecoration(
-            color: _isHovered ? hoverColor : baseColor,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: (_isHovered ? hoverColor : baseColor).withValues(
-                  alpha: 0.3,
+        child: IntrinsicWidth(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            padding: EdgeInsets.symmetric(
+              horizontal: widget.isSmallMobile ? 24 : 48,
+              vertical: widget.isSmallMobile ? 16 : 24,
+            ),
+            decoration: BoxDecoration(
+              color: _isHovered ? hoverColor : baseColor,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: (_isHovered ? hoverColor : baseColor).withValues(
+                    alpha: 0.3,
+                  ),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
                 ),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
+              ],
+            ),
+            child: Text(
+              "베타 출시 알림 + 30% 쿠폰",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: widget.isSmallMobile ? 15 : 20,
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
               ),
-            ],
-          ),
-          child: Text(
-            widget.isSmallMobile
-                ? "베타 출시 알림\n+ 30% 쿠폰"
-                : "베타 출시 알림 + 30% 쿠폰",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: widget.isSmallMobile ? 15 : 20,
-              fontWeight: FontWeight.w800,
-              color: Colors.white,
+              softWrap: false,
+              overflow: TextOverflow.visible,
             ),
           ),
         ),

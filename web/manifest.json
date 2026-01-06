@@ -1,11 +1,11 @@
 {
-    "name": "flutter_demo",
-    "short_name": "flutter_demo",
+    "name": "CoSync_Agreement",
+    "short_name": "CoSync_Agreement",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "CoSync Agreement - 공동창업자 전용 합의 도구",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
