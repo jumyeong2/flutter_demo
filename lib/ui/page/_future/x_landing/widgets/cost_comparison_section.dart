@@ -240,7 +240,7 @@ class CostComparisonSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.red.withOpacity(0.05),
+            color: Colors.red.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),

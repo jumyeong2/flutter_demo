@@ -16,37 +16,45 @@ class Description1 extends StatelessWidget {
     final isSmallMobile = screenWidth <= 480;
 
     // 반응형 값 정의 (각 요소별로 수정 가능)
-    final horizontalPadding = isSmallMobile ? 20.0 : isMobileScreen ? 40.0 : isSmallScreen ? 60.0 : 100.0;
+    final isDesktop = screenWidth > 1440;
+    final horizontalPadding = isSmallMobile ? 20.0 : isMobileScreen ? 40.0 : isSmallScreen ? 60.0 : (isDesktop ? 200.0 : 120.0);
     
     final badgeHeight = isSmallMobile ? 32.0 : 36.0;
     final badgeIconSize = isSmallMobile ? 14.0 : 16.0;
     final badgeFontSize = isSmallMobile ? 12.0 : 14.0;
     
-    final spacingAfterBadge = isSmallMobile ? 20.0 : 48.0;
+    final spacingAfterBadge = isSmallMobile ? 20.0 : (isDesktop ? 32.0 : 48.0);
     
-    final mainCopyFontSize = isSmallMobile ? 22.0 : isMobileScreen ? 26.0 : isSmallScreen ? 36.0 : 58.0;
+    // 데스크탑에서 제목 크기 줄이기
+    final mainCopyFontSize = isSmallMobile ? 22.0 : isMobileScreen ? 26.0 : isSmallScreen ? 36.0 : (isDesktop ? 42.0 : 48.0);
     
-    final spacingAfterMainCopy = isSmallMobile ? 24.0 : 32.0;
+    final spacingAfterMainCopy = isSmallMobile ? 24.0 : (isDesktop ? 24.0 : 32.0);
     
-    final subCopyFontSize = isSmallMobile ? 14.0 : isMobileScreen ? 16.0 : isSmallScreen ? 20.0 : 24.0;
+    final subCopyFontSize = isSmallMobile ? 14.0 : isMobileScreen ? 16.0 : isSmallScreen ? 20.0 : (isDesktop ? 18.0 : 22.0);
     
-    final spacingBeforeCTA = isSmallMobile ? 48.0 : 64.0;
+    final spacingBeforeCTA = isSmallMobile ? 48.0 : (isDesktop ? 80.0 : 96.0);
     
     final ctaButtonHeight = isSmallMobile ? 56.0 : 60.0;
     final ctaPrimaryFontSize = isSmallMobile ? 15.0 : 16.0;
     final ctaIconSize = isSmallMobile ? 14.0 : 16.0;
+    
+    // 데스크탑에서 최대 너비 제한
+    final maxContentWidth = isDesktop ? 1200.0 : double.infinity;
 
     return LandingSectionLayout(
       height: null,
       backgroundColor: const Color(0xFFF8FAFC),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 80),
-          // 배지 - 텍스트 너비에 맞춤
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: Container(
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: maxContentWidth),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: isDesktop ? 100 : 80),
+              // 배지 - 텍스트 너비에 맞춤
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                child: Container(
               height: badgeHeight,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
@@ -64,7 +72,7 @@ class Description1 extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    '창업 팀 필수',
+                    '창업 팀 필수 안전장치',
                     style: TextStyle(
                       color: const Color(0xFF64748B),
                       fontSize: badgeFontSize,
@@ -82,8 +90,8 @@ class Description1 extends StatelessWidget {
             child: Text(
               "공동창업 팀이 흔들리는 순간은\n대부분 '사업 문제'가 아니라,\n'기준'의 차이에서 시작됩니다",
               style: TextStyle(
-                height: 1.4,
-                letterSpacing: -1.0,
+                height: 1.3,
+                letterSpacing: isDesktop ? -0.8 : -1.0,
                 fontSize: mainCopyFontSize,
                 fontWeight: FontWeight.w900,
                 color: const Color(0xFF0F172A),
@@ -92,11 +100,11 @@ class Description1 extends StatelessWidget {
             ),
           ),
           SizedBox(height: spacingAfterMainCopy),
-          // 서브 카피 - 타이밍 고정
+          // 서브 카피 - 포지셔닝
           Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Text(
-              "투자, 법인, 역할 분담을 앞둔 지금 정리하지 않으면\n나중에는 정리할 수 없습니다",
+              "CoSync는 합의를 계약으로 옮길 수 있도록\n구조화하는 공동창업자 전용 인프라입니다.",
               style: TextStyle(
                 height: 1.5,
                 fontSize: subCopyFontSize,
@@ -112,7 +120,7 @@ class Description1 extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: isSmallScreen
                 ? _buildBeforeAfterVertical(isSmallMobile)
-                : _buildBeforeAfterHorizontal(),
+                : _buildBeforeAfterHorizontal(isDesktop),
           ),
           SizedBox(height: spacingBeforeCTA),
           // CTA 버튼 영역
@@ -149,11 +157,11 @@ class Description1 extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Flexible(
-                                child: Text(
-                                    "지금 바로 진단 시작",
+                                Flexible(
+                                  child: Text(
+                                    "베타 출시 알림 + 30% 쿠폰",
                                   style: TextStyle(
-                                      fontSize: isSmallMobile ? 13 : 14,
+                                      fontSize: isSmallMobile ? 12 : 13,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   overflow: TextOverflow.ellipsis,
@@ -218,7 +226,7 @@ class Description1 extends StatelessWidget {
                 : Column(
                     children: [
                       SizedBox(
-                        width: 500,
+                        width: isDesktop ? 480 : 500,
                         height: 60,
                         child: ElevatedButton(
                           onPressed: () {
@@ -245,7 +253,7 @@ class Description1 extends StatelessWidget {
                             children: [
                               Flexible(
                                 child: Text(
-                                  "지금 바로 진단 시작",
+                                  "베타 출시 알림 + 30% 쿠폰",
                                 style: TextStyle(
                                     fontSize: ctaPrimaryFontSize,
                                   fontWeight: FontWeight.bold,
@@ -260,9 +268,9 @@ class Description1 extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: isDesktop ? 16 : 12),
                       SizedBox(
-                        width: 500,
+                        width: isDesktop ? 480 : 500,
                         height: 60,
                         child: ElevatedButton(
                           onPressed: () {
@@ -302,8 +310,10 @@ class Description1 extends StatelessWidget {
                     ],
                   ),
           ),
-          const SizedBox(height: 80),
+          SizedBox(height: isDesktop ? 100 : 80),
         ],
+          ),
+        ),
       ),
     );
   }
@@ -326,36 +336,45 @@ class Description1 extends StatelessWidget {
   }
 
   // Before/After 가로 배치 (데스크톱)
-  Widget _buildBeforeAfterHorizontal() {
+  Widget _buildBeforeAfterHorizontal(bool isDesktop) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
-          child: _buildBeforeColumn(false),
+          flex: isDesktop ? 5 : 1,
+          child: _buildBeforeColumn(false, isDesktop),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: EdgeInsets.symmetric(horizontal: isDesktop ? 32 : 24),
           child: Icon(
             Icons.arrow_forward,
-            size: 48,
+            size: isDesktop ? 40 : 48,
             color: Colors.grey,
           ),
         ),
         Expanded(
-          child: _buildAfterColumn(false),
+          flex: isDesktop ? 5 : 1,
+          child: _buildAfterColumn(false, isDesktop),
         ),
       ],
     );
   }
 
   // Before 컬럼
-  Widget _buildBeforeColumn(bool isSmallMobile) {
+  Widget _buildBeforeColumn(bool isSmallMobile, [bool isDesktop = false]) {
     return Container(
-      padding: EdgeInsets.all(isSmallMobile ? 20 : 24),
+      padding: EdgeInsets.all(isSmallMobile ? 20 : (isDesktop ? 28 : 24)),
       decoration: BoxDecoration(
         color: const Color(0xFFF1F5F9),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(isDesktop ? 16 : 12),
         border: Border.all(color: const Color(0xFFE2E8F0), width: 1),
+        boxShadow: isDesktop ? [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ] : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -390,13 +409,20 @@ class Description1 extends StatelessWidget {
   }
 
   // After 컬럼
-  Widget _buildAfterColumn(bool isSmallMobile) {
+  Widget _buildAfterColumn(bool isSmallMobile, [bool isDesktop = false]) {
     return Container(
-      padding: EdgeInsets.all(isSmallMobile ? 20 : 24),
+      padding: EdgeInsets.all(isSmallMobile ? 20 : (isDesktop ? 28 : 24)),
       decoration: BoxDecoration(
         color: const Color(0xFFF0FDF4),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(isDesktop ? 16 : 12),
         border: Border.all(color: const Color(0xFF86EFAC), width: 1),
+        boxShadow: isDesktop ? [
+          BoxShadow(
+            color: const Color(0xFF16A34A).withValues(alpha: 0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ] : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

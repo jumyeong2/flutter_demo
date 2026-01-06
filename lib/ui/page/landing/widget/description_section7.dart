@@ -104,7 +104,7 @@ class Description7 extends StatelessWidget {
         ),
         const SizedBox(height: 12),
                 Text(
-          "말뿐인 약속은 잊혀집니다.\n'Rulebook'으로 기록하세요.",
+          "말뿐인 약속은 잊혀집니다.\n'Agreement'로 기록하세요.",
           textAlign: isSmallScreen ? TextAlign.center : TextAlign.start,
                   style: TextStyle(
             fontSize: isSmallMobile ? 20 : (isMediumScreen ? 24 : 32),
@@ -116,8 +116,8 @@ class Description7 extends StatelessWidget {
                 const SizedBox(height: 24),
                 Text(
                   isSmallMobile
-              ? "합의된 내용을 바탕으로 우리 팀만의 헌법,\n[Rulebook.pdf]를 생성해 드립니다."
-              : "동업계약서 쓰기엔 너무 딱딱하고, 말로만 하기엔 불안하신가요?\nCoSync는 우리 팀만의 헌법,\n[Rulebook.pdf]를 생성해 드립니다.",
+              ? "합의된 내용을 바탕으로 우리 팀만의 헌법,\n[Agreement.pdf]를 생성해 드립니다."
+              : "동업계약서 쓰기엔 너무 딱딱하고, 말로만 하기엔 불안하신가요?\nCoSync는 우리 팀만의 헌법,\n[Agreement.pdf]를 생성해 드립니다.",
           textAlign: isSmallScreen ? TextAlign.center : TextAlign.start,
                   style: TextStyle(
             fontSize: isSmallMobile ? 13 : 16,
@@ -231,8 +231,8 @@ class _DownloadButtonState extends State<_DownloadButton> {
             ),
             child: Text(
               widget.isSmallMobile
-                  ? "Rulebook 샘플(PDF)"
-                  : "Rulebook 샘플 다운로드 (PDF)",
+                  ? "Agreement 샘플(PDF)"
+                  : "Agreement 샘플 다운로드 (PDF)",
           ),
           ),
         ],
@@ -278,7 +278,7 @@ extension on Description7 {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  "Co-founder Rulebook",
+                                  "Co-founder Agreement",
                                   style: TextStyle(
                                     fontSize: 28,
                                     fontWeight: FontWeight.w900,

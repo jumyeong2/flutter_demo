@@ -1,6 +1,7 @@
 import 'dart:html' as html;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/main.dart' as main_app;
 
 class EmailSignupModal extends StatefulWidget {
   const EmailSignupModal({super.key});
@@ -23,6 +24,9 @@ class _EmailSignupModalState extends State<EmailSignupModal> {
 
   Future<void> _handleSubmit() async {
     if (_formKey.currentState!.validate() && _isAgreed) {
+      // 이벤트 트래킹: lead_submit_attempt
+      main_app.MyApp.analytics.logEvent(name: 'lead_submit_attempt');
+      
       setState(() {
         _isSubmitting = true;
       });
@@ -42,17 +46,22 @@ class _EmailSignupModalState extends State<EmailSignupModal> {
         final source = utmSource != null ? 'meta_ad' : 'landing';
 
         // 중복 체크: 이메일로 검색
+        print('중복 체크 시작... 이메일: $email');
         final existingLeads = await firestore
             .collection('leads')
             .where('email', isEqualTo: email)
             .limit(1)
             .get();
 
+        print('중복 체크 결과: ${existingLeads.docs.length}개 발견');
+
         if (existingLeads.docs.isNotEmpty) {
           // 중복 이메일인 경우
           setState(() {
             _isSubmitting = false;
           });
+          // 이벤트 트래킹: lead_submit_duplicate
+          main_app.MyApp.analytics.logEvent(name: 'lead_submit_duplicate');
           _showDuplicateDialog();
           return;
         }
@@ -79,15 +88,31 @@ class _EmailSignupModalState extends State<EmailSignupModal> {
           leadData['utmAd'] = utmAd;
         }
 
-        await firestore.collection('leads').add(leadData);
+        print('=== Firestore 저장 시작 ===');
+        print('저장할 데이터: $leadData');
+        
+        final docRef = await firestore.collection('leads').add(leadData);
+        
+        print('✅ Firestore 저장 완료! 문서 ID: ${docRef.id}');
+
+        // 이벤트 트래킹: lead_submit_success
+        main_app.MyApp.analytics.logEvent(name: 'lead_submit_success');
 
         // 성공 처리
         if (mounted) {
           Navigator.of(context).pop();
           _showSuccessDialog();
         }
-      } catch (e) {
+      } catch (e, stackTrace) {
         // 에러 처리
+        print('❌ === Firestore 저장 에러 ===');
+        print('에러 타입: ${e.runtimeType}');
+        print('에러 메시지: $e');
+        print('스택 트레이스: $stackTrace');
+        
+        // 이벤트 트래킹: lead_submit_error
+        main_app.MyApp.analytics.logEvent(name: 'lead_submit_error');
+        
         setState(() {
           _isSubmitting = false;
         });
@@ -96,6 +121,7 @@ class _EmailSignupModalState extends State<EmailSignupModal> {
             SnackBar(
               content: Text('오류가 발생했습니다: ${e.toString()}'),
               backgroundColor: Colors.red,
+              duration: const Duration(seconds: 5),
             ),
           );
         }
@@ -295,8 +321,24 @@ class _EmailSignupModalState extends State<EmailSignupModal> {
                       SizedBox(height: isSmallMobile ? 8 : 12),
                       _buildBenefitItem('사전 신청자 전용 30% 할인 쿠폰', isSmallMobile),
                       SizedBox(height: isSmallMobile ? 8 : 12),
-                      _buildBenefitItem('베타 우선 접근 또는 무료 체험 연장', isSmallMobile),
+                      _buildBenefitItem('Pro 질문 일부 무료 체험', isSmallMobile),
                     ],
+                  ),
+                ),
+                SizedBox(height: isSmallMobile ? 24 : 32),
+                // 서비스 소개 텍스트
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: isSmallMobile ? 0 : 8),
+                  child: Text(
+                    isSmallMobile
+                        ? '✓ CoSync는 말 꺼내기 어려운 질문을,\n싸움이 아닌 합의로 만듭니다.'
+                        : '✓ CoSync는 말 꺼내기 어려운 질문을, 싸움이 아닌 합의로 만듭니다.',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontSize: isSmallMobile ? 13 : 14,
+                      color: const Color(0xFF64748B),
+                      height: 1.6,
+                    ),
                   ),
                 ),
                 SizedBox(height: isSmallMobile ? 24 : 32),

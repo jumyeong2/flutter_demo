@@ -117,8 +117,8 @@ class Description5 extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           _ProcessCard(
-            step: "4. Rulebook",
-            description: "공동창업자 룰북을 생성합니다.",
+            step: "4. Agreement",
+            description: "공동창업자 합의안을 생성합니다.",
             icon: Icons.description_outlined,
             iconSize: iconSize,
             iconBackgroundSize: iconBackgroundSize,
@@ -171,7 +171,7 @@ class Description5 extends StatelessWidget {
                 child: _ProcessCard(
                   step: "3. 시장 표준 제안",
                   description:
-                      "정답이 아닌 '참고 프레임'을 제공합니다. 산업 관행과 데이터를 비교하여 감정 소모 없이 선택하세요.",
+                      "정답이 아닌 '참고 프레임'을 제공합니다. 산업 관행과 데이터를 비교해 합리적 선택을 돕습니다.",
                   icon: Icons.insights_rounded,
                   iconSize: iconSize,
                   iconBackgroundSize: iconBackgroundSize,
@@ -183,8 +183,8 @@ class Description5 extends StatelessWidget {
               SizedBox(width: isMobileScreen ? 12 : 20),
               Expanded(
                 child: _ProcessCard(
-                  step: "4. Rulebook",
-                  description: "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 룰북을 생성합니다.",
+                  step: "4. Agreement",
+                  description: "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 합의안을 생성합니다.",
                   icon: Icons.description_outlined,
                   iconSize: iconSize,
                   iconBackgroundSize: iconBackgroundSize,
@@ -200,62 +200,65 @@ class Description5 extends StatelessWidget {
   }
 
     // 1024px 초과: 4개 가로 배치
-    return Row(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40),
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-        Expanded(
-          child: _ProcessCard(
-            step: "1. 진단 (Sync)",
-            description: "단순한 설문이 아닙니다. 예민하지만 꼭 필요한 질문에 각자 답변합니다.",
-            icon: Icons.chat_bubble_outline_rounded,
-            iconSize: iconSize,
-            iconBackgroundSize: iconBackgroundSize,
-            stepFontSize: stepFontSize,
-            descriptionFontSize: descriptionFontSize,
-            height: cardHeight,
+          Expanded(
+            child: _ProcessCard(
+              step: "1. 진단 (Sync)",
+              description: "단순한 설문이 아닙니다. 예민하지만 꼭 필요한 질문에 각자 답변합니다.",
+              icon: Icons.chat_bubble_outline_rounded,
+              iconSize: iconSize,
+              iconBackgroundSize: iconBackgroundSize,
+              stepFontSize: stepFontSize,
+              descriptionFontSize: descriptionFontSize,
+              height: cardHeight,
             ),
           ),
-        const SizedBox(width: 20),
-        Expanded(
-          child: _ProcessCard(
-            step: "2. 리스크 시각화",
-            description: "생각이 일치하는 부분과 조율이 필요한 부분을 데이터로 명확히 보여줍니다.",
-            icon: Icons.bar_chart_rounded,
-            iconSize: iconSize,
-            iconBackgroundSize: iconBackgroundSize,
-            stepFontSize: stepFontSize,
-            descriptionFontSize: descriptionFontSize,
-            height: cardHeight,
+          const SizedBox(width: 20),
+          Expanded(
+            child: _ProcessCard(
+              step: "2. 리스크 시각화",
+              description: "생각이 일치하는 부분과 조율이 필요한 부분을 데이터로 명확히 보여줍니다.",
+              icon: Icons.bar_chart_rounded,
+              iconSize: iconSize,
+              iconBackgroundSize: iconBackgroundSize,
+              stepFontSize: stepFontSize,
+              descriptionFontSize: descriptionFontSize,
+              height: cardHeight,
             ),
           ),
-        const SizedBox(width: 20),
-        Expanded(
-          child: _ProcessCard(
-            step: "3. 시장 표준 제안",
-            description:
-                "정답이 아닌 '참고 프레임'을 제공합니다. 산업 관행과 데이터를 비교하여 감정 소모 없이 선택하세요.",
-            icon: Icons.insights_rounded,
-            iconSize: iconSize,
-            iconBackgroundSize: iconBackgroundSize,
-            stepFontSize: stepFontSize,
-            descriptionFontSize: descriptionFontSize,
-            height: cardHeight,
+          const SizedBox(width: 20),
+          Expanded(
+            child: _ProcessCard(
+              step: "3. 시장 표준 제안",
+              description:
+                  "정답이 아닌 '참고 프레임'을 제공합니다. 산업 관행과 데이터를 비교해 합리적 선택을 돕습니다.",
+              icon: Icons.insights_rounded,
+              iconSize: iconSize,
+              iconBackgroundSize: iconBackgroundSize,
+              stepFontSize: stepFontSize,
+              descriptionFontSize: descriptionFontSize,
+              height: cardHeight,
             ),
           ),
-        const SizedBox(width: 20),
-        Expanded(
+          const SizedBox(width: 20),
+          Expanded(
           child: _ProcessCard(
-            step: "4. Rulebook",
-            description: "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 룰북을 생성합니다.",
-            icon: Icons.description_outlined,
-            iconSize: iconSize,
-            iconBackgroundSize: iconBackgroundSize,
-            stepFontSize: stepFontSize,
-            descriptionFontSize: descriptionFontSize,
-            height: cardHeight,
+            step: "4. Agreement",
+            description: "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 합의안을 생성합니다.",
+              icon: Icons.description_outlined,
+              iconSize: iconSize,
+              iconBackgroundSize: iconBackgroundSize,
+              stepFontSize: stepFontSize,
+              descriptionFontSize: descriptionFontSize,
+              height: cardHeight,
+            ),
           ),
+        ],
       ),
-      ],
     );
   }
 }
@@ -299,10 +302,11 @@ class _ProcessCardState extends State<_ProcessCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
-        height: widget.isSmallMobile ? null : widget.height,
+        height: widget.isSmallMobile ? null : null,
         width: widget.isSmallMobile ? double.infinity : null,
         constraints: BoxConstraints(
           maxWidth: widget.isSmallMobile ? double.infinity : 400,
+          minHeight: widget.isSmallMobile ? 0 : widget.height,
         ),
         transform: _isHovered
             ? Matrix4.translationValues(0, -5, 0)
@@ -329,6 +333,7 @@ class _ProcessCardState extends State<_ProcessCard> {
         ),
         child: widget.isSmallMobile
             ? Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
@@ -363,13 +368,15 @@ class _ProcessCardState extends State<_ProcessCard> {
               ),
             ),
                         const SizedBox(height: 4),
-            Text(
+            Flexible(
+              child: Text(
                           widget.description,
               style: TextStyle(
                             fontSize: widget.descriptionFontSize,
                             color: Colors.black54,
                             height: 1.4,
               ),
+            ),
             ),
           ],
         ),
@@ -378,6 +385,7 @@ class _ProcessCardState extends State<_ProcessCard> {
               )
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
             children: [
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
@@ -408,15 +416,17 @@ class _ProcessCardState extends State<_ProcessCard> {
                 ),
               ),
                   const SizedBox(height: 16),
-                  Text(
-                    widget.description,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: widget.descriptionFontSize,
-                      color: Colors.black54,
-                      height: 1.5,
+                  Flexible(
+                    child: Text(
+                      widget.description,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: widget.descriptionFontSize,
+                        color: Colors.black54,
+                        height: 1.5,
+                      ),
                     ),
-              ),
+                  ),
             ],
         ),
       ),

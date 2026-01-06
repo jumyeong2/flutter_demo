@@ -313,7 +313,7 @@ class AgreementAdjustPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
+                    color: Colors.black.withValues(alpha: 0.04),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -361,7 +361,7 @@ class AgreementAdjustPage extends StatelessWidget {
                                 child: Icon(
                                   _getCategoryIcon(category.id),
                                   size: 80,
-                                  color: Colors.white.withOpacity(0.2),
+                                  color: Colors.white.withValues(alpha: 0.2),
                                 ),
                               ),
                               // 메인 아이콘
@@ -384,7 +384,7 @@ class AgreementAdjustPage extends StatelessWidget {
                                       shape: BoxShape.circle,
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
+                                          color: Colors.black.withValues(alpha: 0.1),
                                           blurRadius: 4,
                                         ),
                                       ],
@@ -501,7 +501,7 @@ class AgreementAdjustPage extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
+                    color: Colors.black.withValues(alpha: 0.04),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),
@@ -607,7 +607,7 @@ class AgreementAdjustPage extends StatelessWidget {
                   border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
+                      color: Colors.black.withValues(alpha: 0.04),
                       blurRadius: 12,
                       offset: const Offset(0, 2),
                     ),
@@ -913,7 +913,7 @@ class AgreementAdjustPage extends StatelessWidget {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 4,
                 offset: const Offset(0, -2),
               ),

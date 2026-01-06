@@ -150,10 +150,11 @@ class _CTAButtonState extends State<_CTAButton> {
           ),
           child: Text(
             widget.isSmallMobile
-                ? "Rulebook 무료 체험하기"
-                : "질문 3개로 Rulebook 체험하기 (무료)",
+                ? "베타 출시 알림\n+ 30% 쿠폰"
+                : "베타 출시 알림 + 30% 쿠폰",
+            textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: widget.isSmallMobile ? 16 : 20,
+              fontSize: widget.isSmallMobile ? 15 : 20,
               fontWeight: FontWeight.w800,
               color: Colors.white,
             ),

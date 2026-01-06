@@ -718,8 +718,9 @@ class SampleReportPage extends StatelessWidget {
               color: Color(0xFF6B7280),
             ),
           ),
+          SizedBox(height: 8),
           Text(
-            "본 문서는 데이터를 바탕으로 시장의 통상적인 사례와 트렌드를 제공하는 정보성 자료입니다. CoSync는 법무법인이 아니며, 본 리포트의 내용은 법률적 자문이나 유권해석을 구성하지 않습니다. 실제 주주간계약 체결 시에는 변호사 등 법률 전문가의 검토를 거치시기를 권고드립니다.",
+            "본 서비스에서 생성되는 합의 문장은 주주간계약서 또는 동업계약서의 작성을 대체하지 않지만, 해당 계약서에 반영될 수 있는 기초 자료로 활용되는 것을 전제로 합니다. 본 문서는 데이터를 바탕으로 시장의 통상적인 사례와 트렌드를 제공하는 정보성 자료입니다. CoSync는 법무법인이 아니며, 본 리포트의 내용은 법률적 자문이나 유권해석을 구성하지 않습니다.",
             style: TextStyle(
               fontSize: 12,
               color: Color(0xFF6B7280),
@@ -748,7 +749,7 @@ class SampleReportPage extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "분석된 리스크를 보완하는 '맞춤형 합의서'이 필요하신가요?",
+            "분석된 리스크를 보완하는 '맞춤형 합의안'이 필요하신가요?",
             style: TextStyle(
               fontSize: isMobile ? 16 : 18,
               fontWeight: FontWeight.bold,
@@ -758,7 +759,7 @@ class SampleReportPage extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           const Text(
-            "시장 표준 데이터를 반영하여 두 분의 의견 차이를 좁힌\n합의서(주주간계약서 초안)를 확인해보세요.",
+            "시장 표준 데이터를 반영하여 두 분의 의견 차이를 좁힌\n합의안을 확인해보세요.",
             style: TextStyle(fontSize: 14, color: Color(0xFF4B5563)),
             textAlign: TextAlign.center,
           ),
@@ -780,7 +781,7 @@ class SampleReportPage extends StatelessWidget {
                 elevation: 4,
               ),
               child: const Text(
-                "주주간계약서 초안 생성하기",
+                "합의안 생성하기",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),

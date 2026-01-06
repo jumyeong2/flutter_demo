@@ -57,7 +57,7 @@ class AgreementPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey[200]!),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4),
         ],
       ),
       child: Column(
@@ -190,7 +190,7 @@ class AgreementPage extends StatelessWidget {
           width: 2,
         ),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4),
         ],
       ),
       child: Stack(
@@ -478,8 +478,8 @@ class AgreementPage extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isUserA
-            ? Colors.indigo[50]!.withOpacity(0.5)
-            : Colors.amber[50]!.withOpacity(0.3),
+            ? Colors.indigo[50]!.withValues(alpha: 0.5)
+            : Colors.amber[50]!.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isUserA ? Colors.indigo[100]! : Colors.amber[100]!,
