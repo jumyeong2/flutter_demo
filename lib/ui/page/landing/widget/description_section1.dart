@@ -117,40 +117,40 @@ class Description1 extends StatelessWidget {
                         child: SizedBox(
                           width: 150,
                           height: ctaButtonHeight,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Get.to(() => const OnboardingPage());
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0F172A),
-                              foregroundColor: Colors.white,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Get.to(() => const OnboardingPage());
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0F172A),
+                            foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(horizontal: 8),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Flexible(
-                                  child: Text(
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                child: Text(
                                     "지금 바로 진단 시작",
-                                    style: TextStyle(
+                                  style: TextStyle(
                                       fontSize: isSmallMobile ? 13 : 14,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.center,
                                     maxLines: 1,
                                   ),
                                 ),
                                 const SizedBox(width: 4),
-                                Icon(
-                                  Icons.arrow_forward_ios,
+                              Icon(
+                                Icons.arrow_forward_ios,
                                   size: isSmallMobile ? 12 : 14,
-                                ),
-                              ],
+                              ),
+                            ],
                             ),
                           ),
                         ),
@@ -160,24 +160,24 @@ class Description1 extends StatelessWidget {
                         child: SizedBox(
                           width: 150,
                           height: ctaButtonHeight,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Get.to(() => const SampleReportPage());
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Get.to(() => const SampleReportPage());
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
                               padding: const EdgeInsets.symmetric(horizontal: 8),
-                              elevation: 0,
-                              side: BorderSide(color: Colors.grey[300]!),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+                            elevation: 0,
+                            side: BorderSide(color: Colors.grey[300]!),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
                                 Flexible(
                                   child: Text(
                                     "결과 화면 미리보기",
@@ -188,11 +188,11 @@ class Description1 extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.center,
                                     maxLines: 1,
-                                  ),
+                              ),
                                 ),
                                 const SizedBox(width: 4),
                                 Icon(Icons.arrow_forward_ios, size: isSmallMobile ? 12 : 14),
-                              ],
+                            ],
                             ),
                           ),
                         ),
@@ -223,9 +223,9 @@ class Description1 extends StatelessWidget {
                               Flexible(
                                 child: Text(
                                   "지금 바로 진단 시작",
-                                  style: TextStyle(
+                                style: TextStyle(
                                     fontSize: ctaPrimaryFontSize,
-                                    fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.bold,
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.center,

@@ -19,9 +19,9 @@ class Description3 extends StatelessWidget {
           const SizedBox(height: 80),
           Text.rich(
             TextSpan(
-              style: TextStyle(
-                fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
-                fontWeight: FontWeight.w900,
+            style: TextStyle(
+              fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
+              fontWeight: FontWeight.w900,
                 color: Colors.black,
               ),
               children: [
@@ -49,7 +49,7 @@ class Description3 extends StatelessWidget {
           // 카드 영역
           Padding(
             padding: EdgeInsets.symmetric(horizontal: isSmallMobile ? 0 : 30.0),
-            child: isSmallScreen
+              child: isSmallScreen
                 ? _buildVerticalLayout(isSmallMobile)
                 : _buildHorizontalLayout(),
           ),
@@ -75,21 +75,21 @@ class Description3 extends StatelessWidget {
   Widget _buildHorizontalLayout() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+        children: [
         Expanded(
           child: Align(
             alignment: Alignment.centerRight,
             child: _buildHiddenCostCard(false),
-          ),
-        ),
+                ),
+              ),
         const SizedBox(width: 40),
         Expanded(
           child: Align(
             alignment: Alignment.centerLeft,
             child: _buildCoSyncEffectCard(false),
-          ),
-        ),
-      ],
+                ),
+              ),
+            ],
     );
   }
 
@@ -219,7 +219,7 @@ class Description3 extends StatelessWidget {
               children: [
                 Expanded(
                   child: Row(
-                    children: [
+                  children: [
                       _buildEffectSection(
                         'BEFORE',
                         '문서 0장',
@@ -291,12 +291,12 @@ class Description3 extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+        Text(
                 title,
-                style: TextStyle(
+          style: TextStyle(
                   fontSize: isSmallMobile ? 14 : 16,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1E293B),
+            color: const Color(0xFF1E293B),
                 ),
                 overflow: TextOverflow.ellipsis,
               ),

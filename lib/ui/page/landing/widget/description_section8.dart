@@ -88,7 +88,7 @@ class Description8 extends StatelessWidget {
                 ),
               ],
             ),
-          ),
+                ),
               ],
             ),
           ),

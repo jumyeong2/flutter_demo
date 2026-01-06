@@ -77,7 +77,7 @@ class SampleReportPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "CoSync Report",
+                "CoSync Agreement",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: isMobile ? 20 : 24, // text-xl md:text-2xl
@@ -87,7 +87,7 @@ class SampleReportPage extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               const Text(
-                "공동창업자 합의 성향 분석 및 데이터 리포트",
+                "공동창업자 합의 성향 분석 및 합의서",
                 style: TextStyle(
                   color: Color(0xFF94A3B8), // text-slate-400
                   fontSize: 12, // text-xs md:text-sm
@@ -719,7 +719,7 @@ class SampleReportPage extends StatelessWidget {
             ),
           ),
           Text(
-            "본 리포트는 CoSync 사용자의 누적 데이터를 바탕으로 시장의 통상적인 사례와 트렌드를 제공하는 정보성 자료입니다. CoSync는 법무법인이 아니며, 본 리포트의 내용은 법률적 자문이나 유권해석을 구성하지 않습니다. 실제 주주간계약 체결 시에는 변호사 등 법률 전문가의 검토를 거치시기를 권고드립니다.",
+            "본 문서는 데이터를 바탕으로 시장의 통상적인 사례와 트렌드를 제공하는 정보성 자료입니다. CoSync는 법무법인이 아니며, 본 리포트의 내용은 법률적 자문이나 유권해석을 구성하지 않습니다. 실제 주주간계약 체결 시에는 변호사 등 법률 전문가의 검토를 거치시기를 권고드립니다.",
             style: TextStyle(
               fontSize: 12,
               color: Color(0xFF6B7280),
@@ -748,7 +748,7 @@ class SampleReportPage extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "분석된 리스크를 보완하는 '맞춤형 계약서'가 필요하신가요?",
+            "분석된 리스크를 보완하는 '맞춤형 합의서'이 필요하신가요?",
             style: TextStyle(
               fontSize: isMobile ? 16 : 18,
               fontWeight: FontWeight.bold,
@@ -758,7 +758,7 @@ class SampleReportPage extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           const Text(
-            "시장 표준 데이터를 반영하여 두 분의 의견 차이를 좁힌 초안을 확인해보세요.",
+            "시장 표준 데이터를 반영하여 두 분의 의견 차이를 좁힌\n합의서(주주간계약서 초안)를 확인해보세요.",
             style: TextStyle(fontSize: 14, color: Color(0xFF4B5563)),
             textAlign: TextAlign.center,
           ),
@@ -780,7 +780,7 @@ class SampleReportPage extends StatelessWidget {
                 elevation: 4,
               ),
               child: const Text(
-                "계약서 초안 생성하기 (Start Draft)",
+                "주주간계약서 초안 생성하기",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),

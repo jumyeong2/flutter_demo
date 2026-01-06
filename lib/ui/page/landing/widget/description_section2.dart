@@ -70,9 +70,7 @@ class Description2 extends StatelessWidget {
                 TextSpan(
                   text: '결국 문을 닫거나 쪼개집니다.',
                   style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    decorationColor: Colors.red,
-                    decorationThickness: 2.0,
+                    backgroundColor: Colors.red.withOpacity(0.2),
                   ),
                 ),
               ],
@@ -81,14 +79,22 @@ class Description2 extends StatelessWidget {
           ),
           SizedBox(height: isSmallMobile ? 32 : 40),
           // 두 번째 문단 (인용구)
-          Text(
-            '"이건 개인의 성격 문제가 아니라 구조의 문제입니다."',
-            style: TextStyle(
-              fontSize: isSmallMobile ? 16 : (isSmallScreen ? 18 : 20),
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-              height: 1.6,
-              fontStyle: FontStyle.italic,
+          Text.rich(
+            TextSpan(
+              style: TextStyle(
+                fontSize: isSmallMobile ? 16 : (isSmallScreen ? 18 : 20),
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+                height: 1.6,
+              ),
+              children: [
+                const TextSpan(text: '이는 개인의 성격 문제가 아니라,\n'),
+                const TextSpan(
+                  text: '구조의 문제',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const TextSpan(text: '입니다.'),
+              ],
             ),
             textAlign: TextAlign.center,
           ),
@@ -104,13 +110,16 @@ class Description2 extends StatelessWidget {
               ),
               children: [
                 const TextSpan(
-                  text: '우리는 수많은 팀이 \'좋은 관계\'로 시작했지만, 불편한 질문을 미룬 대가로 무너지는 것을 목격했습니다.\n서로 믿지 못해서가 아니라, ',
+                  text: '우리는 수많은 팀이 \'좋은 관계\'로 시작했지만, 불편한 질문을 미룬 대가로,\n팀이 무너지는 것을 목격했습니다.\n',
                 ),
                 const TextSpan(
-                  text: '합의하는 법을',
+                  text: '서로 믿지 못해서가 아니라,\n',
+                ),
+                const TextSpan(
+                  text: '합의하는 법',
                   style: TextStyle(fontWeight: FontWeight.w700),
                 ),
-                const TextSpan(text: ' 몰랐기 때문입니다.'),
+                const TextSpan(text: '을 몰랐기 때문입니다.'),
               ],
             ),
             textAlign: TextAlign.center,
@@ -126,17 +135,13 @@ class Description2 extends StatelessWidget {
                 height: 1.6,
               ),
               children: [
-                const TextSpan(text: '"그래서 CoSync는 합의 이후가 아니라, '),
+                const TextSpan(text: '그래서 CoSync는 합의 이후가 아니라,\n'),
                 TextSpan(
                   text: '합의 이전을 구조화합니다.',
                   style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    decorationColor: const Color(0xFF1D4ED8),
-                    decorationStyle: TextDecorationStyle.wavy,
-                    decorationThickness: 2.0,
+                    backgroundColor: const Color(0xFF1D4ED8).withOpacity(0.2),
                   ),
                 ),
-                const TextSpan(text: '"'),
               ],
             ),
             textAlign: TextAlign.center,

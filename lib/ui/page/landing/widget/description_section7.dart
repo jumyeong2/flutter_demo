@@ -20,7 +20,7 @@ class Description7 extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
         child: Column(
-          children: [
+        children: [
             const SizedBox(height: 80),
             Container(
               child: isSmallScreen
@@ -28,9 +28,9 @@ class Description7 extends StatelessWidget {
                   : _buildHorizontalLayout(),
             ),
             const SizedBox(height: 80),
-          ],
-        ),
-      ),
+                  ],
+                ),
+              ),
     );
   }
 
@@ -80,8 +80,8 @@ class Description7 extends StatelessWidget {
       crossAxisAlignment: isSmallScreen
           ? CrossAxisAlignment.center
           : CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
         Row(
           mainAxisAlignment: isSmallScreen
               ? MainAxisAlignment.center
@@ -103,33 +103,33 @@ class Description7 extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        Text(
+                Text(
           "말뿐인 약속은 잊혀집니다.\n'Rulebook'으로 기록하세요.",
           textAlign: isSmallScreen ? TextAlign.center : TextAlign.start,
-          style: TextStyle(
+                  style: TextStyle(
             fontSize: isSmallMobile ? 20 : (isMediumScreen ? 24 : 32),
-            fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w900,
             color: const Color(0xFF1E293B),
             height: 1.3,
-          ),
-        ),
-        const SizedBox(height: 24),
-        Text(
-          isSmallMobile
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  isSmallMobile
               ? "합의된 내용을 바탕으로 우리 팀만의 헌법,\n[Rulebook.pdf]를 생성해 드립니다."
               : "동업계약서 쓰기엔 너무 딱딱하고, 말로만 하기엔 불안하신가요?\nCoSync는 우리 팀만의 헌법,\n[Rulebook.pdf]를 생성해 드립니다.",
           textAlign: isSmallScreen ? TextAlign.center : TextAlign.start,
-          style: TextStyle(
+                  style: TextStyle(
             fontSize: isSmallMobile ? 13 : 16,
             color: const Color(0xFF64748B),
-            height: 1.6,
-          ),
-        ),
+                    height: 1.6,
+                  ),
+                ),
         const SizedBox(height: 40),
-        _buildListItem("Mission & Vision", isSmallMobile),
+        _buildListItem("Mission & Vision (우리가 모인 이유)", isSmallMobile),
         _buildListItem("R&R (역할과 책임)", isSmallMobile),
         _buildListItem("Compensation (지분)", isSmallMobile),
-        _buildListItem("Decision Making", isSmallMobile),
+        _buildListItem("Decision Making (의사결정 구조)", isSmallMobile),
         _buildListItem("Exit Plan (이탈 조건)", isSmallMobile),
         if (!isSmallScreen) ...[
           SizedBox(height: isSmallMobile ? 20 : 30),
@@ -153,16 +153,16 @@ class Description7 extends StatelessWidget {
         border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
       ),
       child: Row(
-        children: [
-          Icon(
+                  children: [
+                      Icon(
             Icons.check_circle_outline_rounded,
             color: const Color(0xFF2563EB),
             size: isSmallMobile ? 16 : 20,
-          ),
+                      ),
           const SizedBox(width: 12),
           Text(
             text,
-            style: TextStyle(
+                        style: TextStyle(
               fontSize: isSmallMobile ? 13 : 15,
               fontWeight: FontWeight.w600,
               color: const Color(0xFF334155),
@@ -193,7 +193,7 @@ class _DownloadButtonState extends State<_DownloadButton> {
     return InkWell(
       onTap: () {},
       onHover: (value) => setState(() => _isHovered = value),
-      hoverColor: Colors.transparent,
+        hoverColor: Colors.transparent,
       borderRadius: BorderRadius.circular(32),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -222,7 +222,7 @@ class _DownloadButtonState extends State<_DownloadButton> {
           ),
           const SizedBox(width: 20),
           AnimatedDefaultTextStyle(
-            duration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 200),
             style: TextStyle(
               fontSize: widget.isSmallMobile ? 16 : 14,
               fontWeight: FontWeight.w800,
@@ -233,7 +233,7 @@ class _DownloadButtonState extends State<_DownloadButton> {
               widget.isSmallMobile
                   ? "Rulebook 샘플(PDF)"
                   : "Rulebook 샘플 다운로드 (PDF)",
-            ),
+          ),
           ),
         ],
       ),
@@ -249,7 +249,7 @@ extension on Description7 {
         // 태블릿 프레임
         Container(
           width: 580,
-          height: 680,
+          height: 1000,
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: const Color(0xFF475569), // 태블릿 베젤 색상
@@ -261,7 +261,7 @@ extension on Description7 {
               borderRadius: BorderRadius.circular(16),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16),
               child: Stack(
                 children: [
                   // 문서 본문 내용
@@ -280,7 +280,7 @@ extension on Description7 {
                                 const Text(
                                   "Co-founder Rulebook",
                                   style: TextStyle(
-                                    fontSize: 24,
+                                    fontSize: 28,
                                     fontWeight: FontWeight.w900,
                                     fontFamily: 'Serif',
                                     color: Color(0xFF1E293B),
@@ -290,7 +290,7 @@ extension on Description7 {
                                 Text(
                                   "Ver 1.0 | 2024.05.20",
                                   style: TextStyle(
-                                    fontSize: 13,
+                                    fontSize: 15,
                                     color: Colors.blue[300],
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -311,12 +311,14 @@ extension on Description7 {
                         "CHAPTER 3. EQUITY & VESTING",
                         "제3조 (지분 및 베스팅)",
                         "공동창업자 김민준, 이강인은 총 4년의 베스팅 기간을 설정하며, 1년의 클리프 기간을 둔다. 이탈 시 회수 조건은...",
+                        marketStandard: "VC 투자 표준: 총 4년(48개월) 베스팅. 최초 1년 클리프(Cliff) 근무 시 지분의 25%를 일괄 인정하고, 이후 3년간 매월 1/48(약 2.08%)씩 분할 귀속시키는 조건이 가장 보편적입니다.",
                       ),
                       // 본문 섹션 2
                       _buildDocSection(
                         "CHAPTER 5. EXIT PLAN",
                         "제5조 (이탈 조건)",
                         "자발적 퇴사의 경우 보유 지분의 50%를 액면가로 회사에 반환하며, 이는 남은 창업자들의 리스크를 헷지하기 위함이다...",
+                        marketStandard: "Bad Leaver(횡령, 배임 등) 확정 시, 보유 지분 100%를 '액면가'로 콜옵션(Call Option). 단순 변심 등(Good Leaver)의 경우, 근속 기간에 비례해 베스팅된 지분은 인정하되 잔여 지분만 무상 회수합니다.",
                       ),
                     ],
                   ),
@@ -399,27 +401,27 @@ extension on Description7 {
           top: -20,
           right: 45,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16),
             decoration: BoxDecoration(
               color: const Color(0xFFFFD600), // 노란색 뱃지
               borderRadius: BorderRadius.circular(24),
-              boxShadow: [
-                BoxShadow(
+            boxShadow: [
+              BoxShadow(
                   color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
-                ),
-              ],
-            ),
+              ),
+            ],
+          ),
             child: const Row(
               children: [
-                Icon(Icons.star, color: Color(0xFF1E293B), size: 16),
-                SizedBox(width: 6),
+                Icon(Icons.star, color: Color(0xFF1E293B), size: 20),
+                SizedBox(width: 7),
                 Text(
                   "Lawyer-friendly",
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
-                    fontSize: 14,
+                    fontSize: 18,
                     color: Color(0xFF1E293B),
                   ),
                 ),
@@ -431,7 +433,7 @@ extension on Description7 {
     );
   }
 
-  Widget _buildDocSection(String chapter, String title, String content) {
+  Widget _buildDocSection(String chapter, String title, String content, {String? marketStandard}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
       child: Column(
@@ -440,7 +442,7 @@ extension on Description7 {
           Text(
             chapter,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 13,
               fontWeight: FontWeight.w800,
               color: Colors.blue[600],
               letterSpacing: 1.0,
@@ -450,12 +452,55 @@ extension on Description7 {
           Text(
             title,
             style: const TextStyle(
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: FontWeight.w800,
               color: Color(0xFF1E293B),
             ),
           ),
           const SizedBox(height: 16),
+          if (marketStandard != null) ...[
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.balance,
+                        size: 14,
+                        color: const Color(0xFF475569),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        "시장 표준 제안 (Reference)",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF475569),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    marketStandard,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF64748B),
+                      height: 1.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -465,7 +510,7 @@ extension on Description7 {
             child: Text(
               content,
               style: const TextStyle(
-                fontSize: 13,
+                fontSize: 15,
                 color: Color(0xFF64748B),
                 height: 1.5,
               ),

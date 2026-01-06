@@ -8,6 +8,7 @@ class Description4 extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isSmallScreen = screenWidth <= 1024;
+    final isMobileScreen = screenWidth <= 763;
     final isSmallMobile = screenWidth <= 480;
 
     return LandingSectionLayout(
@@ -40,8 +41,8 @@ class Description4 extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 0),
             child: isSmallScreen
-                ? _buildCardsColumn(isSmallMobile)
-                : _buildCardsRow(),
+                ? _buildCardsColumn(isSmallMobile, isMobileScreen, isSmallScreen)
+                : _buildCardsRow(isMobileScreen, isSmallScreen),
           ),
           const SizedBox(height: 80),
         ],
@@ -50,37 +51,37 @@ class Description4 extends StatelessWidget {
   }
 
   // 가로 배치 (1024px 초과)
-  Widget _buildCardsRow() {
+  Widget _buildCardsRow(bool isMobileScreen, bool isSmallScreen) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Flexible(child: _buildCostCard(false)),
+          Flexible(child: _buildCostCard(false, isMobileScreen, isSmallScreen)),
           const SizedBox(width: 24),
-          Flexible(child: _buildInvestmentCard(false)),
+          Flexible(child: _buildInvestmentCard(false, isMobileScreen, isSmallScreen)),
           const SizedBox(width: 24),
-          Flexible(child: _buildEmotionCard(false)),
+          Flexible(child: _buildEmotionCard(false, isMobileScreen, isSmallScreen)),
         ],
       ),
     );
   }
 
   // 세로 배치 (1024px 이하)
-  Widget _buildCardsColumn(bool isSmallMobile) {
-    return Column(
+  Widget _buildCardsColumn(bool isSmallMobile, bool isMobileScreenParam, bool isSmallScreenParam) {
+      return Column(
       children: [
-        _buildCostCard(isSmallMobile),
+        _buildCostCard(isSmallMobile, isMobileScreenParam, isSmallScreenParam),
         const SizedBox(height: 24),
-        _buildInvestmentCard(isSmallMobile),
+        _buildInvestmentCard(isSmallMobile, isMobileScreenParam, isSmallScreenParam),
         const SizedBox(height: 24),
-        _buildEmotionCard(isSmallMobile),
+        _buildEmotionCard(isSmallMobile, isMobileScreenParam, isSmallScreenParam),
       ],
     );
   }
 
   // 비용 절감 카드
-  Widget _buildCostCard(bool isSmallMobile) {
+  Widget _buildCostCard(bool isSmallMobile, bool isMobileScreen, bool isSmallScreen) {
     return _RiskHoverCard(
       isSmallMobile: isSmallMobile,
       borderColor: Colors.grey.withValues(alpha: 0.2),
@@ -93,22 +94,22 @@ class Description4 extends StatelessWidget {
                 height: 48,
                 width: 48,
                 decoration: BoxDecoration(
-                  color: Colors.green[50],
+                  color: const Color(0xFF059669).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.savings_outlined,
                   size: isSmallMobile ? 24 : 28,
-                  color: Colors.green[600],
+                  color: const Color(0xFF059669),
                 ),
               ),
               const SizedBox(width: 16),
               Text(
                 '비용 절감',
                 style: TextStyle(
-                  fontSize: isSmallMobile ? 20 : 24,
+                  fontSize: isSmallMobile ? 20 : (isSmallScreen ? 22 : 24),
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF15803D),
+                  color: const Color(0xFF059669),
                 ),
               ),
             ],
@@ -122,14 +123,14 @@ class Description4 extends StatelessWidget {
                   text: 'CoSync 연 구독',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.green[700],
+                    color: const Color(0xFF059669),
                   ),
                 ),
                 const TextSpan(text: '으로 쟁점을 정리하면 비용이 획기적으로 줍니다.'),
               ],
             ),
             style: TextStyle(
-              fontSize: isSmallMobile ? 15 : 17,
+              fontSize: isSmallMobile ? 15 : (isMobileScreen ? 16 : (isSmallScreen ? 17 : 18)),
               color: Colors.black87,
             ),
           ),
@@ -142,7 +143,7 @@ class Description4 extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green[700],
+                  color: const Color(0xFF059669),
                 ),
               ),
               Text(
@@ -150,7 +151,7 @@ class Description4 extends StatelessWidget {
                 style: TextStyle(
                   fontSize: isSmallMobile ? 24 : 28,
                   fontWeight: FontWeight.w900,
-                  color: Colors.green[700],
+                  color: const Color(0xFF059669),
                 ),
               ),
             ],
@@ -160,18 +161,18 @@ class Description4 extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
             child: LinearProgressIndicator(
               value: 0.9,
-              backgroundColor: Colors.green[100],
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.green[400]!),
+              backgroundColor: const Color(0xFF059669).withOpacity(0.1),
+              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF059669)),
               minHeight: 12,
             ),
           ),
         ],
       ),
-    );
-  }
+      );
+    }
 
   // 투자 대비 카드
-  Widget _buildInvestmentCard(bool isSmallMobile) {
+  Widget _buildInvestmentCard(bool isSmallMobile, bool isMobileScreen, bool isSmallScreen) {
     return _RiskHoverCard(
       isSmallMobile: isSmallMobile,
       borderColor: Colors.grey.withValues(alpha: 0.2),
@@ -184,20 +185,20 @@ class Description4 extends StatelessWidget {
                 height: 48,
                 width: 48,
                 decoration: BoxDecoration(
-                  color: Colors.blue[50],
+                  color: const Color(0xFF1D4ED8).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.trending_up_rounded,
                   size: isSmallMobile ? 24 : 28,
-                  color: Colors.blue[600],
+                  color: const Color(0xFF1D4ED8),
                 ),
               ),
               const SizedBox(width: 16),
               Text(
                 '투자 대비',
                 style: TextStyle(
-                  fontSize: isSmallMobile ? 20 : 24,
+                  fontSize: isSmallMobile ? 20 : (isSmallScreen ? 22 : 24),
                   fontWeight: FontWeight.bold,
                   color: const Color(0xFF1D4ED8),
                 ),
@@ -213,31 +214,31 @@ class Description4 extends StatelessWidget {
                   text: '지분 리스크는 탈락 1순위',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1D4ED8),
+                    color: const Color(0xFF1D4ED8),
                   ),
                 ),
                 const TextSpan(text: '입니다. 필수 항목을 미리 점검하세요.'),
               ],
             ),
             style: TextStyle(
-              fontSize: isSmallMobile ? 15 : 17,
+              fontSize: isSmallMobile ? 15 : (isMobileScreen ? 16 : (isSmallScreen ? 17 : 18)),
               color: Colors.black87,
             ),
           ),
           const Spacer(),
           SizedBox(height: isSmallMobile ? 20 : 32),
-          _buildCheckItem(Colors.blue[400]!, '주주명부(Cap Table)', isSmallMobile),
+          _buildCheckItem(const Color(0xFF1D4ED8), '주주명부(Cap Table)', isSmallMobile),
           const SizedBox(height: 12),
-          _buildCheckItem(Colors.blue[400]!, 'IP 양도 계약', isSmallMobile),
+          _buildCheckItem(const Color(0xFF1D4ED8), 'IP 양도 계약', isSmallMobile),
           const SizedBox(height: 12),
-          _buildCheckItem(Colors.blue[400]!, '이탈 방지(Vesting)', isSmallMobile),
+          _buildCheckItem(const Color(0xFF1D4ED8), '이탈 방지(Vesting)', isSmallMobile),
         ],
       ),
     );
   }
 
   // 감정 보호 카드
-  Widget _buildEmotionCard(bool isSmallMobile) {
+  Widget _buildEmotionCard(bool isSmallMobile, bool isMobileScreen, bool isSmallScreen) {
     return _RiskHoverCard(
       isSmallMobile: isSmallMobile,
       borderColor: Colors.grey.withValues(alpha: 0.2),
@@ -250,22 +251,22 @@ class Description4 extends StatelessWidget {
                 height: 48,
                 width: 48,
                 decoration: BoxDecoration(
-                  color: Colors.purple[50],
+                  color: const Color(0xFF7C3AED).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.handshake_outlined,
                   size: isSmallMobile ? 24 : 28,
-                  color: const Color(0xFF7E22CE),
+                  color: const Color(0xFF7C3AED),
                 ),
               ),
               const SizedBox(width: 16),
               Text(
                 '감정 보호',
                 style: TextStyle(
-                  fontSize: isSmallMobile ? 20 : 24,
+                  fontSize: isSmallMobile ? 20 : (isSmallScreen ? 22 : 24),
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF7E22CE),
+                  color: const Color(0xFF7C3AED),
                 ),
               ),
             ],
@@ -279,14 +280,14 @@ class Description4 extends StatelessWidget {
                   text: '팀의 신뢰를 지키세요',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.purple[700],
+                    color: const Color(0xFF7C3AED),
                   ),
                 ),
                 const TextSpan(text: '. 객관적 기준이 감정적 갈등을 줄입니다.'),
               ],
             ),
             style: TextStyle(
-              fontSize: isSmallMobile ? 15 : 17,
+              fontSize: isSmallMobile ? 15 : (isMobileScreen ? 16 : (isSmallScreen ? 17 : 18)),
               color: Colors.black87,
             ),
           ),
@@ -297,7 +298,7 @@ class Description4 extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: Colors.purple[100]!.withValues(alpha: 0.5),
+                color: const Color(0xFF7C3AED).withOpacity(0.2),
               ),
             ),
             child: Column(
@@ -309,7 +310,7 @@ class Description4 extends StatelessWidget {
                     Text(
                       '의사결정 갈등 발생 시',
                       style: TextStyle(
-                        fontSize: isSmallMobile ? 10 : 12,
+                        fontSize: 12,
                         color: Colors.black45,
                       ),
                     ),
@@ -319,15 +320,15 @@ class Description4 extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.purple[50],
+                        color: const Color(0xFF7C3AED).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         'CoSync 해결',
                         style: TextStyle(
-                          fontSize: 10,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Colors.purple[700],
+                          color: const Color(0xFF7C3AED),
                         ),
                       ),
                     ),
@@ -337,7 +338,7 @@ class Description4 extends StatelessWidget {
                 Text(
                   '"CEO에게 최종 결정권 부여"',
                   style: TextStyle(
-                    fontSize: isSmallMobile ? 13 : 15,
+                    fontSize: isSmallMobile ? 15 : 17,
                     fontWeight: FontWeight.bold,
                     color: const Color(0xFF1E293B),
                   ),
@@ -358,7 +359,7 @@ class Description4 extends StatelessWidget {
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
             shape: BoxShape.circle,
-          ),
+        ),
           child: Icon(Icons.check, color: color, size: isSmallMobile ? 12 : 14),
         ),
         const SizedBox(width: 12),

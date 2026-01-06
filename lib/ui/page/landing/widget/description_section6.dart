@@ -51,10 +51,11 @@ class Description6 extends StatelessWidget {
           SizedBox(height: isSmallMobile ? 40 : 80),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: isSmallScreen
+          child: isSmallScreen
                 ? _buildVerticalLayout(isSmallMobile)
-                : _buildHorizontalLayout(),
-          ),
+              : _buildHorizontalLayout(),
+        ),
+          const SizedBox(height: 80),
         ],
       ),
     );
@@ -138,7 +139,7 @@ class Description6 extends StatelessWidget {
                   horizontal: isSmallMobile ? 20 : 36,
                 ),
                 child: Column(
-                  children: [
+      children: [
                     SizedBox(height: isSmallMobile ? 0 : 10),
                     Center(
                       child: Icon(
@@ -172,13 +173,13 @@ class Description6 extends StatelessWidget {
                       status: "보통 (70점)",
                       color: const Color(0xFFD97706),
                       targetBgColor: const Color(0xFFFFFBEB),
-                      isSmallMobile: isSmallMobile,
-                    ),
+          isSmallMobile: isSmallMobile,
+        ),
                     const SizedBox(height: 8),
                   ],
                 ),
               ),
-            ],
+      ],
           ),
         ),
       ),
@@ -192,38 +193,38 @@ class Description6 extends StatelessWidget {
     return Container(
       constraints: BoxConstraints(
         maxWidth: 500,
-        maxHeight: isSmallMobile ? 450 : 400,
       ),
       child: Column(
-        crossAxisAlignment: isSmallScreen
-            ? CrossAxisAlignment.center
-            : CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+      crossAxisAlignment: isSmallScreen
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+          const SizedBox(height: 40),
           const Text(
             "RISK RADAR",
-            style: TextStyle(
+              style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w800,
               color: Color(0xFF2563EB),
-              letterSpacing: 1.2,
+                letterSpacing: 1.2,
+              ),
             ),
-          ),
           const SizedBox(height: 16),
-          Text(
+        Text(
             "팀의 안정성을 점수로 관리하세요.",
-            textAlign: isSmallScreen ? TextAlign.center : TextAlign.start,
-            style: TextStyle(
+          textAlign: isSmallScreen ? TextAlign.center : TextAlign.start,
+          style: TextStyle(
               fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
-              fontWeight: FontWeight.w900,
-              color: const Color(0xFF1E293B),
+            fontWeight: FontWeight.w900,
+            color: const Color(0xFF1E293B),
               height: 1.2,
             ),
           ),
           const SizedBox(height: 8),
-          Text(
+        Text(
             "Team Stability Score",
-            style: TextStyle(
+          style: TextStyle(
               fontSize: isSmallMobile ? 18 : 24,
               fontWeight: FontWeight.w700,
               color: const Color(0xFF94A3B8),
@@ -231,16 +232,14 @@ class Description6 extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           Text(
-            "'그냥 느낌이 좀 쎄한데?'라는 감을 데이터로 확인시켜 드립니다.\n5가지 핵심 영역을 시각화하여 어디서 갈등이 터질지 미리 예측하고 방어합니다.",
+            "'그냥 느낌이 좀 쎄한데?'라는 감을 데이터로 확인시켜 드립니다.\n5가지 핵심 영역을 시각화하여 어디서 갈등이 터질지\n미리 예측하고 방어합니다.",
             textAlign: isSmallScreen ? TextAlign.center : TextAlign.start,
             style: TextStyle(
               fontSize: isSmallMobile ? 13 : (isSmallScreen ? 14 : 16),
               color: const Color(0xFF64748B),
               height: 1.6,
             ),
-          ),
-          const SizedBox(height: 40),
-          const _CompareLink(),
+            ),
         ],
       ),
     );
@@ -281,18 +280,18 @@ class _StabilityHoverItemState extends State<_StabilityHoverItem> {
           horizontal: widget.isSmallMobile ? 12 : 20,
           vertical: widget.isSmallMobile ? 12 : 16,
         ),
-        decoration: BoxDecoration(
-          color: _isHovered
+            decoration: BoxDecoration(
+              color: _isHovered
               ? widget.targetBgColor
               : Colors.grey.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
-        ),
+            ),
         child: Row(
           children: [
             Text(
               widget.emoji,
               style: TextStyle(fontSize: widget.isSmallMobile ? 16 : 20),
-            ),
+          ),
             const SizedBox(width: 8),
             Text(
               widget.label,
@@ -305,64 +304,16 @@ class _StabilityHoverItemState extends State<_StabilityHoverItem> {
             const Spacer(),
             Text(
               widget.status,
-              style: TextStyle(
+            style: TextStyle(
                 fontSize: widget.isSmallMobile ? 13 : 16,
                 fontWeight: FontWeight.bold,
                 color: widget.color,
-              ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CompareLink extends StatefulWidget {
-  const _CompareLink();
-
-  @override
-  State<_CompareLink> createState() => _CompareLinkState();
-}
-
-class _CompareLinkState extends State<_CompareLink> {
-  bool _isHovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      cursor: SystemMouseCursors.click,
-      child: InkWell(
-        onTap: () {},
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "CoSync 도입 전후 비교 보기",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF2563EB),
-                  decoration: _isHovered
-                      ? TextDecoration.underline
-                      : TextDecoration.none,
-                ),
-              ),
-              const SizedBox(width: 8),
-              const Icon(
-                Icons.arrow_forward,
-                color: Color(0xFF2563EB),
-                size: 20,
-              ),
-            ],
           ),
+        ],
         ),
       ),
     );
   }
 }
+

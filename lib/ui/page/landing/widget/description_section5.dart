@@ -34,9 +34,7 @@ class Description5 extends StatelessWidget {
             "감정 싸움 없이 합의하는 4단계 프로세스",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: isSmallMobile
-                  ? 18
-                  : (isMobileScreen ? 20 : (isSmallScreen ? 24 : 32)),
+              fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
               fontWeight: FontWeight.w900,
               color: Color(0xFF1E293B),
             ),
@@ -48,16 +46,14 @@ class Description5 extends StatelessWidget {
                 : "CoSync는 '중간 다리' 역할을 통해 객관적인 합의를 이끌어냅니다.",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: isSmallMobile
-                  ? 13
-                  : (isMobileScreen ? 14 : (isSmallScreen ? 16 : 18)),
+              fontSize: isSmallMobile ? 14 : (isSmallScreen ? 16 : 18),
               fontWeight: FontWeight.w500,
               color: Colors.black54,
             ),
           ),
           SizedBox(height: isSmallMobile ? 40 : 60),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: _buildCards(isMobileScreen, isSmallScreen, isSmallMobile),
           ),
           const SizedBox(height: 80),
@@ -71,7 +67,7 @@ class Description5 extends StatelessWidget {
     bool isSmallScreen,
     bool isSmallMobile,
   ) {
-    final double iconSize = isSmallMobile ? 18 : (isMobileScreen ? 20 : 32);
+    final double iconSize = isSmallMobile ? 24 : 28;
     final double iconBackgroundSize = isSmallMobile
         ? 48
         : (isMobileScreen ? 40 : 64);
@@ -86,7 +82,7 @@ class Description5 extends StatelessWidget {
     // 소형 모바일: 1열 배치
     if (isSmallMobile) {
       return Column(
-        children: [
+      children: [
           _ProcessCard(
             step: "1. 진단 (Sync)",
             description: "꼭 필요한 질문에 각자 답변합니다.",
@@ -130,9 +126,9 @@ class Description5 extends StatelessWidget {
             descriptionFontSize: descriptionFontSize,
             isSmallMobile: true,
           ),
-        ],
-      );
-    }
+      ],
+    );
+  }
 
     // 1024px 이하: 2x2 배치 (모바일 포함)
     if (isSmallScreen) {
@@ -164,9 +160,9 @@ class Description5 extends StatelessWidget {
                   descriptionFontSize: descriptionFontSize,
                   height: cardHeight,
                 ),
-              ),
-            ],
-          ),
+            ),
+          ],
+        ),
           SizedBox(height: isMobileScreen ? 12 : 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -182,8 +178,8 @@ class Description5 extends StatelessWidget {
                   stepFontSize: stepFontSize,
                   descriptionFontSize: descriptionFontSize,
                   height: cardHeight,
-                ),
-              ),
+                      ),
+                    ),
               SizedBox(width: isMobileScreen ? 12 : 20),
               Expanded(
                 child: _ProcessCard(
@@ -200,13 +196,13 @@ class Description5 extends StatelessWidget {
             ],
           ),
         ],
-      );
-    }
+    );
+  }
 
     // 1024px 초과: 4개 가로 배치
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
         Expanded(
           child: _ProcessCard(
             step: "1. 진단 (Sync)",
@@ -217,8 +213,8 @@ class Description5 extends StatelessWidget {
             stepFontSize: stepFontSize,
             descriptionFontSize: descriptionFontSize,
             height: cardHeight,
+            ),
           ),
-        ),
         const SizedBox(width: 20),
         Expanded(
           child: _ProcessCard(
@@ -230,8 +226,8 @@ class Description5 extends StatelessWidget {
             stepFontSize: stepFontSize,
             descriptionFontSize: descriptionFontSize,
             height: cardHeight,
+            ),
           ),
-        ),
         const SizedBox(width: 20),
         Expanded(
           child: _ProcessCard(
@@ -244,8 +240,8 @@ class Description5 extends StatelessWidget {
             stepFontSize: stepFontSize,
             descriptionFontSize: descriptionFontSize,
             height: cardHeight,
+            ),
           ),
-        ),
         const SizedBox(width: 20),
         Expanded(
           child: _ProcessCard(
@@ -258,7 +254,7 @@ class Description5 extends StatelessWidget {
             descriptionFontSize: descriptionFontSize,
             height: cardHeight,
           ),
-        ),
+      ),
       ],
     );
   }
@@ -328,7 +324,7 @@ class _ProcessCardState extends State<_ProcessCard> {
               color: Colors.black.withValues(alpha: _isHovered ? 0.08 : 0.04),
               blurRadius: _isHovered ? 28 : 20,
               offset: Offset(0, _isHovered ? 15 : 10),
-            ),
+        ),
           ],
         ),
         child: widget.isSmallMobile
@@ -338,12 +334,12 @@ class _ProcessCardState extends State<_ProcessCard> {
                     duration: const Duration(milliseconds: 200),
                     width: widget.iconBackgroundSize,
                     height: widget.iconBackgroundSize,
-                    decoration: BoxDecoration(
-                      color: _isHovered
+        decoration: BoxDecoration(
+          color: _isHovered
                           ? const Color(0xFF1D4ED8)
                           : const Color(0xFFF1F5F9),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+          borderRadius: BorderRadius.circular(16),
+        ),
                     child: Icon(
                       widget.icon,
                       color: _isHovered
@@ -357,32 +353,32 @@ class _ProcessCardState extends State<_ProcessCard> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
+          children: [
+            Text(
                           widget.step,
-                          style: TextStyle(
+              style: TextStyle(
                             fontSize: widget.stepFontSize,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF1E293B),
-                          ),
-                        ),
+                color: const Color(0xFF1E293B),
+              ),
+            ),
                         const SizedBox(height: 4),
-                        Text(
+            Text(
                           widget.description,
-                          style: TextStyle(
+              style: TextStyle(
                             fontSize: widget.descriptionFontSize,
                             color: Colors.black54,
                             height: 1.4,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+              ),
+            ),
+          ],
+        ),
+      ),
                 ],
               )
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+            children: [
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     width: widget.iconBackgroundSize,
@@ -402,15 +398,15 @@ class _ProcessCardState extends State<_ProcessCard> {
                     ),
                   ),
                   SizedBox(height: widget.stepFontSize < 16 ? 16 : 32),
-                  Text(
+              Text(
                     widget.step,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                style: TextStyle(
                       fontSize: widget.stepFontSize,
-                      fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.bold,
                       color: const Color(0xFF1E293B),
-                    ),
-                  ),
+                ),
+              ),
                   const SizedBox(height: 16),
                   Text(
                     widget.description,
@@ -420,9 +416,9 @@ class _ProcessCardState extends State<_ProcessCard> {
                       color: Colors.black54,
                       height: 1.5,
                     ),
-                  ),
-                ],
               ),
+            ],
+        ),
       ),
     );
 
