@@ -137,7 +137,7 @@ class Description2 extends StatelessWidget {
               children: [
                 const TextSpan(text: '그래서 CoSync는 합의 이후가 아니라,\n'),
                 TextSpan(
-                  text: '합의 이전을 구조화합니다.',
+                  text: '합의 과정을 구조화합니다.',
                   style: TextStyle(
                     backgroundColor: const Color(0xFF1D4ED8).withOpacity(0.2),
                   ),

@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'CoSync',
+      debugShowCheckedModeBanner: false,
       scrollBehavior: const AppScrollBehavior(),
       navigatorObservers: [observer],
       theme: ThemeData(

@@ -140,7 +140,7 @@ class Description5 extends StatelessWidget {
               Expanded(
                 child: _ProcessCard(
                   step: "1. 진단 (Sync)",
-                  description: "단순한 설문이 아닙니다. 예민하지만 꼭 필요한 질문에 각자 답변합니다.",
+                  description: "단순한 설문이 아닙니다. 예민하지만 꼭 필요한 질문에 각자 답변합니다.\n",
                   icon: Icons.chat_bubble_outline_rounded,
                   iconSize: iconSize,
                   stepFontSize: stepFontSize,
@@ -152,7 +152,7 @@ class Description5 extends StatelessWidget {
               Expanded(
                 child: _ProcessCard(
                   step: "2. 리스크 시각화",
-                  description: "생각이 일치하는 부분과 조율이 필요한 부분을 데이터로 명확히 보여줍니다.",
+                  description: "생각이 일치하는 부분과 조율이 필요한 부분을 데이터로 명확히 보여줍니다.\n",
                   icon: Icons.bar_chart_rounded,
                   iconSize: iconSize,
                   iconBackgroundSize: iconBackgroundSize,
@@ -171,7 +171,7 @@ class Description5 extends StatelessWidget {
                 child: _ProcessCard(
                   step: "3. 시장 표준 제안",
                   description:
-                      "정답이 아닌 '참고 프레임'을 제공합니다. 산업 관행과 데이터를 비교해 합리적 선택을 돕습니다.",
+                      "정답이 아닌 '참고 프레임'을 제공합니다. 산업 관행과 데이터를 토대로 합리적 선택을 돕습니다.",
                   icon: Icons.insights_rounded,
                   iconSize: iconSize,
                   iconBackgroundSize: iconBackgroundSize,
@@ -184,7 +184,7 @@ class Description5 extends StatelessWidget {
               Expanded(
                 child: _ProcessCard(
                   step: "4. Agreement",
-                  description: "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 합의안을 생성합니다.",
+                  description: "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 합의안을 생성합니다.\n",
                   icon: Icons.description_outlined,
                   iconSize: iconSize,
                   iconBackgroundSize: iconBackgroundSize,
@@ -208,7 +208,7 @@ class Description5 extends StatelessWidget {
           Expanded(
             child: _ProcessCard(
               step: "1. 진단 (Sync)",
-              description: "단순한 설문이 아닙니다. 예민하지만 꼭 필요한 질문에 각자 답변합니다.",
+              description: "단순한 설문이 아닙니다. 예민하지만 꼭 필요한 질문에 각자 답변합니다.\n",
               icon: Icons.chat_bubble_outline_rounded,
               iconSize: iconSize,
               iconBackgroundSize: iconBackgroundSize,
@@ -221,7 +221,7 @@ class Description5 extends StatelessWidget {
           Expanded(
             child: _ProcessCard(
               step: "2. 리스크 시각화",
-              description: "생각이 일치하는 부분과 조율이 필요한 부분을 데이터로 명확히 보여줍니다.",
+              description: "생각이 일치하는 부분과 조율이 필요한 부분을 데이터로 명확히 보여줍니다.\n",
               icon: Icons.bar_chart_rounded,
               iconSize: iconSize,
               iconBackgroundSize: iconBackgroundSize,
@@ -235,7 +235,7 @@ class Description5 extends StatelessWidget {
             child: _ProcessCard(
               step: "3. 시장 표준 제안",
               description:
-                  "정답이 아닌 '참고 프레임'을 제공합니다. 산업 관행과 데이터를 비교해 합리적 선택을 돕습니다.",
+                  "정답이 아닌 '참고 프레임'을 제공합니다. 산업 관행과 데이터를 토대로 합리적 선택을 돕습니다.",
               icon: Icons.insights_rounded,
               iconSize: iconSize,
               iconBackgroundSize: iconBackgroundSize,
@@ -248,7 +248,7 @@ class Description5 extends StatelessWidget {
           Expanded(
           child: _ProcessCard(
             step: "4. Agreement",
-            description: "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 합의안을 생성합니다.",
+            description: "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 합의안을 생성합니다.\n",
               icon: Icons.description_outlined,
               iconSize: iconSize,
               iconBackgroundSize: iconBackgroundSize,
