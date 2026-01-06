@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/ui/page/onboarding/onboarding_page.dart';
+import 'package:flutter_demo/ui/page/landing/widget/email_signup_modal.dart';
+import 'package:flutter_demo/main.dart' as main_app;
 import 'package:get/get.dart';
 import '../landing_controller.dart';
 
@@ -65,7 +66,11 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
           if (!isMobileScreen)
             ElevatedButton(
               onPressed: () {
-                Get.to(() => const OnboardingPage());
+                main_app.MyApp.analytics.logEvent(name: 'lead_modal_open');
+                showDialog(
+                  context: context,
+                  builder: (context) => const EmailSignupModal(),
+                );
               },
               child: const Text(
                 "팀 Rulebook 만들기",

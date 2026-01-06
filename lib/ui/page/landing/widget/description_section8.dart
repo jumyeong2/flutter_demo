@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/ui/page/onboarding/onboarding_page.dart';
-import 'package:get/get.dart';
+import 'package:flutter_demo/ui/page/landing/widget/email_signup_modal.dart';
+import 'package:flutter_demo/main.dart' as main_app;
 import 'landing_section_layout.dart';
 
 class Description8 extends StatelessWidget {
@@ -120,7 +120,11 @@ class _CTAButtonState extends State<_CTAButton> {
       cursor: SystemMouseCursors.click,
       child: InkWell(
         onTap: () {
-          Get.to(() => const OnboardingPage());
+          main_app.MyApp.analytics.logEvent(name: 'lead_modal_open');
+          showDialog(
+            context: context,
+            builder: (context) => const EmailSignupModal(),
+          );
         },
         hoverColor: Colors.transparent,
         splashColor: Colors.white.withValues(alpha: 0.1),

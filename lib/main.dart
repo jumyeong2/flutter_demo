@@ -5,7 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/firebase_options.dart';
 import 'package:flutter_demo/ui/page/landing/landing_page.dart';
-import 'package:flutter_demo/ui/page/x_landing/x_landing_page.dart';
 import 'package:get/get.dart';
 import 'data/repository/user_repository.dart';
 import 'service/auth_service.dart';
