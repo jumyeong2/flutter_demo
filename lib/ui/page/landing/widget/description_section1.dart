@@ -63,7 +63,7 @@ class Description1 extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    '팀 필수 안전장치',
+                    '창업 팀 필수',
                     style: TextStyle(
                       color: const Color(0xFF64748B),
                       fontSize: badgeFontSize,
@@ -79,7 +79,7 @@ class Description1 extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Text(
-              "공동창업은 아이디어보다\n기준이 어긋날 때 무너집니다.",
+              "공동창업 팀이 흔들리는 순간은\n대부분 '사업 문제'가 아니라,\n'기준'의 차이에서 시작됩니다",
               style: TextStyle(
                 height: 1.4,
                 letterSpacing: -1.0,
@@ -91,11 +91,11 @@ class Description1 extends StatelessWidget {
             ),
           ),
           SizedBox(height: spacingAfterMainCopy),
-          // 서브 카피 - 방향성 제시
+          // 서브 카피 - 타이밍 고정
           Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Text(
-              "CoSync는 의견이 아닌\n'기준의 차이'를 먼저 드러냅니다.",
+              "투자, 법인, 역할 분담을 앞둔 지금 정리하지 않으면\n나중에는 정리할 수 없습니다",
               style: TextStyle(
                 height: 1.5,
                 fontSize: subCopyFontSize,
@@ -104,6 +104,14 @@ class Description1 extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
+          ),
+          SizedBox(height: isSmallMobile ? 40 : 60),
+          // Before/After 2컬럼
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: isSmallScreen
+                ? _buildBeforeAfterVertical(isSmallMobile)
+                : _buildBeforeAfterHorizontal(),
           ),
           SizedBox(height: spacingBeforeCTA),
           // CTA 버튼 영역
@@ -282,6 +290,154 @@ class Description1 extends StatelessWidget {
           const SizedBox(height: 80),
         ],
       ),
+    );
+  }
+
+  // Before/After 세로 배치 (모바일)
+  Widget _buildBeforeAfterVertical(bool isSmallMobile) {
+    return Column(
+      children: [
+        _buildBeforeColumn(isSmallMobile),
+        SizedBox(height: isSmallMobile ? 24 : 32),
+        Icon(
+          Icons.arrow_downward,
+          size: isSmallMobile ? 32 : 40,
+          color: Colors.grey,
+        ),
+        SizedBox(height: isSmallMobile ? 24 : 32),
+        _buildAfterColumn(isSmallMobile),
+      ],
+    );
+  }
+
+  // Before/After 가로 배치 (데스크톱)
+  Widget _buildBeforeAfterHorizontal() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: _buildBeforeColumn(false),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Icon(
+            Icons.arrow_forward,
+            size: 48,
+            color: Colors.grey,
+          ),
+        ),
+        Expanded(
+          child: _buildAfterColumn(false),
+        ),
+      ],
+    );
+  }
+
+  // Before 컬럼
+  Widget _buildBeforeColumn(bool isSmallMobile) {
+    return Container(
+      padding: EdgeInsets.all(isSmallMobile ? 20 : 24),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF1F5F9),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE2E8F0), width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                size: isSmallMobile ? 20 : 24,
+                color: const Color(0xFF64748B),
+              ),
+              SizedBox(width: isSmallMobile ? 8 : 12),
+              Text(
+                'Before',
+                style: TextStyle(
+                  fontSize: isSmallMobile ? 16 : 18,
+                  fontWeight: FontWeight.w800,
+                  color: const Color(0xFF64748B),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: isSmallMobile ? 16 : 20),
+          _buildBeforeAfterItem('지분은 나중에 정하자', isSmallMobile),
+          SizedBox(height: isSmallMobile ? 12 : 16),
+          _buildBeforeAfterItem('역할은 상황 봐서 정하자', isSmallMobile),
+          SizedBox(height: isSmallMobile ? 12 : 16),
+          _buildBeforeAfterItem('누가 나가면? 그건 생각 안 해봤다', isSmallMobile),
+        ],
+      ),
+    );
+  }
+
+  // After 컬럼
+  Widget _buildAfterColumn(bool isSmallMobile) {
+    return Container(
+      padding: EdgeInsets.all(isSmallMobile ? 20 : 24),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF0FDF4),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF86EFAC), width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.check_circle,
+                size: isSmallMobile ? 20 : 24,
+                color: const Color(0xFF16A34A),
+              ),
+              SizedBox(width: isSmallMobile ? 8 : 12),
+              Text(
+                'After',
+                style: TextStyle(
+                  fontSize: isSmallMobile ? 16 : 18,
+                  fontWeight: FontWeight.w800,
+                  color: const Color(0xFF16A34A),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: isSmallMobile ? 16 : 20),
+          _buildBeforeAfterItem('지분 기준 문장으로 확정', isSmallMobile, isAfter: true),
+          SizedBox(height: isSmallMobile ? 12 : 16),
+          _buildBeforeAfterItem('역할·책임 범위 명시', isSmallMobile, isAfter: true),
+          SizedBox(height: isSmallMobile ? 12 : 16),
+          _buildBeforeAfterItem('이탈 시 조건 합의 완료', isSmallMobile, isAfter: true),
+        ],
+      ),
+    );
+  }
+
+  // Before/After 아이템
+  Widget _buildBeforeAfterItem(String text, bool isSmallMobile, {bool isAfter = false}) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          isAfter ? Icons.check : Icons.close,
+          size: isSmallMobile ? 16 : 18,
+          color: isAfter ? const Color(0xFF16A34A) : const Color(0xFF64748B),
+        ),
+        SizedBox(width: isSmallMobile ? 8 : 12),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: isSmallMobile ? 14 : 15,
+              fontWeight: FontWeight.w500,
+              color: isAfter ? const Color(0xFF166534) : const Color(0xFF475569),
+              height: 1.4,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
