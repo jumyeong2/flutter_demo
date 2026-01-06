@@ -178,12 +178,16 @@ class Description3 extends StatelessWidget {
       height: isSmallMobile ? 320 : 370,
       padding: EdgeInsets.all(isSmallMobile ? 20 : 40),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF1E293B), Color(0xFF0F172A)],
-        ),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(32),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,7 +202,7 @@ class Description3 extends StatelessWidget {
                 ),
                 child: const Icon(
                   Icons.check_circle_outline,
-                  color: Color(0xFF60A5FA),
+                  color: Color(0xFF1D4ED8),
                   size: 24,
                 ),
               ),
@@ -208,7 +212,7 @@ class Description3 extends StatelessWidget {
                 style: TextStyle(
                   fontSize: isSmallMobile ? 18 : 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: const Color(0xFF1D4ED8),
                 ),
               ),
             ],
@@ -229,15 +233,16 @@ class Description3 extends StatelessWidget {
                         isSmallMobile: isSmallMobile,
                       ),
                       const VerticalDivider(
-                        color: Colors.white12,
+                        color: Colors.grey,
                         indent: 10,
                         endIndent: 10,
+                        thickness: 0.5,
                       ),
                       _buildEffectSection('AFTER', 'Rulebook 12p', '핵심 조항 명문화', isSmallMobile: isSmallMobile),
                     ],
                   ),
                 ),
-                const Divider(color: Colors.white12, height: 1),
+                const Divider(color: Colors.grey, height: 1, thickness: 0.5),
                 Expanded(
                   child: Row(
                     children: [
@@ -249,9 +254,10 @@ class Description3 extends StatelessWidget {
                         isSmallMobile: isSmallMobile,
                       ),
                       const VerticalDivider(
-                        color: Colors.white12,
+                        color: Colors.grey,
                         indent: 10,
                         endIndent: 10,
+                        thickness: 0.5,
                       ),
                       _buildEffectSection('AFTER', '안정성 78점', '데이터 기반 확신', isSmallMobile: isSmallMobile),
                     ],
@@ -336,7 +342,7 @@ class Description3 extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                color: isBefore ? Colors.grey[500] : const Color(0xFF60A5FA),
+                color: isBefore ? Colors.grey[500] : const Color(0xFF1D4ED8),
               ),
             ),
             const SizedBox(height: 8),
@@ -345,7 +351,7 @@ class Description3 extends StatelessWidget {
               style: TextStyle(
                 fontSize: isSmallMobile ? 14 : 16,
                 fontWeight: FontWeight.bold,
-                color: isBefore ? Colors.grey[400] : Colors.white,
+                color: isBefore ? Colors.grey[600] : const Color(0xFF1E293B),
                 decoration: strikethrough ? TextDecoration.lineThrough : null,
                 decorationColor: Colors.grey[400],
               ),
@@ -355,7 +361,7 @@ class Description3 extends StatelessWidget {
               subtitle,
               style: TextStyle(
                 fontSize: 13,
-                color: isBefore ? Colors.grey[500] : Colors.grey[400],
+                color: isBefore ? Colors.grey[500] : Colors.grey[600],
               ),
             ),
           ],

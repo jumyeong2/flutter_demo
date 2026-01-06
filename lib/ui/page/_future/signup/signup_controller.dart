@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../data/model/user.dart';
-import '../../../data/repository/user_repository.dart';
-import '../../../service/auth_service.dart';
+import '../../../../data/model/user.dart';
+import '../../../../data/repository/user_repository.dart';
+import '../../../../service/auth_service.dart';
 import '../agreement/agreement_adjust_page.dart';
 import 'signup_step2_page.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../data/model/adjustment_question.dart';
+import '../../../../data/model/adjustment_question.dart';
 import 'agreement_adjust_controller.dart';
 
 class AgreementController extends GetxController {

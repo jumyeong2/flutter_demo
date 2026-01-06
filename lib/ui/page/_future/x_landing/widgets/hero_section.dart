@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_demo/ui/widgets/responsive_layout.dart';
-import '../../sample/sample_report.dart';
+import '../../../sample/sample_report.dart';
 import '../x_landing_controller.dart';
 
 class HeroSection extends StatelessWidget {

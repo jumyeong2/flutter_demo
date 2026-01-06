@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../../../data/model/adjustment_question.dart';
+import '../../../../data/model/adjustment_question.dart';
 import 'agreement_page.dart';
 
 class AgreementAdjustController extends GetxController {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../widgets/responsive_layout.dart';
+import '../../../widgets/responsive_layout.dart';
 import 'agreement_adjust_page.dart';
 
 class AgreementAdjustIntroStep2Page extends StatefulWidget {

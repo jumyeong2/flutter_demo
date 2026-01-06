@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../_future/onboarding/onboarding_page.dart';
+import '../onboarding/onboarding_page.dart';
 
 class LandingController extends GetxController {
   final RxInt demoStep = 0.obs;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../widgets/responsive_layout.dart';
+import '../../../widgets/responsive_layout.dart';
 import 'agreement_controller.dart';
 import 'agreement_popup.dart';
 
