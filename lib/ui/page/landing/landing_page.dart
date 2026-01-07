@@ -1,55 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'landing_controller.dart';
-import 'widgets/landing_navbar.dart';
-import 'widgets/hero_section.dart';
-import 'widgets/process_section.dart';
-import 'widgets/demo_section.dart';
-import 'widgets/radar_section.dart';
-import 'widgets/rulebook_section.dart';
-import 'widgets/cta_section.dart';
-import 'widgets/footer_section.dart';
+import 'package:flutter_demo/ui/page/landing/landing_controller.dart';
+import 'package:flutter_demo/ui/page/landing/widget/app_bar_widget.dart';
+import 'package:flutter_demo/ui/page/landing/widget/description_section1.dart';
+import 'package:flutter_demo/ui/page/landing/widget/description_section2.dart';
+import 'package:flutter_demo/ui/page/landing/widget/description_section3.dart';
+import 'package:flutter_demo/ui/page/landing/widget/description_section4.dart';
+import 'package:flutter_demo/ui/page/landing/widget/description_section5.dart';
+import 'package:flutter_demo/ui/page/landing/widget/description_section6.dart';
+import 'package:flutter_demo/ui/page/landing/widget/description_section7.dart';
+import 'package:flutter_demo/ui/page/landing/widget/description_section8.dart';
+import 'package:flutter_demo/ui/page/landing/widget/footer_section.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Controller 주입 (Dependency Injection)
-    Get.put(LandingController());
+    final controller = Get.put(LandingController());
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Stack(
-          children: [
-            // Main Scroll View
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const HeroSection(),
-                  const SizedBox(height: 100),
-                  const ProcessSection(),
-                  const SizedBox(height: 100),
-                  const DemoSection(),
-                  const SizedBox(height: 50),
-                  const RadarSection(),
-                  const SizedBox(height: 100),
-                  const RulebookSection(),
-                  const SizedBox(height: 50),
-                  const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [CtaSection(), FooterSection()],
-                  ),
-                ],
-              ),
-            ),
-      
-            // Navbar (Fixed on top)
-            const Positioned(top: 0, left: 0, right: 0, child: LandingNavbar()),
-          ],
-        ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBarWidget(),
+      body: ListView(
+        controller: controller.scrollController,
+        children: [
+          const Description1(),
+          const Description2(),
+          const Description3(),
+          Description4(key: controller.riskKey),
+          Description5(key: controller.processKey),
+          const Description6(),
+          const Description7(),
+          Description8(key: controller.rulebookKey),
+          const FooterSection(),
+        ],
       ),
     );
   }

@@ -94,25 +94,16 @@ class _AgreementAdjustIntroStep2PageState
                             hintText: "예) CoSync, Inc.",
                           ),
                           const SizedBox(height: 16),
-                          Wrap(
-                            spacing: 16,
-                            runSpacing: 16,
-                            children: [
-                              _wrapSizedBox(
-                                child: _buildField(
-                                  label: "회사 기간 / Startup age",
-                                  controller: _startupAgeController,
-                                  hintText: "예) 1.5년",
-                                ),
-                              ),
-                              _wrapSizedBox(
-                                child: _buildField(
-                                  label: "산업군 / Industry",
-                                  controller: _industryController,
-                                  hintText: "예) SaaS / 핀테크 / 커머스",
-                                ),
-                              ),
-                            ],
+                          _buildField(
+                            label: "회사 기간 / Startup age",
+                            controller: _startupAgeController,
+                            hintText: "예) 1.5년",
+                          ),
+                          const SizedBox(height: 16),
+                          _buildField(
+                            label: "산업군 / Industry",
+                            controller: _industryController,
+                            hintText: "예) SaaS / 핀테크 / 커머스",
                           ),
                           const SizedBox(height: 16),
                           _buildField(
@@ -185,12 +176,6 @@ class _AgreementAdjustIntroStep2PageState
     );
   }
 
-  Widget _wrapSizedBox({required Widget child}) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width >= 900 ? 350 : double.infinity,
-      child: child,
-    );
-  }
 
   Widget _buildField({
     required String label,

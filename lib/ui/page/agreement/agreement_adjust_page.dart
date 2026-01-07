@@ -450,75 +450,73 @@ class AgreementAdjustPage extends StatelessWidget {
             controller.answers.containsKey(question.id) &&
             controller.answers[question.id]!.isNotEmpty;
 
-        return Obx(
-          () => InkWell(
-            onTap: () => controller.selectQuestion(question),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFE0F2FE) : Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: isSelected
-                      ? const Color(0xFF0EA5E9)
-                      : (isAnswered
-                            ? const Color(0xFF10B981)
-                            : Colors.grey[200]!),
-                  width: isSelected ? 2 : 1,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: isAnswered
+        return InkWell(
+          onTap: () => controller.selectQuestion(question),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: isSelected ? const Color(0xFFE0F2FE) : Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isSelected
+                    ? const Color(0xFF0EA5E9)
+                    : (isAnswered
                           ? const Color(0xFF10B981)
-                          : Colors.grey[200],
-                      shape: BoxShape.circle,
-                    ),
-                    child: isAnswered
-                        ? const Icon(Icons.check, size: 18, color: Colors.white)
-                        : Center(
-                            child: Text(
-                              "${index + 1}",
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey[700],
-                              ),
+                          : Colors.grey[200]!),
+                width: isSelected ? 2 : 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: isAnswered
+                        ? const Color(0xFF10B981)
+                        : Colors.grey[200],
+                    shape: BoxShape.circle,
+                  ),
+                  child: isAnswered
+                      ? const Icon(Icons.check, size: 18, color: Colors.white)
+                      : Center(
+                          child: Text(
+                            "${index + 1}",
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[700],
                             ),
                           ),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Text(
-                      question.title,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: isSelected
-                            ? FontWeight.w600
-                            : FontWeight.normal,
-                        color: isSelected
-                            ? const Color(0xFF0369A1)
-                            : Colors.black87,
-                        height: 1.4,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                        ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Text(
+                    question.title,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.normal,
+                      color: isSelected
+                          ? const Color(0xFF0369A1)
+                          : Colors.black87,
+                      height: 1.4,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );

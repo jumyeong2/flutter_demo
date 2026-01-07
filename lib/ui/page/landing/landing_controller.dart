@@ -1,19 +1,47 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../onboarding/onboarding_page.dart';
 
 class LandingController extends GetxController {
-  final RxInt demoStep = 0.obs;
-  final RxBool isMenuOpen = false.obs;
+  final ScrollController scrollController = ScrollController();
 
-  void setDemoStep(int step) {
-    demoStep.value = step;
+  // 섹션별 GlobalKey 정의
+  final GlobalKey processKey = GlobalKey();
+  final GlobalKey riskKey = GlobalKey();
+  final GlobalKey rulebookKey = GlobalKey();
+
+  void scrollToProcess() {
+    if (processKey.currentContext != null) {
+      Scrollable.ensureVisible(
+        processKey.currentContext!,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
-  void toggleMenu() {
-    isMenuOpen.value = !isMenuOpen.value;
+  void scrollToRisk() {
+    if (riskKey.currentContext != null) {
+      Scrollable.ensureVisible(
+        riskKey.currentContext!,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
-  void startTrial() {
-    Get.to(() => const OnboardingPage());
+  void scrollToRulebook() {
+    if (rulebookKey.currentContext != null) {
+      Scrollable.ensureVisible(
+        rulebookKey.currentContext!,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  @override
+  void onClose() {
+    scrollController.dispose();
+    super.onClose();
   }
 }

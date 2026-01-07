@@ -88,25 +88,16 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
                       key: _formKey,
                       child: Column(
                         children: [
-                          Wrap(
-                            spacing: 16,
-                            runSpacing: 16,
-                            children: [
-                              _wrapSizedBox(
-                                child: _buildField(
-                                  label: "이름 / Your Name",
-                                  controller: _nameController,
-                                  hintText: "예) 홍길동",
-                                ),
-                              ),
-                              _wrapSizedBox(
-                                child: _buildField(
-                                  label: "직위 / Position (Role)",
-                                  controller: _positionController,
-                                  hintText: "예) CEO / CTO / COO",
-                                ),
-                              ),
-                            ],
+                          _buildField(
+                            label: "이름 / Your Name",
+                            controller: _nameController,
+                            hintText: "예) 홍길동",
+                          ),
+                          const SizedBox(height: 16),
+                          _buildField(
+                            label: "직위 / Position (Role)",
+                            controller: _positionController,
+                            hintText: "예) CEO / CTO / COO",
                           ),
                           const SizedBox(height: 16),
                           _buildField(
@@ -207,12 +198,6 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
     );
   }
 
-  Widget _wrapSizedBox({required Widget child}) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width >= 900 ? 350 : double.infinity,
-      child: child,
-    );
-  }
 
   Widget _buildField({
     required String label,
