@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../widgets/responsive_layout.dart';
+import 'agreement_adjust_controller.dart';
 import 'agreement_adjust_page.dart';
 
 class AgreementAdjustIntroStep2Page extends StatefulWidget {
@@ -119,9 +120,7 @@ class _AgreementAdjustIntroStep2PageState
                                   onPressed: () => Get.back(),
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor: Colors.blue[700],
-                                    side: BorderSide(
-                                      color: Colors.blue[200]!,
-                                    ),
+                                    side: BorderSide(color: Colors.blue[200]!),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
@@ -176,7 +175,6 @@ class _AgreementAdjustIntroStep2PageState
     );
   }
 
-
   Widget _buildField({
     required String label,
     required TextEditingController controller,
@@ -200,7 +198,8 @@ class _AgreementAdjustIntroStep2PageState
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
-          validator: validator ??
+          validator:
+              validator ??
               (val) {
                 if (val == null || val.isEmpty) {
                   return "필수 입력 항목입니다.";
@@ -212,8 +211,10 @@ class _AgreementAdjustIntroStep2PageState
             prefixText: prefixText,
             filled: true,
             fillColor: Colors.grey[50],
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 14,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(color: Colors.grey[300]!),
@@ -232,9 +233,24 @@ class _AgreementAdjustIntroStep2PageState
     );
   }
 
-  void _handleSubmit() {
+  Future<void> _handleSubmit() async {
     if (!_formKey.currentState!.validate()) return;
+
+    try {
+      final controller = Get.find<AgreementAdjustController>();
+      controller.saveCompanyInfo(
+        name: _companyController.text,
+        age: _startupAgeController.text,
+        ind: _industryController.text,
+        team: _teamController.text,
+      );
+
+      // 파이어베이스 저장
+      await controller.submitFounderInfoToFirebase();
+    } catch (e) {
+      print("Error saving company info: $e");
+    }
+
     Get.to(() => const AgreementAdjustPage());
   }
 }
-

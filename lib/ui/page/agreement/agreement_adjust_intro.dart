@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 
 import '../../widgets/responsive_layout.dart';
+import 'agreement_adjust_controller.dart';
 import 'agreement_adjust_intro_step2.dart';
 
 class AgreementAdjustIntroPage extends StatefulWidget {
@@ -198,7 +199,6 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
     );
   }
 
-
   Widget _buildField({
     required String label,
     required TextEditingController controller,
@@ -261,6 +261,15 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
 
   void _handleSubmit() {
     if (!_formKey.currentState!.validate()) return;
+
+    final controller = Get.put(AgreementAdjustController());
+    controller.saveFounderInfo(
+      name: _nameController.text,
+      position: _positionController.text,
+      email: _emailController.text,
+      phone: _phoneController.text,
+    );
+
     Get.to(() => const AgreementAdjustIntroStep2Page());
   }
 }

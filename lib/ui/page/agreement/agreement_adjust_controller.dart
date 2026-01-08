@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import '../../../data/model/adjustment_question.dart';
 import 'agreement_page.dart';
@@ -93,6 +94,68 @@ class AgreementAdjustController extends GetxController {
     null,
   );
   final RxMap<String, String> answers = <String, String>{}.obs;
+
+  // Founder Info
+  final RxString founderName = "".obs;
+  final RxString founderPosition = "".obs;
+  final RxString founderEmail = "".obs;
+  final RxString founderPhone = "".obs;
+
+  // Company Info
+  final RxString companyName = "".obs;
+  final RxString startupAge = "".obs;
+  final RxString industry = "".obs;
+  final RxString teamInfo = "".obs;
+
+  // Save Founder Info
+  void saveFounderInfo({
+    required String name,
+    required String position,
+    required String email,
+    required String phone,
+  }) {
+    founderName.value = name;
+    founderPosition.value = position;
+    founderEmail.value = email;
+    founderPhone.value = phone;
+  }
+
+  // Save Company Info
+  void saveCompanyInfo({
+    required String name,
+    required String age,
+    required String ind,
+    required String team,
+  }) {
+    companyName.value = name;
+    startupAge.value = age;
+    industry.value = ind;
+    teamInfo.value = team;
+  }
+
+  Future<void> submitFounderInfoToFirebase() async {
+    try {
+      final firestore = FirebaseFirestore.instance;
+      final docData = {
+        'founderName': founderName.value,
+        'founderPosition': founderPosition.value,
+        'founderEmail': founderEmail.value,
+        'founderPhone': founderPhone.value,
+        'companyName': companyName.value,
+        'startupAge': startupAge.value,
+        'industry': industry.value,
+        'teamInfo': teamInfo.value,
+        'createdAt': FieldValue.serverTimestamp(),
+        'source': 'agreement_adjust_intro',
+      };
+
+      await firestore.collection('teams').add(docData);
+      print('✅ Founder/Company info saved to Firebase');
+    } catch (e) {
+      print('❌ Failed to save Founder/Company info: $e');
+      // Quietly fail or handle error? For now just log.
+    }
+  }
 
   // 현재 질문의 답변 가져오기
   String getCurrentAnswer() {
