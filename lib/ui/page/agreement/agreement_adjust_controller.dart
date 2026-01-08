@@ -107,6 +107,9 @@ class AgreementAdjustController extends GetxController {
   final RxString industry = "".obs;
   final RxString teamInfo = "".obs;
 
+  // Firebase Doc ID
+  String? currentTeamDocId;
+
   // Save Founder Info
   void saveFounderInfo({
     required String name,
@@ -149,11 +152,31 @@ class AgreementAdjustController extends GetxController {
         'source': 'agreement_adjust_intro',
       };
 
-      await firestore.collection('teams').add(docData);
-      print('✅ Founder/Company info saved to Firebase');
+      final docRef = await firestore.collection('teams').add(docData);
+      currentTeamDocId = docRef.id;
+      print(
+        '✅ Founder/Company info saved to Firebase with ID: $currentTeamDocId',
+      );
     } catch (e) {
       print('❌ Failed to save Founder/Company info: $e');
-      // Quietly fail or handle error? For now just log.
+    }
+  }
+
+  Future<void> saveAnswersToFirebase() async {
+    if (currentTeamDocId == null) {
+      print('❌ No team document ID found to save answers');
+      return;
+    }
+
+    try {
+      final firestore = FirebaseFirestore.instance;
+      await firestore.collection('teams').doc(currentTeamDocId).update({
+        'answers': answers,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+      print('✅ Answers saved to Firebase for ID: $currentTeamDocId');
+    } catch (e) {
+      print('❌ Failed to save answers: $e');
     }
   }
 
@@ -202,7 +225,7 @@ class AgreementAdjustController extends GetxController {
   }
 
   // 다음 질문으로 이동
-  void goToNextQuestion() {
+  Future<void> goToNextQuestion() async {
     if (selectedQuestion.value == null || selectedCategory.value == null) {
       return;
     }
@@ -227,6 +250,8 @@ class AgreementAdjustController extends GetxController {
         }
       } else {
         // 모든 질문 완료
+        // 답변 파이어베이스에 저장
+        await saveAnswersToFirebase();
         Get.to(() => const AgreementPage());
       }
     }
