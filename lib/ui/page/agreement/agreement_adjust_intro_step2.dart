@@ -116,29 +116,6 @@ class _AgreementAdjustIntroStep2PageState
                           Row(
                             children: [
                               Expanded(
-                                child: OutlinedButton(
-                                  onPressed: () => Get.back(),
-                                  style: OutlinedButton.styleFrom(
-                                    foregroundColor: Colors.blue[700],
-                                    side: BorderSide(color: Colors.blue[200]!),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 16,
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    "뒤로가기",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
                                 child: ElevatedButton(
                                   onPressed: _handleSubmit,
                                   style: ElevatedButton.styleFrom(
