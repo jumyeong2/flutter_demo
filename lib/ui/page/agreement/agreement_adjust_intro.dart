@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter_demo/service/auth_service.dart';
 import '../../widgets/responsive_layout.dart';
+import '../login/login_page.dart';
 import 'agreement_adjust_controller.dart';
 import 'agreement_adjust_intro_step2.dart';
 
@@ -19,13 +21,16 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
   final _nameController = TextEditingController();
   final _positionController = TextEditingController();
   final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   final _phoneController = TextEditingController();
+  bool _isSigningUp = false;
 
   @override
   void dispose() {
     _nameController.dispose();
     _positionController.dispose();
     _emailController.dispose();
+    _passwordController.dispose();
     _phoneController.dispose();
     super.dispose();
   }
@@ -118,6 +123,22 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
                           ),
                           const SizedBox(height: 16),
                           _buildField(
+                            label: "비밀번호 / Password",
+                            controller: _passwordController,
+                            hintText: "8자 이상 입력해주세요",
+                            obscureText: true,
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return "비밀번호를 입력해주세요.";
+                              }
+                              if (val.length < 8) {
+                                return "비밀번호는 8자 이상이어야 합니다.";
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          _buildField(
                             label: "연락처 / Mobile number",
                             controller: _phoneController,
                             hintText: "010-1234-5678",
@@ -164,7 +185,9 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
                               const SizedBox(width: 12),
                               Expanded(
                                 child: ElevatedButton(
-                                  onPressed: _handleSubmit,
+                                  onPressed: _isSigningUp
+                                      ? null
+                                      : _handleSubmit,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue[600],
                                     foregroundColor: Colors.white,
@@ -175,14 +198,41 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
                                       vertical: 16,
                                     ),
                                   ),
-                                  child: const Text(
-                                    "계속하기",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  child: _isSigningUp
+                                      ? const SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                  Colors.white,
+                                                ),
+                                          ),
+                                        )
+                                      : const Text(
+                                          "계속하기 (회원가입)",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                 ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "이미 계정이 있으신가요?",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    Get.to(() => const LoginPage()),
+                                child: const Text("로그인"),
                               ),
                             ],
                           ),
@@ -207,6 +257,7 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
     String? prefixText,
     String? Function(String?)? validator,
     List<TextInputFormatter>? inputFormatters,
+    bool obscureText = false,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,6 +275,7 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
           controller: controller,
           keyboardType: keyboardType,
           inputFormatters: inputFormatters,
+          obscureText: obscureText,
           validator:
               validator ??
               (val) {
@@ -259,18 +311,47 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
     );
   }
 
-  void _handleSubmit() {
+  Future<void> _handleSubmit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final controller = Get.put(AgreementAdjustController());
-    controller.saveFounderInfo(
-      name: _nameController.text,
-      position: _positionController.text,
-      email: _emailController.text,
-      phone: _phoneController.text,
-    );
+    setState(() => _isSigningUp = true);
 
-    Get.to(() => const AgreementAdjustIntroStep2Page());
+    try {
+      // 1. 회원가입 (Firebase Auth)
+      // AuthService가 GetxService여야 하고 main.dart 등에서 Get.put() 되어있어야 함.
+      // 만약 등록 안되어있다면 여기서 put 해줘야 함.
+      // 안전을 위해 없으면 put 하는 로직이 필요할 수 있으나, 일반적으로 main에서 처리.
+      // 여기서는 그냥 Get.find로 하는데, 에러나면 Get.putAsync 등을 고려해야 함.
+      if (!Get.isRegistered<AuthService>()) {
+        Get.put(AuthService());
+      }
+      final authService = Get.find<AuthService>();
+      await authService.signUpWithEmail(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+
+      // 2. 창업자 정보 임시 저장 (Controller)
+      final controller = Get.put(AgreementAdjustController());
+      controller.saveFounderInfo(
+        name: _nameController.text,
+        position: _positionController.text,
+        email: _emailController.text,
+        phone: _phoneController.text,
+      );
+
+      // 3. 다음 단계로 이동
+      Get.to(() => const AgreementAdjustIntroStep2Page());
+    } catch (e) {
+      Get.snackbar(
+        "회원가입 실패",
+        e.toString().replaceAll("Exception: ", ""),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      if (mounted) setState(() => _isSigningUp = false);
+    }
   }
 }
 

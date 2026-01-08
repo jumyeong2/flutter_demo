@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'onboarding_controller.dart';
+import '../login/login_page.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -233,6 +234,26 @@ class _OnboardingPageState extends State<OnboardingPage>
                           Icon(Icons.chevron_right),
                         ],
                       ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  FadeTransition(
+                    opacity: _animations[5],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "이미 계정이 있으신가요?",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        TextButton(
+                          onPressed: () => Get.to(() => const LoginPage()),
+                          child: const Text(
+                            "로그인",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
