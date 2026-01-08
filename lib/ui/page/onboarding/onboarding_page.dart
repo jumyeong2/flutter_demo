@@ -43,12 +43,12 @@ class _OnboardingPageState extends State<OnboardingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF8FAFC), // Slate 50
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF0F172A)),
           onPressed: controller.goBack,
         ),
         title: const Text(
@@ -61,7 +61,7 @@ class _OnboardingPageState extends State<OnboardingPage>
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
-          child: Container(color: Colors.grey[100], height: 1),
+          child: Container(color: const Color(0xFFE2E8F0), height: 1),
         ),
       ),
       body: SafeArea(
@@ -98,8 +98,8 @@ class _OnboardingPageState extends State<OnboardingPage>
                             "간단한 3단계로 나의 협업 리스크와\n개선 가이드를 확인할 수 있어요.",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
+                              fontSize: 15,
+                              color: Color(0xFF64748B),
                               height: 1.5,
                             ),
                           ),
@@ -117,7 +117,10 @@ class _OnboardingPageState extends State<OnboardingPage>
                             left: 19,
                             top: 20,
                             bottom: 40,
-                            child: Container(width: 2, color: Colors.grey[100]),
+                            child: Container(
+                              width: 2,
+                              color: const Color(0xFFE2E8F0),
+                            ),
                           ),
                           Column(
                             children: [
@@ -150,15 +153,16 @@ class _OnboardingPageState extends State<OnboardingPage>
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   // Tip Section
                   FadeTransition(
                     opacity: _animations[4],
                     child: Container(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.blue[50],
+                        color: const Color(0xFFEFF6FF), // Blue 50
                         borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFFDBEAFE)),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,10 +173,10 @@ class _OnboardingPageState extends State<OnboardingPage>
                               color: Colors.white,
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(
-                              Icons.access_time,
+                            child: const Icon(
+                              Icons.lightbulb_outline,
                               size: 16,
-                              color: Colors.blue[600],
+                              color: Color(0xFF0F172A), // Blue 600
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -180,12 +184,12 @@ class _OnboardingPageState extends State<OnboardingPage>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   "Quick Tip",
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.blue[800],
+                                    color: Color(0xFF1E40AF), // Blue 800
                                   ),
                                 ),
                                 const SizedBox(height: 4),
@@ -193,7 +197,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                                   "30분만 투자하면, 내 팀의 위험 요소를\n바로 확인할 수 있어요.",
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: Colors.blue[900],
+                                    color: const Color(0xFF1E3A8A), // Blue 900
                                     height: 1.5,
                                   ),
                                 ),
@@ -211,27 +215,27 @@ class _OnboardingPageState extends State<OnboardingPage>
                     child: ElevatedButton(
                       onPressed: controller.startExperience,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue[600],
+                        backgroundColor: const Color(0xFF0F172A), // Blue 600
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 20),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        elevation: 4,
-                        shadowColor: Colors.blue.withValues(alpha: 0.4),
+                        elevation: 0,
+                        shadowColor: Colors.transparent,
                       ),
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "무료 체험 시작하기",
+                            "진단 바로 시작하기",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           SizedBox(width: 8),
-                          Icon(Icons.chevron_right),
+                          Icon(Icons.arrow_forward, size: 20),
                         ],
                       ),
                     ),
@@ -244,13 +248,16 @@ class _OnboardingPageState extends State<OnboardingPage>
                       children: [
                         const Text(
                           "이미 계정이 있으신가요?",
-                          style: TextStyle(color: Colors.grey),
+                          style: TextStyle(color: Color(0xFF64748B)),
                         ),
                         TextButton(
                           onPressed: () => Get.to(() => const LoginPage()),
                           child: const Text(
                             "로그인",
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF0F172A), // Blue 600
+                            ),
                           ),
                         ),
                       ],
@@ -286,16 +293,18 @@ class _OnboardingPageState extends State<OnboardingPage>
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: isActive ? Colors.blue[600] : Colors.white,
+                color: isActive ? const Color(0xFF0F172A) : Colors.white,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isActive ? Colors.blue[600]! : Colors.grey[200]!,
+                  color: isActive
+                      ? const Color(0xFF0F172A)
+                      : const Color(0xFFE2E8F0),
                   width: 2,
                 ),
                 boxShadow: isActive
                     ? [
                         BoxShadow(
-                          color: Colors.blue.withValues(alpha: 0.3),
+                          color: const Color(0xFF0F172A).withOpacity(0.3),
                           blurRadius: 8,
                           spreadRadius: 2,
                         ),
@@ -303,13 +312,15 @@ class _OnboardingPageState extends State<OnboardingPage>
                     : [],
               ),
               child: Center(
-                child: Text(
-                  "$step",
-                  style: TextStyle(
-                    color: isActive ? Colors.white : Colors.grey[400],
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: isActive
+                    ? const Icon(Icons.check, color: Colors.white, size: 20)
+                    : Text(
+                        "$step",
+                        style: const TextStyle(
+                          color: Color(0xFFCBD5E1),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               ),
             ),
             const SizedBox(width: 16),
@@ -324,7 +335,9 @@ class _OnboardingPageState extends State<OnboardingPage>
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: isActive ? Colors.blue[600] : Colors.grey[400],
+                        color: isActive
+                            ? const Color(0xFF0F172A)
+                            : const Color(0xFF94A3B8),
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -332,8 +345,10 @@ class _OnboardingPageState extends State<OnboardingPage>
                       desc,
                       style: TextStyle(
                         fontSize: 14,
-                        color: isActive ? Colors.grey[600] : Colors.grey[400],
-                        height: 1.4,
+                        color: isActive
+                            ? const Color(0xFF475569)
+                            : const Color(0xFF94A3B8),
+                        height: 1.5,
                       ),
                     ),
                   ],

@@ -64,110 +64,212 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF8FAFC), // Slate 50
       appBar: AppBar(
-        title: const Text("로그인"),
+        title: const Text(
+          "로그인",
+          style: TextStyle(
+            color: Color(0xFF0F172A),
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
         backgroundColor: Colors.white,
         elevation: 0,
-        foregroundColor: Colors.black,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF0F172A)),
+          onPressed: () => Get.back(),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(color: const Color(0xFFE2E8F0), height: 1),
+        ),
       ),
-      body: SafeArea(
-        child: Padding(
+      body: Center(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 32),
-                const Text(
-                  "이메일로 로그인",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF0F172A),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 480),
+            child: Container(
+              padding: const EdgeInsets.all(32),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.03),
+                    blurRadius: 16,
+                    offset: const Offset(0, 4),
                   ),
-                ),
-                const SizedBox(height: 32),
-                TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    labelText: "이메일",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    prefixIcon: const Icon(Icons.email_outlined),
-                  ),
-                  validator: (val) {
-                    if (val == null || val.isEmpty) return "이메일을 입력해주세요.";
-                    if (!val.contains("@")) return "이메일 형식을 확인해주세요.";
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: "비밀번호",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    prefixIcon: const Icon(Icons.lock_outline),
-                  ),
-                  validator: (val) {
-                    if (val == null || val.isEmpty) return "비밀번호를 입력해주세요.";
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 32),
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _handleLogin,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2563EB),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        )
-                      : const Text(
-                          "로그인",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                ],
+                border: Border.all(color: const Color(0xFFE2E8F0)),
+              ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      "계정이 없으신가요?",
-                      style: TextStyle(color: Colors.grey),
+                      "이메일로 로그인",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF0F172A),
+                        height: 1.3,
+                      ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        // 회원가입 페이지(AgreementAdjustIntroPage)로 이동
-                        // 현재 스택에 있다면 pop, 아니면 이동
-                        Get.to(() => const AgreementAdjustIntroPage());
+                    const SizedBox(height: 8),
+                    const Text(
+                      "계정이 있다면 로그인하고\n팀과 함께 합의를 시작하세요.",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Color(0xFF64748B),
+                        height: 1.5,
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    TextFormField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        labelText: "이메일",
+                        labelStyle: const TextStyle(color: Color(0xFF64748B)),
+                        hintText: "example@email.com",
+                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFE2E8F0),
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFE2E8F0),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF0F172A),
+                            width: 1.5,
+                          ),
+                        ),
+                        prefixIcon: const Icon(
+                          Icons.email_outlined,
+                          color: Color(0xFF64748B),
+                        ),
+                      ),
+                      validator: (val) {
+                        if (val == null || val.isEmpty) return "이메일을 입력해주세요.";
+                        if (!val.contains("@")) return "이메일 형식을 확인해주세요.";
+                        return null;
                       },
-                      child: const Text("회원가입"),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: "비밀번호",
+                        labelStyle: const TextStyle(color: Color(0xFF64748B)),
+                        hintText: "비밀번호 입력",
+                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFE2E8F0),
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFE2E8F0),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF0F172A),
+                            width: 1.5,
+                          ),
+                        ),
+                        prefixIcon: const Icon(
+                          Icons.lock_outline,
+                          color: Color(0xFF64748B),
+                        ),
+                      ),
+                      validator: (val) {
+                        if (val == null || val.isEmpty) return "비밀번호를 입력해주세요.";
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 32),
+                    ElevatedButton(
+                      onPressed: _isLoading ? null : _handleLogin,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF0F172A),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: _isLoading
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Text(
+                              "로그인",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                    ),
+                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "계정이 없으신가요?",
+                          style: TextStyle(color: Color(0xFF64748B)),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Get.to(() => const AgreementAdjustIntroPage());
+                          },
+                          child: const Text(
+                            "회원가입",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF0F172A),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

@@ -36,60 +36,74 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveLayout.isMobile(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7FBFF),
+      backgroundColor: const Color(0xFFF8FAFC), // Slate 50
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 760),
+              constraints: const BoxConstraints(maxWidth: 600),
               child: Container(
-                padding: EdgeInsets.all(isMobile ? 20 : 32),
+                padding: EdgeInsets.all(isMobile ? 24 : 40),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 12,
-                      offset: const Offset(0, 10),
+                      color: Colors.black.withOpacity(0.03),
+                      blurRadius: 16,
+                      offset: const Offset(0, 4),
                     ),
                   ],
+                  border: Border.all(color: const Color(0xFFE2E8F0)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Step 1/2",
-                      style: TextStyle(
-                        color: Colors.grey[500],
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFEFF6FF), // Blue 50
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: const Color(0xFFDBEAFE)),
+                      ),
+                      child: const Text(
+                        "Step 1/2",
+                        style: TextStyle(
+                          color: Color(0xFF0F172A), // Blue 600
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 20),
                     const Text(
                       "창업자 정보를 입력해주세요",
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF0F172A),
+                        color: Color(0xFF0F172A), // Navy
+                        height: 1.3,
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      "향후 주주간 계약(SHA) 조율을 위해 회사와 개인 기본 정보를 받아요.",
+                    const SizedBox(height: 8),
+                    const Text(
+                      "향후 주주간 계약(SHA) 조율을 위해\n회사와 개인 기본 정보를 받아요.",
                       style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
+                        color: Color(0xFF64748B), // Slate 500
+                        fontSize: 15,
                         height: 1.5,
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 32),
                     Form(
                       key: _formKey,
                       child: Column(
@@ -99,13 +113,13 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
                             controller: _nameController,
                             hintText: "예) 홍길동",
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 20),
                           _buildField(
                             label: "직위 / Position (Role)",
                             controller: _positionController,
                             hintText: "예) CEO / CTO / COO",
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 20),
                           _buildField(
                             label: "이메일 / Email",
                             controller: _emailController,
@@ -121,7 +135,7 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 20),
                           _buildField(
                             label: "비밀번호 / Password",
                             controller: _passwordController,
@@ -137,7 +151,7 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 20),
                           _buildField(
                             label: "연락처 / Mobile number",
                             controller: _phoneController,
@@ -157,20 +171,22 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 28),
+                          const SizedBox(height: 40),
                           Row(
                             children: [
                               Expanded(
                                 child: OutlinedButton(
                                   onPressed: () => Get.back(),
                                   style: OutlinedButton.styleFrom(
-                                    foregroundColor: Colors.blue[700],
-                                    side: BorderSide(color: Colors.blue[200]!),
+                                    foregroundColor: const Color(0xFF64748B),
+                                    side: const BorderSide(
+                                      color: Color(0xFFCBD5E1),
+                                    ),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
                                     padding: const EdgeInsets.symmetric(
-                                      vertical: 16,
+                                      vertical: 20,
                                     ),
                                   ),
                                   child: const Text(
@@ -189,14 +205,17 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
                                       ? null
                                       : _handleSubmit,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue[600],
+                                    backgroundColor: const Color(
+                                      0xFF0F172A,
+                                    ), // Navy
                                     foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
                                     padding: const EdgeInsets.symmetric(
-                                      vertical: 16,
+                                      vertical: 20,
                                     ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    elevation: 0,
                                   ),
                                   child: _isSigningUp
                                       ? const SizedBox(
@@ -227,12 +246,18 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
                             children: [
                               const Text(
                                 "이미 계정이 있으신가요?",
-                                style: TextStyle(color: Colors.grey),
+                                style: TextStyle(color: Color(0xFF64748B)),
                               ),
                               TextButton(
                                 onPressed: () =>
                                     Get.to(() => const LoginPage()),
-                                child: const Text("로그인"),
+                                child: const Text(
+                                  "로그인",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF0F172A), // Blue 600
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -267,7 +292,7 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF334155),
+            color: Color(0xFF475569), // Slate 600
           ),
         ),
         const SizedBox(height: 8),
@@ -286,24 +311,28 @@ class _AgreementAdjustIntroPageState extends State<AgreementAdjustIntroPage> {
               },
           decoration: InputDecoration(
             hintText: hintText,
+            hintStyle: TextStyle(color: Colors.grey[400]),
             prefixText: prefixText,
             filled: true,
-            fillColor: Colors.grey[50],
+            fillColor: Colors.white,
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: 14,
+              horizontal: 16,
+              vertical: 16,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.grey[300]!),
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.grey[300]!),
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Colors.blue, width: 1.2),
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(
+                color: Color(0xFF2563EB), // Blue 600
+                width: 1.5,
+              ),
             ),
           ),
         ),
