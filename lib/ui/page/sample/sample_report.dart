@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../widgets/responsive_layout.dart';
 
@@ -654,25 +655,62 @@ class SampleReportPage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          RichText(
-            textAlign: TextAlign.justify,
-            text: TextSpan(
-              style: const TextStyle(
-                fontSize: 14,
-                color: Color(0xFF4B5563),
-                height: 1.6,
-              ), // text-gray-600
-              children: _buildRichTextWithTerms(
-                content,
-                baseStyle: const TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF4B5563),
-                  height: 1.6,
+          title == "CoSync 룰북 데이터 분석"
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: Stack(
+                    children: [
+                      // 원본 텍스트
+                      RichText(
+                        textAlign: TextAlign.justify,
+                        text: TextSpan(
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Color(0xFF4B5563),
+                            height: 1.6,
+                          ),
+                          children: _buildRichTextWithTerms(
+                            content,
+                            baseStyle: const TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF4B5563),
+                              height: 1.6,
+                            ),
+                            parseStrong: isHtmlLike,
+                          ),
+                        ),
+                      ),
+                      // 블러 처리 오버레이
+                      Positioned.fill(
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                          child: Container(
+                            color: Colors.transparent,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : RichText(
+                  textAlign: TextAlign.justify,
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF4B5563),
+                      height: 1.6,
+                    ), // text-gray-600
+                    children: _buildRichTextWithTerms(
+                      content,
+                      baseStyle: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF4B5563),
+                        height: 1.6,
+                      ),
+                      parseStrong: isHtmlLike,
+                    ),
+                  ),
                 ),
-                parseStrong: isHtmlLike,
-              ),
-            ),
-          ),
         ],
       ),
     );
