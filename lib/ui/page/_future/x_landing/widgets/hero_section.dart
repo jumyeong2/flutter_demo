@@ -141,7 +141,7 @@ class HeroSection extends StatelessWidget {
                     runSpacing: 16,
                     alignment: WrapAlignment.center,
                     children: [
-                      Container(
+                      SizedBox(
                         width: 280,
                         height: 60,
                         child: ElevatedButton.icon(
@@ -167,7 +167,7 @@ class HeroSection extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         width: 280,
                         height: 60,
                         child: OutlinedButton.icon(

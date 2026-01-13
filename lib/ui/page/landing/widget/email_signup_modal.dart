@@ -732,7 +732,7 @@ class _EmailSignupModalState extends State<EmailSignupModal> {
                 SizedBox(height: isSmallMobile ? 20 : 24),
                 // 팀 형태 선택 필드 (선택)
                 DropdownButtonFormField<String>(
-                  value: _teamType,
+                  initialValue: _teamType,
                   decoration: InputDecoration(
                     labelText: '팀 형태 (선택)',
                     hintText: '선택해주세요',
@@ -766,7 +766,7 @@ class _EmailSignupModalState extends State<EmailSignupModal> {
                 SizedBox(height: isSmallMobile ? 20 : 24),
                 // 단계 선택 필드 (선택)
                 DropdownButtonFormField<String>(
-                  value: _stage,
+                  initialValue: _stage,
                   decoration: InputDecoration(
                     labelText: '단계 (선택)',
                     hintText: '선택해주세요',
