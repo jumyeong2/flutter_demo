@@ -11,19 +11,10 @@ class Description1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 1024;
     final isSmallScreen = screenWidth <= 1024;
     final isMobileScreen = screenWidth <= 763;
     final isSmallMobile = screenWidth <= 480;
-
-    // 반응형 값 정의 (각 요소별로 수정 가능)
-    final isDesktop = screenWidth > 1440;
-    final horizontalPadding = isSmallMobile
-        ? 20.0
-        : isMobileScreen
-        ? 40.0
-        : isSmallScreen
-        ? 60.0
-        : (isDesktop ? 200.0 : 120.0);
 
     final badgeHeight = isSmallMobile ? 32.0 : 36.0;
     final badgeIconSize = isSmallMobile ? 14.0 : 16.0;
@@ -58,59 +49,55 @@ class Description1 extends StatelessWidget {
     final ctaPrimaryFontSize = isSmallMobile ? 17.0 : 19.0;
     final ctaIconSize = isSmallMobile ? 16.0 : 18.0;
 
-    // 데스크탑에서 최대 너비 제한
-    final maxContentWidth = isDesktop ? 1200.0 : double.infinity;
-
     return LandingSectionLayout(
       height: null,
       backgroundColor: const Color(0xFFF8FAFC),
       child: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: maxContentWidth),
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          padding: EdgeInsets.symmetric(
+            horizontal: isSmallMobile ? 20 : (isSmallScreen ? 40 : 60),
+            vertical: isDesktop ? 100 : 80,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: isDesktop ? 100 : 80),
               // 배지 - 텍스트 너비에 맞춤
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-                child: Container(
-                  height: badgeHeight,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF1F5F9),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: const Color(0xFFE2E8F0),
-                      width: 1,
+              Container(
+                height: badgeHeight,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF1F5F9),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: const Color(0xFFE2E8F0),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.verified_user_outlined,
+                      color: const Color(0xFF64748B),
+                      size: badgeIconSize,
                     ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.verified_user_outlined,
+                    const SizedBox(width: 8),
+                    Text(
+                      '창업 팀 필수 안전장치',
+                      style: TextStyle(
                         color: const Color(0xFF64748B),
-                        size: badgeIconSize,
+                        fontSize: badgeFontSize,
+                        fontWeight: FontWeight.w600,
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '창업 팀 필수 안전장치',
-                        style: TextStyle(
-                          color: const Color(0xFF64748B),
-                          fontSize: badgeFontSize,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: spacingAfterBadge),
               // 메인 카피 - 화면의 시각적 중심
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-                child: Text(
+              Text(
                   "공동창업 팀이 흔들리는 순간은\n대부분 '사업 문제'가 아니라,\n'기준'의 차이에서 시작됩니다",
                   style: TextStyle(
                     height: 1.3,
@@ -119,14 +106,11 @@ class Description1 extends StatelessWidget {
                     fontWeight: FontWeight.w900,
                     color: const Color(0xFF0F172A),
                   ),
-                  textAlign: TextAlign.center,
-                ),
+                textAlign: TextAlign.center,
               ),
               SizedBox(height: spacingAfterMainCopy),
               // 서브 카피 - 포지셔닝
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-                child: Text(
+              Text(
                   "CoSync는 합의를 계약으로 옮길 수 있도록 구조화하는 공동창업자 전용 인프라입니다.",
                   style: TextStyle(
                     height: 1.5,
@@ -134,22 +118,16 @@ class Description1 extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                     color: const Color(0xFF64748B),
                   ),
-                  textAlign: TextAlign.center,
-                ),
+                textAlign: TextAlign.center,
               ),
               SizedBox(height: isSmallMobile ? 40 : 60),
               // Before/After 2컬럼
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-                child: isSmallScreen
-                    ? _buildBeforeAfterVertical(isSmallMobile)
-                    : _buildBeforeAfterHorizontal(isDesktop),
-              ),
+              isSmallScreen
+                  ? _buildBeforeAfterVertical(isSmallMobile)
+                  : _buildBeforeAfterHorizontal(isDesktop),
               SizedBox(height: spacingBeforeCTA),
               // CTA 버튼 영역
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-                child: isMobileScreen
+              isMobileScreen
                     ? Column(
                         children: [
                           SizedBox(
@@ -344,7 +322,6 @@ class Description1 extends StatelessWidget {
                           ),
                         ],
                       ),
-              ),
               SizedBox(height: isDesktop ? 100 : 80),
             ],
           ),
