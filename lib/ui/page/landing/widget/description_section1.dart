@@ -54,9 +54,9 @@ class Description1 extends StatelessWidget {
 
     final spacingBeforeCTA = isSmallMobile ? 48.0 : (isDesktop ? 80.0 : 96.0);
 
-    final ctaButtonHeight = isSmallMobile ? 56.0 : 60.0;
-    final ctaPrimaryFontSize = isSmallMobile ? 15.0 : 16.0;
-    final ctaIconSize = isSmallMobile ? 14.0 : 16.0;
+    final ctaButtonHeight = isSmallMobile ? 72.0 : 80.0;
+    final ctaPrimaryFontSize = isSmallMobile ? 17.0 : 19.0;
+    final ctaIconSize = isSmallMobile ? 16.0 : 18.0;
 
     // 데스크탑에서 최대 너비 제한
     final maxContentWidth = isDesktop ? 1200.0 : double.infinity;
@@ -111,7 +111,7 @@ class Description1 extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                 child: Text(
-                  "공동창업 팀이 흔들리는 순간은 대부분 '사업 문제'가 아니라, '기준'의 차이에서 시작됩니다",
+                  "공동창업 팀이 흔들리는 순간은\n대부분 '사업 문제'가 아니라,\n'기준'의 차이에서 시작됩니다",
                   style: TextStyle(
                     height: 1.3,
                     letterSpacing: isDesktop ? -0.8 : -1.0,
@@ -253,7 +253,7 @@ class Description1 extends StatelessWidget {
                         children: [
                           SizedBox(
                             width: isDesktop ? 480 : 500,
-                            height: 60,
+                            height: ctaButtonHeight,
                             child: ElevatedButton(
                               onPressed: () {
                                 // 이벤트 트래킹: lead_modal_open
@@ -303,7 +303,7 @@ class Description1 extends StatelessWidget {
                           SizedBox(height: isDesktop ? 16 : 12),
                           SizedBox(
                             width: isDesktop ? 480 : 500,
-                            height: 60,
+                            height: ctaButtonHeight,
                             child: ElevatedButton(
                               onPressed: () {
                                 Get.to(() => const SampleReportPage());
@@ -397,101 +397,97 @@ class Description1 extends StatelessWidget {
 
   // Before 컬럼
   Widget _buildBeforeColumn(bool isSmallMobile, [bool isDesktop = false]) {
-    return Container(
-      padding: EdgeInsets.all(isSmallMobile ? 20 : (isDesktop ? 28 : 24)),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF1F5F9),
-        borderRadius: BorderRadius.circular(isDesktop ? 16 : 12),
-        border: Border.all(color: const Color(0xFFE2E8F0), width: 1),
-        boxShadow: isDesktop
-            ? [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.02),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : null,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.warning_amber_rounded,
-                size: isSmallMobile ? 20 : 24,
-                color: const Color(0xFF64748B),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Decorative Line & Badge
+        Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.centerLeft,
+          children: [
+            // Line
+            Container(
+              width: double.infinity,
+              height: 2,
+              color: const Color(0xFFE2E8F0), // Slate 200
+              margin: const EdgeInsets.only(left: 20),
+            ),
+            // Badge
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE2E8F0), // Slate 200
+                borderRadius: BorderRadius.circular(4),
               ),
-              SizedBox(width: isSmallMobile ? 8 : 12),
-              Text(
-                'Before',
+              child: Text(
+                'BEFORE',
                 style: TextStyle(
-                  fontSize: isSmallMobile ? 16 : 18,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF64748B),
+                  fontSize: isSmallMobile ? 12 : 14,
+                  fontWeight: FontWeight.w900,
+                  color: const Color(0xFF64748B), // Slate 500
+                  letterSpacing: 1.2,
                 ),
               ),
-            ],
-          ),
-          SizedBox(height: isSmallMobile ? 16 : 20),
-          _buildBeforeAfterItem('지분은 나중에 정하자', isSmallMobile),
-          SizedBox(height: isSmallMobile ? 12 : 16),
-          _buildBeforeAfterItem('역할은 상황 봐서 정하자', isSmallMobile),
-          SizedBox(height: isSmallMobile ? 12 : 16),
-          _buildBeforeAfterItem('누가 나가면? 그건 생각 안 해봤다', isSmallMobile),
-        ],
-      ),
+            ),
+          ],
+        ),
+        SizedBox(height: isSmallMobile ? 20 : 28),
+        _buildBeforeAfterItem('지분은 나중에 정하자', isSmallMobile, isAfter: false),
+        SizedBox(height: isSmallMobile ? 12 : 16),
+        _buildBeforeAfterItem('역할은 상황 봐서 정하자', isSmallMobile, isAfter: false),
+        SizedBox(height: isSmallMobile ? 12 : 16),
+        _buildBeforeAfterItem(
+          '누가 나가면? 그건 생각 안 해봤다',
+          isSmallMobile,
+          isAfter: false,
+        ),
+      ],
     );
   }
 
   // After 컬럼
   Widget _buildAfterColumn(bool isSmallMobile, [bool isDesktop = false]) {
-    return Container(
-      padding: EdgeInsets.all(isSmallMobile ? 20 : (isDesktop ? 28 : 24)),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF0FDF4),
-        borderRadius: BorderRadius.circular(isDesktop ? 16 : 12),
-        border: Border.all(color: const Color(0xFF86EFAC), width: 1),
-        boxShadow: isDesktop
-            ? [
-                BoxShadow(
-                  color: const Color(0xFF16A34A).withValues(alpha: 0.08),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : null,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.check_circle,
-                size: isSmallMobile ? 20 : 24,
-                color: const Color(0xFF16A34A),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Decorative Line & Badge
+        Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.centerLeft,
+          children: [
+            // Line
+            Container(
+              width: double.infinity,
+              height: 2,
+              color: const Color(0xFFBFDBFE), // Blue 200
+              margin: const EdgeInsets.only(left: 20),
+            ),
+            // Badge
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF2563EB), // Blue 600
+                borderRadius: BorderRadius.circular(4),
               ),
-              SizedBox(width: isSmallMobile ? 8 : 12),
-              Text(
-                'After',
+              child: Text(
+                'AFTER',
                 style: TextStyle(
-                  fontSize: isSmallMobile ? 16 : 18,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF16A34A),
+                  fontSize: isSmallMobile ? 12 : 14,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                  letterSpacing: 1.2,
                 ),
               ),
-            ],
-          ),
-          SizedBox(height: isSmallMobile ? 16 : 20),
-          _buildBeforeAfterItem('지분 기준 문장으로 확정', isSmallMobile, isAfter: true),
-          SizedBox(height: isSmallMobile ? 12 : 16),
-          _buildBeforeAfterItem('역할·책임 범위 명시', isSmallMobile, isAfter: true),
-          SizedBox(height: isSmallMobile ? 12 : 16),
-          _buildBeforeAfterItem('이탈 시 조건 합의 완료', isSmallMobile, isAfter: true),
-        ],
-      ),
+            ),
+          ],
+        ),
+        SizedBox(height: isSmallMobile ? 20 : 28),
+        _buildBeforeAfterItem('지분 기준 문장으로 확정', isSmallMobile, isAfter: true),
+        SizedBox(height: isSmallMobile ? 12 : 16),
+        _buildBeforeAfterItem('역할·책임 범위 명시', isSmallMobile, isAfter: true),
+        SizedBox(height: isSmallMobile ? 12 : 16),
+        _buildBeforeAfterItem('이탈 시 조건 합의 완료', isSmallMobile, isAfter: true),
+      ],
     );
   }
 
@@ -501,29 +497,63 @@ class Description1 extends StatelessWidget {
     bool isSmallMobile, {
     bool isAfter = false,
   }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(
-          isAfter ? Icons.check : Icons.close,
-          size: isSmallMobile ? 16 : 18,
-          color: isAfter ? const Color(0xFF16A34A) : const Color(0xFF64748B),
-        ),
-        SizedBox(width: isSmallMobile ? 8 : 12),
-        Expanded(
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: isSmallMobile ? 14 : 15,
-              fontWeight: FontWeight.w500,
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        horizontal: isSmallMobile ? 16 : 24,
+        vertical: isSmallMobile ? 16 : 20,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: isAfter
+            ? Border.all(color: const Color(0xFF93C5FD), width: 1.5) // Blue 300
+            : Border.all(
+                color: const Color(0xFFF1F5F9),
+                width: 1.0,
+              ), // Slate 100
+        boxShadow: [
+          BoxShadow(
+            color: isAfter
+                ? const Color(0xFF2563EB).withOpacity(0.08) // Blue tint
+                : Colors.black.withOpacity(0.04),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // Icon Circle
+          Container(
+            width: isSmallMobile ? 28 : 32,
+            height: isSmallMobile ? 28 : 32,
+            decoration: BoxDecoration(
               color: isAfter
-                  ? const Color(0xFF166534)
-                  : const Color(0xFF475569),
-              height: 1.4,
+                  ? const Color(0xFF2563EB) // Blue 600
+                  : const Color(0xFFE2E8F0), // Slate 200
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              isAfter ? Icons.check : Icons.close,
+              size: isSmallMobile ? 14 : 16,
+              color: isAfter ? Colors.white : const Color(0xFF64748B),
             ),
           ),
-        ),
-      ],
+          SizedBox(width: isSmallMobile ? 12 : 16),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: isSmallMobile ? 15 : 16,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF1E293B), // Slate 800
+                height: 1.4,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
