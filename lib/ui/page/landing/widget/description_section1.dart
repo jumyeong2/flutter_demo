@@ -111,7 +111,7 @@ class Description1 extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                 child: Text(
-                  "공동창업 팀이 흔들리는 순간은\n대부분 '사업 문제'가 아니라,\n'기준'의 차이에서 시작됩니다",
+                  "공동창업 팀이 흔들리는 순간은 대부분 '사업 문제'가 아니라, '기준'의 차이에서 시작됩니다",
                   style: TextStyle(
                     height: 1.3,
                     letterSpacing: isDesktop ? -0.8 : -1.0,
@@ -127,7 +127,7 @@ class Description1 extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                 child: Text(
-                  "CoSync는 합의를 계약으로 옮길 수 있도록\n구조화하는 공동창업자 전용 인프라입니다.",
+                  "CoSync는 합의를 계약으로 옮길 수 있도록 구조화하는 공동창업자 전용 인프라입니다.",
                   style: TextStyle(
                     height: 1.5,
                     fontSize: subCopyFontSize,
