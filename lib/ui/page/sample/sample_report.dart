@@ -2,6 +2,7 @@ import 'dart:ui'; // For ImageFilter
 import 'dart:math' as math; // For rotate
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_demo/ui/page/landing/widget/email_signup_modal.dart';
 
 // --- 0. Tailwind Color Palette Mapping ---
 class _AppColors {
@@ -114,15 +115,11 @@ class _SampleReportPageState extends State<SampleReportPage> {
 
   void _handleRegister(String location) {
     setState(() => _isModalOpen = false);
-    // GetX Snackbar for Toast
-    Get.snackbar(
-      "알림",
-      "사전신청이 완료되었습니다! (Demo)",
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.black87,
-      colorText: Colors.white,
-      margin: const EdgeInsets.all(16),
-      icon: const Icon(Icons.check_circle, color: Colors.green),
+    // EmailSignupModal 열기
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => const EmailSignupModal(),
     );
   }
 
@@ -200,9 +197,12 @@ class _SampleReportPageState extends State<SampleReportPage> {
               ),
 
               // --- Layer 2: Watermark (Ignore Pointer) ---
-              IgnorePointer(
-                child: _buildWatermark(),
-              ),
+              // 임시로 완전히 비활성화
+              // Positioned.fill(
+              //   child: IgnorePointer(
+              //     child: _buildWatermark(),
+              //   ),
+              // ),
 
               // --- Layer 3: Sticky Bottom CTA (Mobile Only) ---
               if (!isDesktop && !_isModalOpen)
@@ -236,7 +236,7 @@ class _SampleReportPageState extends State<SampleReportPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(_ctaLabel, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          Text(_ctaLabel, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                           const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -244,9 +244,9 @@ class _SampleReportPageState extends State<SampleReportPage> {
                               color: _AppColors.gray800,
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            child: const Text(
+                            child: Text(
                               _ctaSubLabel,
-                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal, color: _AppColors.gray400),
+                              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.normal, color: _AppColors.gray400),
                             ),
                           )
                         ],
@@ -257,20 +257,21 @@ class _SampleReportPageState extends State<SampleReportPage> {
 
               // --- Layer 4: Custom Modal Overlay ---
               if (_isModalOpen)
-                Stack(
-                  children: [
-                    // Backdrop
-                    GestureDetector(
-                      onTap: () => setState(() => _isModalOpen = false),
-                      child: Container(
-                        // [FIX] withOpacity -> withValues
-                        color: Colors.black.withValues(alpha: 0.6),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-                          child: Container(color: Colors.transparent),
+                Positioned.fill(
+                  child: Stack(
+                    children: [
+                      // Backdrop
+                      GestureDetector(
+                        onTap: () => setState(() => _isModalOpen = false),
+                        child: Container(
+                          // [FIX] withOpacity -> withValues
+                          color: Colors.black.withValues(alpha: 0.6),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                            child: Container(color: Colors.transparent),
+                          ),
                         ),
                       ),
-                    ),
                     // Modal Content
                     Center(
                       child: Container(
@@ -346,14 +347,15 @@ class _SampleReportPageState extends State<SampleReportPage> {
                                   elevation: 4,
                                   shadowColor: _AppColors.blue100,
                                 ),
-                                child: const Text(_ctaLabel, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                child: Text(_ctaLabel, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                               ),
                             ),
                           ],
                         ),
                       ),
                     ),
-                  ],
+                    ],
+                  ),
                 ),
             ],
           ),
@@ -376,10 +378,10 @@ class _SampleReportPageState extends State<SampleReportPage> {
           Container(
             color: _AppColors.blue600,
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: const Text(
+            child: Text(
               "현재는 사전신청 단계입니다. $_ctaSubLabel. (다운로드/복사 제한)",
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+              style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
             ),
           ),
           Container(
@@ -523,7 +525,7 @@ class _SampleReportPageState extends State<SampleReportPage> {
               const SizedBox(width: 12),
               Expanded(child: _summaryBox("100%", "합의 완료", _AppColors.green50, _AppColors.green600)),
               const SizedBox(width: 12),
-              Expanded(child: _summaryBox("Locked", "룰북 분석", _AppColors.gray50, _AppColors.gray600, sub: "샘플 잠금")),
+              Expanded(child: _summaryBox("Locked", "누락된 합의 포인트", _AppColors.gray50, _AppColors.gray600)),
             ],
           )
         ],
@@ -619,6 +621,7 @@ class _SampleReportPageState extends State<SampleReportPage> {
               children: [
                 // Question
                 Container(
+                  width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(border: Border.all(color: _AppColors.gray200), borderRadius: BorderRadius.circular(8)),
                   child: Column(
@@ -637,20 +640,33 @@ class _SampleReportPageState extends State<SampleReportPage> {
                 // Opinions
                 LayoutBuilder(builder: (context, c) {
                   final isSmall = c.maxWidth < 500;
-                  return Flex(
-                    direction: isSmall ? Axis.vertical : Axis.horizontal,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(flex: isSmall ? 0 : 1, child: _opinionBox("A 의견 (CEO)", topic.opinionA)),
-                      SizedBox(width: isSmall ? 0 : 16, height: isSmall ? 16 : 0),
-                      Expanded(flex: isSmall ? 0 : 1, child: _opinionBox("B 의견 (CTO)", topic.opinionB)),
-                    ],
-                  );
+                  if (isSmall) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _opinionBox("A 의견 (CEO)", topic.opinionA),
+                        const SizedBox(height: 16),
+                        _opinionBox("B 의견 (CTO)", topic.opinionB),
+                      ],
+                    );
+                  } else {
+                    return IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(child: _opinionBox("A 의견 (CEO)", topic.opinionA)),
+                          const SizedBox(width: 16),
+                          Expanded(child: _opinionBox("B 의견 (CTO)", topic.opinionB)),
+                        ],
+                      ),
+                    );
+                  }
                 }),
                 const SizedBox(height: 16),
 
                 // Reference
                 Container(
+                  width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(color: _AppColors.slate50, borderRadius: BorderRadius.circular(8)),
                   child: Row(
@@ -785,15 +801,16 @@ class _SampleReportPageState extends State<SampleReportPage> {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            border: Border.all(color: _AppColors.gray200),
-            borderRadius: BorderRadius.circular(8),
+        SizedBox.expand(
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              border: Border.all(color: _AppColors.gray200),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            // [FIX] gray700 사용 오류 해결
+            child: Text('"$content"', style: const TextStyle(fontSize: 13, height: 1.5, color: _AppColors.gray700)),
           ),
-          // [FIX] gray700 사용 오류 해결
-          child: Text('"$content"', style: const TextStyle(fontSize: 13, height: 1.5, color: _AppColors.gray700)),
         ),
         Positioned(
           top: -10,
@@ -863,7 +880,7 @@ class _SampleReportPageState extends State<SampleReportPage> {
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            child: const Text(_ctaLabel, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            child: Text(_ctaLabel, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           )
         ],
       ),
@@ -873,12 +890,15 @@ class _SampleReportPageState extends State<SampleReportPage> {
   Widget _buildWatermark() {
     // 성능 최적화: RepaintBoundary로 감싸고 위젯 수 감소
     return RepaintBoundary(
-      child: IgnorePointer(
-        child: CustomPaint(
-          painter: _WatermarkPainter(
-            text: "SAMPLE · CoSync · 예시 문서(무료 미리보기) · $_issuedAt · SID:$_sessionId",
-          ),
-        ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return CustomPaint(
+            size: Size(constraints.maxWidth, constraints.maxHeight),
+            painter: _WatermarkPainter(
+              text: "SAMPLE · CoSync · 예시 문서(무료 미리보기) · $_issuedAt · SID:$_sessionId",
+            ),
+          );
+        },
       ),
     );
   }
@@ -904,6 +924,11 @@ class _WatermarkPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // size가 유효하지 않으면 그리지 않음
+    if (size.width <= 0 || size.height <= 0 || !size.width.isFinite || !size.height.isFinite) {
+      return;
+    }
+
     final textStyle = TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.bold,
@@ -916,6 +941,11 @@ class _WatermarkPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
     textPainter.layout();
+
+    // textPainter가 유효하지 않으면 그리지 않음
+    if (textPainter.size.width <= 0) {
+      return;
+    }
 
     // 화면을 덮을 만큼만 그리기 (성능 최적화)
     final angle = -math.pi / 12; // -15 degrees
