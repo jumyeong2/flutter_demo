@@ -105,7 +105,7 @@ class Description4 extends StatelessWidget {
                 height: 48,
                 width: 48,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF059669).withOpacity(0.1),
+                  color: const Color(0xFF059669).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -172,7 +172,7 @@ class Description4 extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
             child: LinearProgressIndicator(
               value: 0.9,
-              backgroundColor: const Color(0xFF059669).withOpacity(0.1),
+              backgroundColor: const Color(0xFF059669).withValues(alpha: 0.1),
               valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF059669)),
               minHeight: 12,
             ),
@@ -196,7 +196,7 @@ class Description4 extends StatelessWidget {
                 height: 48,
                 width: 48,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1D4ED8).withOpacity(0.1),
+                  color: const Color(0xFF1D4ED8).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -262,7 +262,7 @@ class Description4 extends StatelessWidget {
                 height: 48,
                 width: 48,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF7C3AED).withOpacity(0.1),
+                  color: const Color(0xFF7C3AED).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -309,7 +309,7 @@ class Description4 extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: const Color(0xFF7C3AED).withOpacity(0.2),
+                color: const Color(0xFF7C3AED).withValues(alpha: 0.2),
               ),
             ),
             child: Column(
@@ -331,7 +331,7 @@ class Description4 extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF7C3AED).withOpacity(0.1),
+                        color: const Color(0xFF7C3AED).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(

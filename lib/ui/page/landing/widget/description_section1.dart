@@ -523,8 +523,8 @@ class Description1 extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: isAfter
-                ? const Color(0xFF2563EB).withOpacity(0.08) // Blue tint
-                : Colors.black.withOpacity(0.04),
+                ? const Color(0xFF2563EB).withValues(alpha: 0.08) // Blue tint
+                : Colors.black.withValues(alpha: 0.04),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
