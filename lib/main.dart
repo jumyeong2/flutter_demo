@@ -28,10 +28,11 @@ class MyApp extends StatelessWidget {
     analytics: analytics,
   );
 
-@override
+  @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'CoSync',
+      debugShowCheckedModeBanner: false,
       scrollBehavior: const AppScrollBehavior(),
       navigatorObservers: [observer],
       theme: ThemeData(

@@ -111,7 +111,7 @@ class Description1 extends StatelessWidget {
               SizedBox(height: spacingAfterMainCopy),
               // 서브 카피 - 포지셔닝
               Text(
-                  "CoSync는 합의를 계약으로 옮길 수 있도록 구조화하는 공동창업자 전용 인프라입니다.",
+                  "CoSync는 합의를 계약으로 옮길 수 있도록 구조화하는\n공동창업자 전용 인프라입니다.",
                   style: TextStyle(
                     height: 1.5,
                     fontSize: subCopyFontSize,

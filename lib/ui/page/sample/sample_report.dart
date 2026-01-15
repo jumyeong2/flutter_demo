@@ -234,7 +234,7 @@ class _SampleReportPageState extends State<SampleReportPage>
                                   ],
                                 ),
                               ),
-                              SizedBox(height: isMobile ? 20 : 24),
+                              const SizedBox(height: 32),
 
                               // B. Summary
                               _RevealAnimation(
@@ -255,7 +255,7 @@ class _SampleReportPageState extends State<SampleReportPage>
                                   ],
                                 ),
                               ),
-                              SizedBox(height: isMobile ? 20 : 24),
+                              const SizedBox(height: 32),
 
                               // C. Topics
                               _RevealAnimation(
@@ -275,7 +275,7 @@ class _SampleReportPageState extends State<SampleReportPage>
                                   ],
                                 ),
                               ),
-                              SizedBox(height: isMobile ? 20 : 24),
+                              const SizedBox(height: 32),
                               ..._topics.asMap().entries.map(
                                 (entry) => _RevealAnimation(
                                   delay: 700 + (entry.key * 200),
@@ -288,7 +288,7 @@ class _SampleReportPageState extends State<SampleReportPage>
                                 ),
                               ),
 
-                              SizedBox(height: isMobile ? 20 : 24),
+                              const SizedBox(height: 32),
 
                               // D. Footer Area
                               _RevealAnimation(
@@ -1061,7 +1061,7 @@ class _SampleReportPageState extends State<SampleReportPage>
 
     return RepaintBoundary(
       child: Container(
-        margin: const EdgeInsets.only(bottom: 24),
+        margin: const EdgeInsets.only(bottom: 32),
         decoration: _cardDecoration(),
         clipBehavior: Clip.antiAlias,
         child: Column(

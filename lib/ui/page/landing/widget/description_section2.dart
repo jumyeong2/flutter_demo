@@ -8,7 +8,9 @@ class Description2 extends StatelessWidget {
   Widget build(BuildContext context) {
     // Responsive logic
     final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 1024;
     final isSmallScreen = screenWidth <= 1024;
+    final isMobileScreen = screenWidth <= 763;
     final isSmallMobile = screenWidth <= 480;
 
     return LandingSectionLayout(
@@ -24,18 +26,18 @@ class Description2 extends StatelessWidget {
           child: isSmallScreen
               ? Column(
                   children: [
-                    _buildLeftColumn(isSmallMobile),
+                    _buildLeftColumn(isSmallMobile, isMobileScreen, isSmallScreen, isDesktop),
                     const SizedBox(height: 60),
                     _buildRightColumn(isSmallMobile),
                   ],
                 )
               : Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
                       child: Align(
                         alignment: Alignment.centerRight,
-                        child: _buildLeftColumn(isSmallMobile),
+                        child: _buildLeftColumn(isSmallMobile, isMobileScreen, isSmallScreen, isDesktop),
                       ),
                     ),
                     const SizedBox(width: 60),
@@ -52,7 +54,7 @@ class Description2 extends StatelessWidget {
     );
   }
 
-  Widget _buildLeftColumn(bool isSmallMobile) {
+  Widget _buildLeftColumn(bool isSmallMobile, bool isMobileScreen, bool isSmallScreen, bool isDesktop) {
     return ConstrainedBox(
       constraints: BoxConstraints(
         minWidth: isSmallMobile ? 0 : 500,
@@ -102,7 +104,13 @@ class Description2 extends StatelessWidget {
                     Text(
                       "공동창업자 갈등으로\n스타트업 10곳 중 4곳은",
                       style: TextStyle(
-                        fontSize: isSmallMobile ? 20 : 28,
+                        fontSize: isSmallMobile
+                            ? 18
+                            : isMobileScreen
+                                ? 22
+                                : isSmallScreen
+                                    ? 24
+                                    : (isDesktop ? 26 : 28),
                         fontWeight: FontWeight.w900,
                         color: const Color(0xFF0F172A),
                         height: 1.4,
@@ -111,7 +119,13 @@ class Description2 extends StatelessWidget {
                     Text(
                       "결국 문을 닫거나 쪼개집니다.",
                       style: TextStyle(
-                        fontSize: isSmallMobile ? 20 : 28,
+                        fontSize: isSmallMobile
+                            ? 18
+                            : isMobileScreen
+                                ? 22
+                                : isSmallScreen
+                                    ? 24
+                                    : (isDesktop ? 26 : 28),
                         fontWeight: FontWeight.w900,
                         color: const Color(0xFFDC2626), // Red 600
                         height: 1.4,
@@ -237,19 +251,21 @@ class Description2 extends StatelessWidget {
         minWidth: isSmallMobile ? 0 : 500,
         maxWidth: 600,
       ),
-      child: Stack(
-        alignment: Alignment.center,
-        clipBehavior: Clip.none,
-        children: [
-          // Main Image / Graphic Area - 고정 크기
-          Container(
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8FAFC), // Slate 50
+          borderRadius: BorderRadius.circular(32),
+        ),
+        padding: const EdgeInsets.all(8),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: Image.asset(
+            'assets/buyout.png',
+            fit: BoxFit.contain,
             width: double.infinity,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(32),
-              child: Image.asset('assets/buyout.jpg', fit: BoxFit.contain),
-            ),
+            alignment: Alignment.center,
           ),
-        ],
+        ),
       ),
     );
   }

@@ -130,7 +130,7 @@ class Description4 extends StatelessWidget {
               ],
             ),
             style: TextStyle(
-              fontSize: isSmallMobile ? 15 : (isMobileScreen ? 16 : (isSmallScreen ? 17 : 18)),
+              fontSize: isSmallMobile ? 14 : 16,
               color: Colors.black87,
             ),
           ),
@@ -221,7 +221,7 @@ class Description4 extends StatelessWidget {
               ],
             ),
             style: TextStyle(
-              fontSize: isSmallMobile ? 15 : (isMobileScreen ? 16 : (isSmallScreen ? 17 : 18)),
+              fontSize: isSmallMobile ? 14 : 16,
               color: Colors.black87,
             ),
           ),
@@ -287,7 +287,7 @@ class Description4 extends StatelessWidget {
               ],
             ),
             style: TextStyle(
-              fontSize: isSmallMobile ? 15 : (isMobileScreen ? 16 : (isSmallScreen ? 17 : 18)),
+              fontSize: isSmallMobile ? 14 : 16,
               color: Colors.black87,
             ),
           ),

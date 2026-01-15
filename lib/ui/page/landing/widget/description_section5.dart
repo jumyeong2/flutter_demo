@@ -7,61 +7,52 @@ class Description5 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 1024;
     final isSmallScreen = screenWidth <= 1024;
     final isMobileScreen = screenWidth <= 763;
     final isSmallMobile = screenWidth <= 480;
 
-    // 반응형 값 정의 (각 요소별로 수정 가능)
-    final isDesktop = screenWidth > 1440;
-    final horizontalPadding = isSmallMobile
-        ? 20.0
-        : isMobileScreen
-        ? 40.0
-        : isSmallScreen
-        ? 60.0
-        : (isDesktop ? 200.0 : 120.0);
-
     return LandingSectionLayout(
       height: null,
       backgroundColor: const Color(0xFFF8FAFC),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 80),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: Text(
-              "감정 싸움 없이 합의하는 4단계 프로세스",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
-                fontWeight: FontWeight.w900,
-                color: Color(0xFF1E293B),
+      child: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          padding: EdgeInsets.symmetric(
+            horizontal: isSmallMobile ? 20 : (isSmallScreen ? 40 : 60),
+            vertical: isDesktop ? 100 : 80,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: isDesktop ? 100 : 80),
+              Text(
+                "감정 싸움 없이 합의하는 4단계 프로세스",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
+                  fontWeight: FontWeight.w900,
+                  color: Color(0xFF1E293B),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: Text(
-              isSmallScreen
-                  ? "CoSync는 '중간 다리' 역할을 통해 \n객관적인 합의를 이끌어냅니다."
-                  : "CoSync는 '중간 다리' 역할을 통해 객관적인 합의를 이끌어냅니다.",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: isSmallMobile ? 14 : (isSmallScreen ? 16 : 18),
-                fontWeight: FontWeight.w500,
-                color: Colors.black54,
+              const SizedBox(height: 18),
+              Text(
+                isSmallScreen
+                    ? "CoSync는 '중간 다리' 역할을 통해 \n객관적인 합의를 이끌어냅니다."
+                    : "CoSync는 '중간 다리' 역할을 통해 객관적인 합의를 이끌어냅니다.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: isSmallMobile ? 14 : (isSmallScreen ? 16 : 18),
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black54,
+                ),
               ),
-            ),
+              SizedBox(height: isSmallMobile ? 28 : 38),
+              _buildCards(isMobileScreen, isSmallScreen, isSmallMobile),
+              SizedBox(height: isDesktop ? 100 : 80),
+            ],
           ),
-          SizedBox(height: isSmallMobile ? 40 : 60),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: _buildCards(isMobileScreen, isSmallScreen, isSmallMobile),
-          ),
-          const SizedBox(height: 80),
-        ],
+        ),
       ),
     );
   }
@@ -76,90 +67,151 @@ class Description5 extends StatelessWidget {
         ? 48
         : (isMobileScreen ? 40 : 64);
     final double stepFontSize = isSmallMobile ? 15 : (isMobileScreen ? 16 : 22);
-    final double descriptionFontSize = isSmallMobile
-        ? 13
-        : (isMobileScreen ? 13 : 16);
-    // 높이를 유연하게 조정하거나 고정값 사용
-    final double cardHeight = isSmallMobile
-        ? 240 // 모바일에서 2줄 텍스트 고려하여 약간 높임
-        : (isMobileScreen ? 260 : 320);
+    final double descriptionFontSize = isSmallMobile ? 14 : 16;
+    // 높이를 고정값 사용
+    final double cardHeight = isSmallMobile ? 240 : 320;
 
     final double gap = isSmallMobile ? 12 : 20;
     final double verticalGap = isSmallMobile ? 12 : 20;
 
-    // 모든 화면 크기에서 2x2 그리드 강제 적용
-    return Column(
-      children: [
-        // 첫 번째 줄 (1, 2)
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start, // 높이가 다르면 위쪽 정렬
-          children: [
-            Expanded(
-              child: _ProcessCard(
-                step: "1. 진단 (Sync)",
-                description: "단순한 설문이 아닙니다. 예민하지만 꼭 필요한 질문에 각자 답변합니다.\n",
-                icon: Icons.chat_bubble_outline_rounded,
-                iconSize: iconSize,
-                iconBackgroundSize: iconBackgroundSize,
-                stepFontSize: stepFontSize,
-                descriptionFontSize: descriptionFontSize,
-                height: cardHeight,
-                isSmallMobile: isSmallMobile,
+    // Description3처럼 세로/가로 배치로 변경
+    if (isSmallScreen) {
+      // 세로 배치 (1024px 이하)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _ProcessCard(
+            step: "1. 진단 (Sync)",
+            description: "단순한 설문이 아닙니다. 예민하지만 꼭 필요한 질문에 각자 답변합니다.\n",
+            icon: Icons.chat_bubble_outline_rounded,
+            iconSize: iconSize,
+            iconBackgroundSize: iconBackgroundSize,
+            stepFontSize: stepFontSize,
+            descriptionFontSize: descriptionFontSize,
+            height: cardHeight,
+            isSmallMobile: isSmallMobile,
+          ),
+          SizedBox(height: verticalGap),
+          _ProcessCard(
+            step: "2. 리스크 시각화",
+            description: "생각이 일치하는 부분과 조율이 필요한 부분을 데이터로 명확히 보여줍니다.\n",
+            icon: Icons.bar_chart_rounded,
+            iconSize: iconSize,
+            iconBackgroundSize: iconBackgroundSize,
+            stepFontSize: stepFontSize,
+            descriptionFontSize: descriptionFontSize,
+            height: cardHeight,
+            isSmallMobile: isSmallMobile,
+          ),
+          SizedBox(height: verticalGap),
+          _ProcessCard(
+            step: "3. 시장 표준 제안",
+            description:
+                "정답이 아닌 '참고 프레임'을 제공합니다. 산업 관행과 데이터를 토대로 합리적 선택을 돕습니다.",
+            icon: Icons.insights_rounded,
+            iconSize: iconSize,
+            iconBackgroundSize: iconBackgroundSize,
+            stepFontSize: stepFontSize,
+            descriptionFontSize: descriptionFontSize,
+            height: cardHeight,
+            isSmallMobile: isSmallMobile,
+          ),
+          SizedBox(height: verticalGap),
+          _ProcessCard(
+            step: "4. Agreement",
+            description: "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 합의안을 생성합니다.\n",
+            icon: Icons.description_outlined,
+            iconSize: iconSize,
+            iconBackgroundSize: iconBackgroundSize,
+            stepFontSize: stepFontSize,
+            descriptionFontSize: descriptionFontSize,
+            height: cardHeight,
+            isSmallMobile: isSmallMobile,
+          ),
+        ],
+      );
+    } else {
+      // 가로 배치 (1024px 초과) - 2x2 그리드
+      return Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: 1000,
+          ),
+          child: Column(
+            children: [
+              // 첫 번째 줄 (1, 2)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: _ProcessCard(
+                      step: "1. 진단 (Sync)",
+                      description: "단순한 설문이 아닙니다.\n예민하지만 꼭 필요한 질문에 각자 답변합니다.\n",
+                      icon: Icons.chat_bubble_outline_rounded,
+                      iconSize: iconSize,
+                      iconBackgroundSize: iconBackgroundSize,
+                      stepFontSize: stepFontSize,
+                      descriptionFontSize: descriptionFontSize,
+                      height: cardHeight,
+                      isSmallMobile: isSmallMobile,
+                    ),
+                  ),
+                  SizedBox(width: gap),
+                  Expanded(
+                    child: _ProcessCard(
+                      step: "2. 리스크 시각화",
+                      description: "생각이 일치하는 부분과 조율이 필요한 부분을\n데이터로 명확히 보여줍니다.\n",
+                      icon: Icons.bar_chart_rounded,
+                      iconSize: iconSize,
+                      iconBackgroundSize: iconBackgroundSize,
+                      stepFontSize: stepFontSize,
+                      descriptionFontSize: descriptionFontSize,
+                      height: cardHeight,
+                      isSmallMobile: isSmallMobile,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(width: gap),
-            Expanded(
-              child: _ProcessCard(
-                step: "2. 리스크 시각화",
-                description: "생각이 일치하는 부분과 조율이 필요한 부분을 데이터로 명확히 보여줍니다.\n",
-                icon: Icons.bar_chart_rounded,
-                iconSize: iconSize,
-                iconBackgroundSize: iconBackgroundSize,
-                stepFontSize: stepFontSize,
-                descriptionFontSize: descriptionFontSize,
-                height: cardHeight,
-                isSmallMobile: isSmallMobile,
+              SizedBox(height: verticalGap),
+              // 두 번째 줄 (3, 4)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: _ProcessCard(
+                      step: "3. 시장 표준 제안",
+                      description:
+                          "정답이 아닌 '참고 프레임'을 제공합니다.\n산업 관행과 데이터를 토대로 합리적 선택을 돕습니다.",
+                      icon: Icons.insights_rounded,
+                      iconSize: iconSize,
+                      iconBackgroundSize: iconBackgroundSize,
+                      stepFontSize: stepFontSize,
+                      descriptionFontSize: descriptionFontSize,
+                      height: cardHeight,
+                      isSmallMobile: isSmallMobile,
+                    ),
+                  ),
+                  SizedBox(width: gap),
+                  Expanded(
+                    child: _ProcessCard(
+                      step: "4. Agreement",
+                      description: "합의된 내용을 바탕으로 법적 효력을 고려한\n공동창업자 합의안을 생성합니다.\n",
+                      icon: Icons.description_outlined,
+                      iconSize: iconSize,
+                      iconBackgroundSize: iconBackgroundSize,
+                      stepFontSize: stepFontSize,
+                      descriptionFontSize: descriptionFontSize,
+                      height: cardHeight,
+                      isSmallMobile: isSmallMobile,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        SizedBox(height: verticalGap),
-        // 두 번째 줄 (3, 4)
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: _ProcessCard(
-                step: "3. 시장 표준 제안",
-                description:
-                    "정답이 아닌 '참고 프레임'을 제공합니다. 산업 관행과 데이터를 토대로 합리적 선택을 돕습니다.",
-                icon: Icons.insights_rounded,
-                iconSize: iconSize,
-                iconBackgroundSize: iconBackgroundSize,
-                stepFontSize: stepFontSize,
-                descriptionFontSize: descriptionFontSize,
-                height: cardHeight,
-                isSmallMobile: isSmallMobile,
-              ),
-            ),
-            SizedBox(width: gap),
-            Expanded(
-              child: _ProcessCard(
-                step: "4. Agreement",
-                description: "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 합의안을 생성합니다.\n",
-                icon: Icons.description_outlined,
-                iconSize: iconSize,
-                iconBackgroundSize: iconBackgroundSize,
-                stepFontSize: stepFontSize,
-                descriptionFontSize: descriptionFontSize,
-                height: cardHeight,
-                isSmallMobile: isSmallMobile,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
+      );
+    }
   }
 }
 
@@ -205,7 +257,8 @@ class _ProcessCardState extends State<_ProcessCard> {
         height: widget.isSmallMobile ? null : null,
         width: widget.isSmallMobile ? double.infinity : null,
         constraints: BoxConstraints(
-          maxWidth: widget.isSmallMobile ? double.infinity : 400,
+          minWidth: widget.isSmallMobile ? 0 : 400,
+          maxWidth: widget.isSmallMobile ? double.infinity : 500,
           minHeight: widget.isSmallMobile ? 0 : widget.height,
         ),
         transform: _isHovered

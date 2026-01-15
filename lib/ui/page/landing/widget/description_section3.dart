@@ -7,54 +7,61 @@ class Description3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 1024;
     final isSmallScreen = screenWidth <= 1024;
     final isSmallMobile = screenWidth <= 480;
 
     return LandingSectionLayout(
       height: null,
       backgroundColor: const Color(0xFFF8FAFC),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 80),
-          Text.rich(
-            TextSpan(
-            style: TextStyle(
-              fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
-              fontWeight: FontWeight.w900,
-                color: Colors.black,
-              ),
-              children: [
-                const TextSpan(text: '계약서를 안 써서 아낀 '),
-                const TextSpan(
-                  text: '300만 원',
-                  style: TextStyle(color: Color(0xFF1D4ED8)),
+      child: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          padding: EdgeInsets.symmetric(
+            horizontal: isSmallMobile ? 20 : (isSmallScreen ? 40 : 60),
+            vertical: isDesktop ? 100 : 80,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: isDesktop ? 100 : 80),
+              Text.rich(
+                TextSpan(
+                  style: TextStyle(
+                    fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
+                    fontWeight: FontWeight.w900,
+                    color: Colors.black,
+                  ),
+                  children: [
+                    const TextSpan(text: '계약서를 안 써서 아낀 '),
+                    const TextSpan(
+                      text: '300만 원',
+                      style: TextStyle(color: Color(0xFF1D4ED8)),
+                    ),
+                    TextSpan(text: isSmallMobile ? ',\n그 대가는 얼마일까요?' : ',\n그 대가는 얼마일까요?'),
+                  ],
                 ),
-                TextSpan(text: isSmallMobile ? ',\n그 대가는 얼마일까요?' : ',\n그 대가는 얼마일까요?'),
-              ],
-            ),
-            textAlign: TextAlign.center,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 18),
+              Text(
+                "비용을 아끼려다 더 큰 기회를 놓치고 있습니다.",
+                style: TextStyle(
+                  fontSize: isSmallMobile ? 14 : (isSmallScreen ? 16 : 18),
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black54,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: isSmallMobile ? 28 : 38),
+              // 카드 영역
+              isSmallScreen
+                  ? _buildVerticalLayout(isSmallMobile)
+                  : _buildHorizontalLayout(),
+              SizedBox(height: isDesktop ? 100 : 80),
+            ],
           ),
-          const SizedBox(height: 18),
-          Text(
-            "비용을 아끼려다 더 큰 기회를 놓치고 있습니다.",
-            style: TextStyle(
-              fontSize: isSmallMobile ? 14 : (isSmallScreen ? 16 : 18),
-              fontWeight: FontWeight.w900,
-              color: Colors.black54,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: isSmallMobile ? 28 : 38),
-          // 카드 영역
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: isSmallMobile ? 0 : 30.0),
-              child: isSmallScreen
-                ? _buildVerticalLayout(isSmallMobile)
-                : _buildHorizontalLayout(),
-          ),
-          const SizedBox(height: 80),
-        ],
+        ),
       ),
     );
   }
