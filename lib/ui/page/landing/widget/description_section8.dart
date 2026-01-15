@@ -48,7 +48,10 @@ class Description8 extends StatelessWidget {
                       height: 1.2,
                       letterSpacing: -1.0,
                     ),
-                  ),
+                  )
+                      .animate()
+                      .fadeIn(duration: 800.ms, delay: 100.ms)
+                      .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 100.ms, curve: Curves.easeOutCubic),
                   const SizedBox(height: 24),
                 Text(
                   isSmallMobile
@@ -63,7 +66,10 @@ class Description8 extends StatelessWidget {
                     color: Colors.white.withValues(alpha: 0.7),
                     height: 1.6,
                   ),
-                ),
+                )
+                    .animate()
+                    .fadeIn(duration: 800.ms, delay: 250.ms)
+                    .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 250.ms, curve: Curves.easeOutCubic),
                 SizedBox(height: isSmallMobile ? 30 : 38),
                 // CTA 버튼 - 텍스트 너비에 맞춤
                 LayoutBuilder(

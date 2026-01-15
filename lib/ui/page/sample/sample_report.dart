@@ -90,6 +90,9 @@ class _SampleReportPageState extends State<SampleReportPage>
   // State
   bool _isModalOpen = false;
   final ScrollController _scrollController = ScrollController();
+  
+  // Topic별 GlobalKey 맵
+  final Map<int, GlobalKey> _topicKeys = {};
 
   // Constants
   static const String _ctaLabel = "사전신청하고 혜택 받기";
@@ -134,6 +137,15 @@ class _SampleReportPageState extends State<SampleReportPage>
   ];
 
   @override
+  void initState() {
+    super.initState();
+    // 각 Topic에 대한 GlobalKey 초기화
+    for (var topic in _topics) {
+      _topicKeys[topic.id] = GlobalKey();
+    }
+  }
+
+  @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
@@ -150,12 +162,23 @@ class _SampleReportPageState extends State<SampleReportPage>
   }
 
   void _scrollToTopic(int id) {
-    Get.snackbar(
-      "Navigation",
-      "Topic 0$id로 이동합니다.",
-      snackPosition: SnackPosition.BOTTOM,
-      duration: const Duration(seconds: 1),
-    );
+    final key = _topicKeys[id];
+    if (key?.currentContext != null) {
+      Scrollable.ensureVisible(
+        key!.currentContext!,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+        alignment: 0.1, // 상단에서 10% 위치에 정렬
+      );
+    } else {
+      // Fallback: Snackbar (key가 아직 준비되지 않은 경우)
+      Get.snackbar(
+        "Navigation",
+        "Topic 0$id로 이동합니다.",
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 1),
+      );
+    }
   }
 
   @override
@@ -284,6 +307,7 @@ class _SampleReportPageState extends State<SampleReportPage>
                                     isDesktop: isDesktop,
                                     isMobile: isMobile,
                                     isSmallMobile: isSmallMobile,
+                                    key: _topicKeys[entry.value.id],
                                   ),
                                 ),
                               ),
@@ -1034,6 +1058,7 @@ class _SampleReportPageState extends State<SampleReportPage>
     required bool isDesktop,
     required bool isMobile,
     required bool isSmallMobile,
+    GlobalKey? key,
   }) {
     // Determine Color based on ID (as per requirement: 1=Blue(Decision), 2=Green(Equity), 3=Orange(R&R))
     // Current IDs: 1: Decision, 2: Finance, 3: Exit.
@@ -1060,6 +1085,7 @@ class _SampleReportPageState extends State<SampleReportPage>
     }
 
     return RepaintBoundary(
+      key: key,
       child: Container(
         margin: const EdgeInsets.only(bottom: 32),
         decoration: _cardDecoration(),

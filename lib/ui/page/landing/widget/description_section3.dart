@@ -13,6 +13,7 @@ class Description3 extends StatefulWidget {
 
 class _Description3State extends State<Description3> {
   int _animationKey = 0;
+  bool _hasAnimated = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +25,11 @@ class _Description3State extends State<Description3> {
     return VisibilityDetector(
       key: const Key('description3'),
       onVisibilityChanged: (VisibilityInfo info) {
-        if (info.visibleFraction > 0.2) {
+        // 한 번만 실행되도록 플래그 체크
+        if (!_hasAnimated && info.visibleFraction > 0.2) {
           setState(() {
             _animationKey = DateTime.now().millisecondsSinceEpoch;
+            _hasAnimated = true;
           });
         }
       },
