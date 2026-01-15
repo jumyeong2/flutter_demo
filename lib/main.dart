@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_demo/firebase_options.dart';
 import 'package:flutter_demo/ui/page/landing/landing_page.dart';
 import 'package:get/get.dart';
@@ -37,8 +38,25 @@ class MyApp extends StatelessWidget {
       navigatorObservers: [observer],
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-         useMaterial3: true,
-        fontFamily: 'Pretendard',
+        useMaterial3: true,
+        textTheme: TextTheme(
+          displayLarge: GoogleFonts.montserrat(),
+          displayMedium: GoogleFonts.montserrat(),
+          displaySmall: GoogleFonts.montserrat(),
+          headlineLarge: GoogleFonts.montserrat(),
+          headlineMedium: GoogleFonts.montserrat(),
+          headlineSmall: GoogleFonts.montserrat(),
+          titleLarge: GoogleFonts.montserrat(),
+          titleMedium: GoogleFonts.montserrat(),
+          titleSmall: GoogleFonts.montserrat(),
+          bodyLarge: GoogleFonts.inter(),
+          bodyMedium: GoogleFonts.inter(),
+          bodySmall: GoogleFonts.inter(),
+          labelLarge: GoogleFonts.inter(),
+          labelMedium: GoogleFonts.inter(),
+          labelSmall: GoogleFonts.inter(),
+        ),
+        fontFamily: GoogleFonts.inter().fontFamily,
       ),
       home : const LandingPage(),
     );

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:rive/rive.dart';
 import 'package:flutter_demo/main.dart';
 import 'package:flutter_demo/ui/page/sample/sample_report.dart';
 import 'package:get/get.dart';
@@ -52,19 +55,30 @@ class Description1 extends StatelessWidget {
     return LandingSectionLayout(
       height: null,
       backgroundColor: const Color(0xFFF8FAFC),
-      child: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 1200),
-          padding: EdgeInsets.symmetric(
-            horizontal: isSmallMobile ? 20 : (isSmallScreen ? 40 : 60),
-            vertical: isDesktop ? 100 : 80,
+      child: Stack(
+        children: [
+          // Rive Animation Background
+          Positioned.fill(
+            child: RiveAnimation.asset(
+              'assets/rive/hero.riv',
+              fit: BoxFit.cover,
+              alignment: Alignment.center,
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: isDesktop ? 100 : 80),
-              // 배지 - 텍스트 너비에 맞춤
-              Container(
+          // Content
+          Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 1200),
+              padding: EdgeInsets.symmetric(
+                horizontal: isSmallMobile ? 20 : (isSmallScreen ? 40 : 60),
+                vertical: isDesktop ? 100 : 80,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: isDesktop ? 100 : 80),
+                  // 배지 - 텍스트 너비에 맞춤
+                  Container(
                 height: badgeHeight,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
@@ -94,12 +108,15 @@ class Description1 extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
+              )
+                  .animate()
+                  .fadeIn(duration: 800.ms, delay: 100.ms)
+                  .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 100.ms, curve: Curves.easeOutCubic),
               SizedBox(height: spacingAfterBadge),
               // 메인 카피 - 화면의 시각적 중심
               Text(
                   "공동창업 팀이 흔들리는 순간은\n대부분 '사업 문제'가 아니라,\n'기준'의 차이에서 시작됩니다",
-                  style: TextStyle(
+                  style: GoogleFonts.montserrat(
                     height: 1.3,
                     letterSpacing: isDesktop ? -0.8 : -1.0,
                     fontSize: mainCopyFontSize,
@@ -107,24 +124,33 @@ class Description1 extends StatelessWidget {
                     color: const Color(0xFF0F172A),
                   ),
                 textAlign: TextAlign.center,
-              ),
+              )
+                  .animate()
+                  .fadeIn(duration: 800.ms, delay: 300.ms)
+                  .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 300.ms, curve: Curves.easeOutCubic),
               SizedBox(height: spacingAfterMainCopy),
               // 서브 카피 - 포지셔닝
               Text(
                   "CoSync는 합의를 계약으로 옮길 수 있도록 구조화하는\n공동창업자 전용 인프라입니다.",
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     height: 1.5,
                     fontSize: subCopyFontSize,
                     fontWeight: FontWeight.w500,
                     color: const Color(0xFF64748B),
                   ),
                 textAlign: TextAlign.center,
-              ),
+              )
+                  .animate()
+                  .fadeIn(duration: 800.ms, delay: 500.ms)
+                  .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 500.ms, curve: Curves.easeOutCubic),
               SizedBox(height: isSmallMobile ? 40 : 60),
               // Before/After 2컬럼
-              isSmallScreen
+              (isSmallScreen
                   ? _buildBeforeAfterVertical(isSmallMobile)
-                  : _buildBeforeAfterHorizontal(isDesktop),
+                  : _buildBeforeAfterHorizontal(isDesktop))
+                  .animate()
+                  .fadeIn(duration: 800.ms, delay: 700.ms)
+                  .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 700.ms, curve: Curves.easeOutCubic),
               SizedBox(height: spacingBeforeCTA),
               // CTA 버튼 영역
               isMobileScreen
@@ -321,12 +347,17 @@ class Description1 extends StatelessWidget {
                             ),
                           ),
                         ],
-                      ),
+                      )
+                  .animate()
+                  .fadeIn(duration: 800.ms, delay: 900.ms)
+                  .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 900.ms, curve: Curves.easeOutCubic),
               SizedBox(height: isDesktop ? 100 : 80),
             ],
           ),
         ),
       ),
+    ],
+    ),
     );
   }
 

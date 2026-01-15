@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'landing_section_layout.dart';
 
 class Description4 extends StatelessWidget {
@@ -20,29 +22,38 @@ class Description4 extends StatelessWidget {
           const SizedBox(height: 80),
           Text(
             "가장 치명적인 3가지 리스크 해결",
-            style: TextStyle(
+            style: GoogleFonts.montserrat(
               fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
               fontWeight: FontWeight.w900,
             ),
-          ),
+          )
+              .animate()
+              .fadeIn(duration: 800.ms, delay: 100.ms)
+              .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 100.ms, curve: Curves.easeOutCubic),
           const SizedBox(height: 18),
           Text(
             isSmallScreen
                 ? "공동창업팀이 겪는 현실적인 고민들,\n이제 CoSync가 해결해 드립니다."
                 : "공동창업팀이 겪는 현실적인 고민들, 이제 CoSync가 해결해 드립니다.",
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: isSmallMobile ? 14 : (isSmallScreen ? 16 : 18),
               fontWeight: FontWeight.w500,
               color: Colors.black54,
             ),
-          ),
+          )
+              .animate()
+              .fadeIn(duration: 800.ms, delay: 250.ms)
+              .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 250.ms, curve: Curves.easeOutCubic),
           SizedBox(height: isSmallMobile ? 30 : 60),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 0),
-            child: isSmallScreen
+            child: (isSmallScreen
                 ? _buildCardsColumn(isSmallMobile, isMobileScreen, isSmallScreen)
-                : _buildCardsRow(isMobileScreen, isSmallScreen),
+                : _buildCardsRow(isMobileScreen, isSmallScreen))
+                .animate()
+                .fadeIn(duration: 800.ms, delay: 400.ms)
+                .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 400.ms, curve: Curves.easeOutCubic),
           ),
           const SizedBox(height: 80),
         ],

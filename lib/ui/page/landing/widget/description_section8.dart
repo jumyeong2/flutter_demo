@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_demo/ui/page/landing/widget/email_signup_modal.dart';
 import 'package:flutter_demo/main.dart' as main_app;
 import 'landing_section_layout.dart';
@@ -33,7 +35,7 @@ class Description8 extends StatelessWidget {
                   Text(
                     "건강한 팀만이\n유니콘이 될 수 있습니다.",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: GoogleFonts.montserrat(
                       fontSize: isSmallMobile
                           ? 22
                           : isMobileScreen
@@ -48,23 +50,23 @@ class Description8 extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  Text(
-                    isSmallMobile
-                        ? "지금의 껄끄러움이 나중의 소송을 막습니다."
-                        : "지금의 껄끄러움이 나중의 소송을 막습니다.\n가장 합리적인 비용으로 팀의 안전장치를 마련하세요.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: isSmallMobile
-                          ? 13
-                          : (isMobileScreen ? 14 : (isSmallScreen ? 16 : 20)),
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white.withValues(alpha: 0.7),
-                      height: 1.6,
-                    ),
+                Text(
+                  isSmallMobile
+                      ? "지금의 껄끄러움이 나중의 소송을 막습니다."
+                      : "지금의 껄끄러움이 나중의 소송을 막습니다.\n가장 합리적인 비용으로 팀의 안전장치를 마련하세요.",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.inter(
+                    fontSize: isSmallMobile
+                        ? 13
+                        : (isMobileScreen ? 14 : (isSmallScreen ? 16 : 20)),
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white.withValues(alpha: 0.7),
+                    height: 1.6,
                   ),
-                  SizedBox(height: isSmallMobile ? 30 : 38),
-                  // CTA 버튼 - 텍스트 너비에 맞춤
-                  LayoutBuilder(
+                ),
+                SizedBox(height: isSmallMobile ? 30 : 38),
+                // CTA 버튼 - 텍스트 너비에 맞춤
+                LayoutBuilder(
                     builder: (context, constraints) {
                       // "가장 합리적인 비용으로 팀의 안전장치를 마련하세요." 텍스트 너비 측정
                       final textPainter = TextPainter(
@@ -85,7 +87,10 @@ class Description8 extends StatelessWidget {
                       return _CTAButton(
                         isSmallMobile: isSmallMobile,
                         width: textWidth,
-                      );
+                      )
+                          .animate()
+                          .fadeIn(duration: 800.ms, delay: 400.ms)
+                          .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 400.ms, curve: Curves.easeOutCubic);
                     },
                   ),
                   SizedBox(height: isSmallMobile ? 12 : 24),

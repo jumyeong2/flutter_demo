@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'landing_section_layout.dart';
 
 class Description2 extends StatelessWidget {
@@ -26,9 +28,15 @@ class Description2 extends StatelessWidget {
           child: isSmallScreen
               ? Column(
                   children: [
-                    _buildLeftColumn(isSmallMobile, isMobileScreen, isSmallScreen, isDesktop),
+                    _buildLeftColumn(isSmallMobile, isMobileScreen, isSmallScreen, isDesktop)
+                        .animate()
+                        .fadeIn(duration: 800.ms, delay: 100.ms)
+                        .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 100.ms, curve: Curves.easeOutCubic),
                     const SizedBox(height: 60),
-                    _buildRightColumn(isSmallMobile),
+                    _buildRightColumn(isSmallMobile)
+                        .animate()
+                        .fadeIn(duration: 800.ms, delay: 300.ms)
+                        .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 300.ms, curve: Curves.easeOutCubic),
                   ],
                 )
               : Row(
@@ -37,14 +45,20 @@ class Description2 extends StatelessWidget {
                     Expanded(
                       child: Align(
                         alignment: Alignment.centerRight,
-                        child: _buildLeftColumn(isSmallMobile, isMobileScreen, isSmallScreen, isDesktop),
+                        child: _buildLeftColumn(isSmallMobile, isMobileScreen, isSmallScreen, isDesktop)
+                            .animate()
+                            .fadeIn(duration: 800.ms, delay: 100.ms)
+                            .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 100.ms, curve: Curves.easeOutCubic),
                       ),
                     ),
                     const SizedBox(width: 60),
                     Expanded(
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: _buildRightColumn(isSmallMobile),
+                        child: _buildRightColumn(isSmallMobile)
+                            .animate()
+                            .fadeIn(duration: 800.ms, delay: 300.ms)
+                            .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 300.ms, curve: Curves.easeOutCubic),
                       ),
                     ),
                   ],
@@ -103,7 +117,7 @@ class Description2 extends StatelessWidget {
                   children: [
                     Text(
                       "공동창업자 갈등으로\n스타트업 10곳 중 4곳은",
-                      style: TextStyle(
+                      style: GoogleFonts.montserrat(
                         fontSize: isSmallMobile
                             ? 18
                             : isMobileScreen
@@ -115,10 +129,13 @@ class Description2 extends StatelessWidget {
                         color: const Color(0xFF0F172A),
                         height: 1.4,
                       ),
-                    ),
+                    )
+                        .animate()
+                        .fadeIn(duration: 800.ms, delay: 200.ms)
+                        .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 200.ms, curve: Curves.easeOutCubic),
                     Text(
                       "결국 문을 닫거나 쪼개집니다.",
-                      style: TextStyle(
+                      style: GoogleFonts.montserrat(
                         fontSize: isSmallMobile
                             ? 18
                             : isMobileScreen
@@ -130,7 +147,10 @@ class Description2 extends StatelessWidget {
                         color: const Color(0xFFDC2626), // Red 600
                         height: 1.4,
                       ),
-                    ),
+                    )
+                        .animate()
+                        .fadeIn(duration: 800.ms, delay: 350.ms)
+                        .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 350.ms, curve: Curves.easeOutCubic),
                   ],
                 ),
               ),
@@ -158,18 +178,24 @@ class Description2 extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-          ),
+          )
+              .animate()
+              .fadeIn(duration: 800.ms, delay: 500.ms)
+              .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 500.ms, curve: Curves.easeOutCubic),
           const SizedBox(height: 24),
 
           // Description Text
-          const Text(
+          Text(
             "공동창업자가 떠나야 하는 순간,\n준비되지 않은 이별은 남은 팀원들에게 가장 큰 리스크가 됩니다.\n\n지속 가능한 비즈니스를 위해서는\n합의 과정의 구조화가 반드시 필요합니다.",
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 16,
               height: 1.6,
               color: Color(0xFF475569), // Slate 600
             ),
-          ),
+          )
+              .animate()
+              .fadeIn(duration: 800.ms, delay: 650.ms)
+              .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 650.ms, curve: Curves.easeOutCubic),
           const SizedBox(height: 48),
 
           // Mission Box
@@ -239,7 +265,10 @@ class Description2 extends StatelessWidget {
                 ),
               ),
             ],
-          ),
+          )
+              .animate()
+              .fadeIn(duration: 800.ms, delay: 800.ms)
+              .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 800.ms, curve: Curves.easeOutCubic),
         ],
       ),
     );

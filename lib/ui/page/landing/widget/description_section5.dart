@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'landing_section_layout.dart';
 
 class Description5 extends StatelessWidget {
@@ -29,26 +31,35 @@ class Description5 extends StatelessWidget {
               Text(
                 "감정 싸움 없이 합의하는 4단계 프로세스",
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.montserrat(
                   fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
                   fontWeight: FontWeight.w900,
                   color: Color(0xFF1E293B),
                 ),
-              ),
+              )
+                  .animate()
+                  .fadeIn(duration: 800.ms, delay: 100.ms)
+                  .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 100.ms, curve: Curves.easeOutCubic),
               const SizedBox(height: 18),
               Text(
                 isSmallScreen
                     ? "CoSync는 '중간 다리' 역할을 통해 \n객관적인 합의를 이끌어냅니다."
                     : "CoSync는 '중간 다리' 역할을 통해 객관적인 합의를 이끌어냅니다.",
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   fontSize: isSmallMobile ? 14 : (isSmallScreen ? 16 : 18),
                   fontWeight: FontWeight.w500,
                   color: Colors.black54,
                 ),
-              ),
+              )
+                  .animate()
+                  .fadeIn(duration: 800.ms, delay: 250.ms)
+                  .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 250.ms, curve: Curves.easeOutCubic),
               SizedBox(height: isSmallMobile ? 28 : 38),
-              _buildCards(isMobileScreen, isSmallScreen, isSmallMobile),
+              _buildCards(isMobileScreen, isSmallScreen, isSmallMobile)
+                  .animate()
+                  .fadeIn(duration: 800.ms, delay: 400.ms)
+                  .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 400.ms, curve: Curves.easeOutCubic),
               SizedBox(height: isDesktop ? 100 : 80),
             ],
           ),

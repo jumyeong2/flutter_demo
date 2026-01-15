@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'landing_section_layout.dart';
 
 class Description7 extends StatelessWidget {
@@ -26,9 +28,12 @@ class Description7 extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(height: isDesktop ? 100 : 80),
-              isSmallScreen
+              (isSmallScreen
                   ? _buildVerticalLayout(isMediumScreen, isSmallMobile)
-                  : _buildHorizontalLayout(),
+                  : _buildHorizontalLayout())
+                  .animate()
+                  .fadeIn(duration: 800.ms, delay: 100.ms)
+                  .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 100.ms, curve: Curves.easeOutCubic),
               SizedBox(height: isDesktop ? 100 : 80),
             ],
           ),
@@ -111,7 +116,7 @@ class Description7 extends StatelessWidget {
             ],
             Text(
               "FINAL OUTPUT",
-              style: TextStyle(
+              style: GoogleFonts.montserrat(
                 fontSize: isSmallMobile ? 12 : 14,
                 fontWeight: FontWeight.w800,
                 color: const Color(0xFF2563EB),
@@ -119,7 +124,10 @@ class Description7 extends StatelessWidget {
               ),
             ),
           ],
-        ),
+        )
+            .animate()
+            .fadeIn(duration: 800.ms, delay: 200.ms)
+            .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 200.ms, curve: Curves.easeOutCubic),
         const SizedBox(height: 12),
         Text(
           isSmallMobile
@@ -128,13 +136,16 @@ class Description7 extends StatelessWidget {
                   ? "말뿐인 약속은 잊혀집니다.\n'Agreement'로 기록하세요."
                   : "말뿐인 약속은 잊혀집니다.\n'Agreement'로 기록하세요.",
           textAlign: isSmallScreen ? TextAlign.center : TextAlign.start,
-          style: TextStyle(
+          style: GoogleFonts.montserrat(
             fontSize: isSmallMobile ? 20 : (isMediumScreen ? 24 : 32),
             fontWeight: FontWeight.w900,
             color: const Color(0xFF1E293B),
             height: 1.3,
           ),
-        ),
+        )
+            .animate()
+            .fadeIn(duration: 800.ms, delay: 350.ms)
+            .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 350.ms, curve: Curves.easeOutCubic),
         const SizedBox(height: 24),
         Text(
           isSmallMobile
@@ -143,12 +154,15 @@ class Description7 extends StatelessWidget {
                   ? "동업계약서 쓰기엔 너무 딱딱하고,\n말로만 하기엔 불안하신가요?\n\nCoSync는 우리 팀만의 헌법,\n[Agreement.pdf]를 생성해 드립니다."
                   : "동업계약서 쓰기엔 너무 딱딱하고,\n말로만 하기엔 불안하신가요?\n\nCoSync는 우리 팀만의 헌법,\n[Agreement.pdf]를 생성해 드립니다.",
           textAlign: isSmallScreen ? TextAlign.center : TextAlign.start,
-          style: TextStyle(
+          style: GoogleFonts.inter(
             fontSize: isSmallMobile ? 13 : 16,
             color: const Color(0xFF64748B),
             height: 1.6,
           ),
-        ),
+        )
+            .animate()
+            .fadeIn(duration: 800.ms, delay: 500.ms)
+            .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 500.ms, curve: Curves.easeOutCubic),
         const SizedBox(height: 40),
         _buildListItem("Mission & Vision (우리가 모인 이유)", isSmallMobile),
         _buildListItem("R&R (역할과 책임)", isSmallMobile),
