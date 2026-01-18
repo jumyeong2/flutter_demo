@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 
 import '../../widgets/responsive_layout.dart';
 import 'agreement_adjust_controller.dart';
-import 'agreement_adjust_page.dart';
+import '../../../service/pending_route_service.dart';
+import '../../../router/routes.dart';
 
 class AgreementAdjustIntroStep2Page extends StatefulWidget {
   const AgreementAdjustIntroStep2Page({super.key});
@@ -241,10 +242,32 @@ class _AgreementAdjustIntroStep2PageState
 
       // 파이어베이스 저장
       await controller.submitFounderInfoToFirebase();
+
+      // 회원가입 완료 후 pendingRoutePath 복귀 처리
+      try {
+        final pendingRouteService = Get.find<PendingRouteService>();
+        final pendingRoutePath = pendingRouteService.getPendingRoutePath();
+        
+        if (pendingRoutePath != null && pendingRoutePath.isNotEmpty) {
+          // pendingRoutePath로 이동 (해당 라우트의 Guard가 실행됨)
+          // clear는 목적지 화면에서 성공적으로 진입했을 때만 수행
+          Get.offAllNamed(pendingRoutePath);
+        } else {
+          // pendingRoutePath가 없으면 AgreementAdjustPage로 이동 (기존 플로우)
+          Get.offAllNamed(Routes.entry);
+        }
+      } catch (e) {
+        // PendingRouteService가 없는 경우 기본 플로우로 진행
+        Get.offAllNamed(Routes.entry);
+      }
     } catch (e) {
       print("Error saving company info: $e");
+      Get.snackbar(
+        "오류",
+        "정보 저장 중 오류가 발생했습니다: $e",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
-
-    Get.to(() => const AgreementAdjustPage());
   }
 }

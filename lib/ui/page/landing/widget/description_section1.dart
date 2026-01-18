@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/main.dart';
 import 'package:flutter_demo/ui/page/sample/sample_report.dart';
 import 'package:flutter_demo/ui/page/onboarding/onboarding_page.dart';
 import 'package:get/get.dart';

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../service/auth_service.dart';
+import '../../../service/pending_route_service.dart';
+import '../../../router/routes.dart';
 import '../agreement/agreement_adjust_intro.dart';
 
 class LoginPage extends StatefulWidget {
@@ -35,20 +37,18 @@ class _LoginPageState extends State<LoginPage> {
         _passwordController.text.trim(),
       );
 
-      // 로그인 성공 시 로직 (예: 홈으로 이동 or 동의서 조율 페이지 등)
-      // 여기서는 우선 뒤로가기 혹은 홈으로 보내도록 설정하거나,
-      // 사용자가 요청한 흐름에 맞춰 AgreementAdjustIntroPage로 보낼 수도 있음.
-      // 하지만 보통 로그인은 메인 대시보드 진입.
-      // 기획이 명확하지 않으므로 우선 Get.back() 또는 특정 페이지로 이동.
-      // 지금은 창업자 정보 입력 흐름이 메인이므로, 이미 정보를 입력했을 수도 있고...
-      // 일단 이전 화면으로 돌아가거나 Landing으로 가는게 안전함.
-      Get.back();
-      Get.snackbar(
-        "성공",
-        "로그인되었습니다.",
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      // 로그인 성공: pendingRoutePath 복귀 처리
+      final pendingRouteService = Get.find<PendingRouteService>();
+      final pendingRoutePath = pendingRouteService.getPendingRoutePath();
+      
+      if (pendingRoutePath != null && pendingRoutePath.isNotEmpty) {
+        // pendingRoutePath로 이동 (해당 라우트의 Guard가 실행됨)
+        // clear는 목적지 화면에서 성공적으로 진입했을 때만 수행
+        Get.offAllNamed(pendingRoutePath);
+      } else {
+        // pendingRoutePath가 없으면 Entry로 이동 (자동 분기)
+        Get.offAllNamed(Routes.entry);
+      }
     } catch (e) {
       Get.snackbar(
         "로그인 실패",
