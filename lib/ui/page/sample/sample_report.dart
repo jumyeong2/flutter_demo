@@ -1,675 +1,1643 @@
-import 'package:flutter/material.dart';
-import '../../widgets/responsive_layout.dart';
+import 'dart:ui'; // For ImageFilter
 
-class SampleReportPage extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:flutter_demo/ui/page/landing/widget/email_signup_modal.dart';
+
+// --- 0. Toss Design System Color Palette ---
+class _AppColors {
+  // Primary (Toss Blue)
+  static const blue600 = Color(0xFF3182F6); // Toss Primary Blue
+
+  static const blue50 = Color(0xFFEFF6FF);
+  static const blue100 = Color(0xFFDBEAFE);
+
+  // Background (Cool Gray Tone)
+  static const bgToss = Color(0xFFF2F4F6); // Toss Background
+
+  // Text (Dark Navy/Gray instead of pure black)
+  static const textPrimary = Color(0xFF191F28); // Toss Text Primary
+  static const textSub = Color(0xFF8B95A1); // Toss Text Sub
+
+  // Slate
+  static const slate900 = Color(0xFF0F172A);
+  static const slate50 = Color(0xFFF8FAFC);
+  static const slate400 = Color(0xFF94A3B8);
+  static const slate500 = Color(0xFF64748B);
+  static const slate700 = Color(0xFF334155);
+
+  // Gray Scale
+  static const gray50 = Color(0xFFF9FAFB);
+  static const gray100 = Color(0xFFF3F4F6);
+  static const gray200 = Color(0xFFE5E7EB);
+
+  static const gray400 = Color(0xFF9CA3AF);
+
+  static const gray600 = Color(0xFF4B5563);
+  static const gray700 = Color(0xFF374151);
+
+  static const gray900 = Color(0xFF111827);
+
+  // Green
+  static const green50 = Color(0xFFF0FDF4);
+
+  static const green600 = Color(0xFF16A34A);
+
+  // Orange
+  static const orange50 = Color(0xFFFFF7ED);
+
+  static const orange500 = Color(0xFFF97316);
+
+  // Purple
+  static const purple50 = Color(0xFFFAF5FF);
+
+  static const purple600 = Color(0xFF9333EA);
+}
+
+// --- 1. Data Models ---
+class _Topic {
+  final int id;
+  final String title;
+  final String questionTitle;
+  final String questionDesc;
+  final String opinionA;
+  final String opinionB;
+  final String reference;
+  final String decision;
+
+  _Topic({
+    required this.id,
+    required this.title,
+    required this.questionTitle,
+    required this.questionDesc,
+    required this.opinionA,
+    required this.opinionB,
+    required this.reference,
+    required this.decision,
+  });
+}
+
+// --- 2. Main Page Widget ---
+class SampleReportPage extends StatefulWidget {
   const SampleReportPage({super.key});
 
   @override
+  State<SampleReportPage> createState() => _SampleReportPageState();
+}
+
+class _SampleReportPageState extends State<SampleReportPage>
+    with TickerProviderStateMixin {
+  // State
+  bool _isModalOpen = false;
+  final ScrollController _scrollController = ScrollController();
+  
+  // Topic별 GlobalKey 맵
+  final Map<int, GlobalKey> _topicKeys = {};
+
+  // Constants
+  static const String _ctaLabel = "사전신청하고 혜택 받기";
+  static const String _ctaSubLabel = "오픈 시 우선 안내드립니다";
+  static const String _stageLabel = "아이디어/예비창업(Pre-ceed)";
+
+  final List<_Topic> _topics = [
+    _Topic(
+      id: 1,
+      title: "결론 내리는 룰 (기한/권한/근거)",
+      questionTitle: "의견이 갈릴 때, 언제까지 논의하고 누가 확정하며 어떤 근거로 결론을 내리나요?",
+      questionDesc: "기한/확정자/근거/기록이 없으면 결정이 늦어지고 불만이 쌓입니다.",
+      opinionA: "속도를 위해 최종 확정자는 CEO가 맡는 게 좋습니다.",
+      opinionB: "기술/보안 관련은 CTO 동의가 필요하고, 나머지는 CEO가 확정하는 게 맞습니다.",
+      reference:
+          "초기 팀은 교착(Deadlock) 방지가 최우선입니다. 최종 확정자(캐스팅보트)를 두되, 기술/보안 같은 예외 영역을 함께 정의하는 방식이 흔합니다.",
+      decision:
+          "의견 불일치 시 48시간 내 논의 후 CEO(PM)가 최종 확정한다. 전환율(+10%) 또는 2주 잔존율(+5%) 중 1개 이상 개선이 예상되면 실행하며, 교착 시 외부 멘토 1회 자문 후 재결정한다.",
+    ),
+    _Topic(
+      id: 2,
+      title: "자금 조정 룰 (트리거/우선순위/기한)",
+      questionTitle: "어떤 신호(잔고/런웨이)에서 무엇을 어떤 순서로 얼마까지 줄이고, 누가 언제 확정하나요?",
+      questionDesc: "트리거와 조정 순서가 없으면 비용/급여에서 갈등이 납니다.",
+      opinionA: "런웨이 기준을 먼저 두고, 마케팅부터 줄이는 게 빠릅니다.",
+      opinionB: "외주/고정비가 크면 마케팅보다 외주부터 끊어야 합니다. 보호 항목도 필요합니다.",
+      reference: "비용 조정은 ‘트리거(수치) → 우선순위(순서) → 보호 항목’이 세트로 있어야 팀 갈등이 줄어듭니다.",
+      decision:
+          "잔고 3,000만원 이하 또는 런웨이 3개월 이하 시 비용 조정을 발동한다. 1순위는 마케팅 50% 축소, 2순위는 외주 신규 발주 중단(유지 상한 월 200만원)으로 조정한다. 최종 확정은 CEO(재무 산출)+CTO(외주 범위)가 72시간 내 진행한다. 서버/보안 비용은 보호하며, 런웨이 6개월 회복 시 단계적으로 복구한다.",
+    ),
+    _Topic(
+      id: 3,
+      title: "이탈 정리 원칙 (인수인계/권한/정산)",
+      questionTitle: "공동창업자 1명 이탈 시, 인수인계/권한/지분/채무/데이터를 언제까지 어떤 원칙으로 정리하나요?",
+      questionDesc: "이 질문은 감정이 아니라 체크리스트입니다. 핵심 영역을 빠짐없이 확정합니다.",
+      opinionA: "이탈 후에도 업무 공백이 생기지 않도록 인수인계를 최우선으로 해야 합니다.",
+      opinionB: "권한/데이터 차단이 즉시 되지 않으면 리스크가 큽니다. 정산 기한도 짧게 잡아야 합니다.",
+      reference: "실무에선 ‘인수인계(기간/산출물) + 권한 차단(즉시) + 정산 기한(짧게)’을 최소 세트로 둡니다.",
+      decision:
+          "공동창업자 이탈 시 2주 내 인수인계를 완료하고(인수인계 문서/레포 정리/계정 목록 포함), 권한은 이탈일 즉시 차단한다. 지분/정산은 베스팅 기준을 적용하고 Bad Leaver는 액면가 회수 원칙으로 7일 내 정리한다. 고객 데이터 접근은 즉시 차단하며 소스/디자인/도메인 등 자산은 회사 귀속으로 한다.",
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    // 각 Topic에 대한 GlobalKey 초기화
+    for (var topic in _topics) {
+      _topicKeys[topic.id] = GlobalKey();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _handleRegister(String location) {
+    setState(() => _isModalOpen = false);
+    // EmailSignupModal 열기
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => const EmailSignupModal(),
+    );
+  }
+
+  void _scrollToTopic(int id) {
+    final key = _topicKeys[id];
+    if (key?.currentContext != null) {
+      Scrollable.ensureVisible(
+        key!.currentContext!,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+        alignment: 0.1, // 상단에서 10% 위치에 정렬
+      );
+    } else {
+      // Fallback: Snackbar (key가 아직 준비되지 않은 경우)
+      Get.snackbar(
+        "Navigation",
+        "Topic 0$id로 이동합니다.",
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 1),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    bool isMobile = ResponsiveLayout.isMobile(context);
+    // MediaQuery를 사용하여 정확한 화면 크기 가져오기
+    final mediaQuery = MediaQuery.of(context);
+    final screenWidth = mediaQuery.size.width;
+
+    // 반응형 브레이크포인트
+    final isMobile = screenWidth < 640;
+    final isTablet = screenWidth >= 640 && screenWidth < 1024;
+    final isDesktop = screenWidth >= 1024;
+    final isSmallMobile = screenWidth < 400;
 
     return Scaffold(
-      backgroundColor: Colors.grey[100], // bg-gray-100
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF0F172A),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 896), // max-w-4xl
-              margin: isMobile
-                  ? const EdgeInsets.only(bottom: 12)
-                  : const EdgeInsets.symmetric(vertical: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ), // shadow-xl
-                ],
-                borderRadius: BorderRadius.zero, // remove rounding on body
-              ),
-              clipBehavior: Clip.hardEdge, // overflow-hidden
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _buildHeader(context, isMobile),
-                  _buildSummarySection(context, isMobile),
-                  SizedBox(height: 30),
-                  _buildDetailSection1(context, isMobile),
-                  SizedBox(height: 50),
-                  _buildDetailSection2(context, isMobile),
-                  SizedBox(height: 50),
-                  _buildDetailSection3(context, isMobile),
-                  SizedBox(height: 50),
-                  _buildDisclaimer(context, isMobile),
-                  SizedBox(height: 50),
-                  _buildFooter(context, isMobile),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, bool isMobile) {
-    return Container(
-      color: const Color(0xFF0F172A), // bg-slate-900
-      padding: EdgeInsets.all(isMobile ? 24 : 32),
-      child: Flex(
-        direction: isMobile ? Axis.vertical : Axis.horizontal,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: isMobile
-            ? CrossAxisAlignment.start
-            : CrossAxisAlignment.center,
+      backgroundColor: _AppColors.bgToss, // TDS Background
+      body: Stack(
         children: [
+          // --- Layer 1: Main Scrollable Content ---
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "CoSync Report",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: isMobile ? 20 : 24, // text-xl md:text-2xl
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.0, // tracking-wider
-                ),
+              // 1-1. Sticky Header
+              _buildStickyHeader(
+                isDesktop: isDesktop,
+                isMobile: isMobile,
+                isSmallMobile: isSmallMobile,
+                screenWidth: screenWidth,
               ),
-              const SizedBox(height: 4),
-              const Text(
-                "공동창업자 합의 성향 분석 및 데이터 리포트",
-                style: TextStyle(
-                  color: Color(0xFF94A3B8), // text-slate-400
-                  fontSize: 12, // text-xs md:text-sm
-                ),
-              ),
-            ],
-          ),
-          if (isMobile)
-            Container(
-              margin: const EdgeInsets.only(top: 16, bottom: 8),
-              height: 1,
-              color: const Color(0xFF334155), // border-slate-700
-            ),
-          Column(
-            crossAxisAlignment: isMobile
-                ? CrossAxisAlignment.start
-                : CrossAxisAlignment.end,
-            children: [
-              Text(
-                "진단 일자",
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
-                  fontSize: 12, // text-xs like
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const Text(
-                "2025. 10. 21",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16, // text-base md:text-lg
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildSummarySection(BuildContext context, bool isMobile) {
-    return Container(
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Color(0xFFE5E7EB))),
-      ),
-      padding: EdgeInsets.all(isMobile ? 20 : 32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.pie_chart, color: Color(0xFF2563EB), size: 20),
-              const SizedBox(width: 8),
-              Text(
-                "합의 현황 요약",
-                style: TextStyle(
-                  fontSize: isMobile ? 18 : 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Container(
-            padding: EdgeInsets.all(isMobile ? 20 : 24),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF8FAFC), // bg-slate-50
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Flex(
-              direction: isMobile ? Axis.vertical : Axis.horizontal,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: isMobile ? 0 : 1,
-                  child: RichText(
-                    text: TextSpan(
-                      style: TextStyle(
-                        fontSize: isMobile ? 14 : 16,
-                        color: const Color(0xFF374151), // text-gray-700
-                        height: 1.6,
+              // 1-2. Scroll Body
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  physics: _isModalOpen
+                      ? const NeverScrollableScrollPhysics()
+                      : const BouncingScrollPhysics(),
+                  child: Container(
+                    padding: const EdgeInsets.only(bottom: 60),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: isDesktop
+                              ? 768
+                              : (isTablet ? 700 : screenWidth),
+                        ), // max-w-3xl on desktop, full width on mobile
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isSmallMobile
+                                ? 16
+                                : isMobile
+                                ? 20
+                                : isTablet
+                                ? 24
+                                : 32,
+                            vertical: isDesktop ? 40 : (isMobile ? 16 : 24),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              // A. Context
+                              _RevealAnimation(
+                                delay: 100,
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    _buildSectionLabel(
+                                      "A. 예시 팀 컨텍스트",
+                                      isMobile: isMobile,
+                                    ),
+                                    _buildContextCard(
+                                      isDesktop: isDesktop,
+                                      isMobile: isMobile,
+                                      isSmallMobile: isSmallMobile,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 32),
+
+                              // B. Summary
+                              _RevealAnimation(
+                                delay: 300,
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    _buildSectionLabel(
+                                      "B. 합의 현황 요약",
+                                      isMobile: isMobile,
+                                    ),
+                                    _buildSummaryCard(
+                                      isDesktop: isDesktop,
+                                      isMobile: isMobile,
+                                      isSmallMobile: isSmallMobile,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 32),
+
+                              // C. Topics
+                              _RevealAnimation(
+                                delay: 500,
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    _buildSectionLabel(
+                                      "C. Topic 01~03 (합의 결과)",
+                                      isMobile: isMobile,
+                                    ),
+                                    _buildTableOfContents(
+                                      isDesktop: isDesktop,
+                                      isMobile: isMobile,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 32),
+                              ..._topics.asMap().entries.map(
+                                (entry) => _RevealAnimation(
+                                  delay: 700 + (entry.key * 200),
+                                  child: _buildTopicCard(
+                                    entry.value,
+                                    isDesktop: isDesktop,
+                                    isMobile: isMobile,
+                                    isSmallMobile: isSmallMobile,
+                                    key: _topicKeys[entry.value.id],
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(height: 32),
+
+                              // D. Footer Area
+                              _RevealAnimation(
+                                delay: 1300,
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    _buildSectionLabel(
+                                      "D. 면책 + 사전신청 CTA",
+                                      isMobile: isMobile,
+                                    ),
+                                    _buildDisclaimer(
+                                      isDesktop: isDesktop,
+                                      isMobile: isMobile,
+                                    ),
+                                    _buildFooterSection(
+                                      isMobile: isMobile,
+                                      isSmallMobile: isSmallMobile,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      children: const [
-                        TextSpan(
-                          text: "User A(CEO)",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E40AF), // text-blue-800
-                          ),
-                        ),
-                        TextSpan(text: "님과 "),
-                        TextSpan(
-                          text: "User B(CTO)",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E40AF),
-                          ),
-                        ),
-                        TextSpan(text: "님의 답변을 분석한 결과, "),
-                        TextSpan(
-                          text: "3개 항목 중 1개",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF2563EB), // text-blue-600
-                          ),
-                        ),
-                        TextSpan(
-                          text:
-                              " 항목에서만 완전한 의견 일치를 보였습니다.\n특히 '지분 베스팅'과 'R&R' 항목에서는 서로의 기대치가 달라, 향후 ",
-                        ),
-                        TextSpan(
-                          text: "잠재적 분쟁 리스크(Potential Risk)",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                          text:
-                              "가 감지되었습니다. CoSync의 누적 데이터를 참고하여 간극을 좁히는 과정이 필요합니다.",
-                        ),
-                      ],
                     ),
                   ),
                 ),
-                if (isMobile) const SizedBox(height: 16),
-                if (!isMobile) const SizedBox(width: 24),
-                // Badges
-                Builder(
-                  builder: (context) {
-                    final badges = [
-                      _buildSummaryBadge(
-                        "R&R",
-                        "조율 필요",
-                        Colors.yellow[800]!,
-                        Colors.yellow[600]!,
-                      ), // Approximate yellow styling
-                      _buildSummaryBadge(
-                        "베스팅",
-                        "Risk 높음",
-                        Colors.red[800]!,
-                        Colors.red[600]!,
-                      ),
-                      _buildSummaryBadge(
-                        "Bad Leaver",
-                        "의견 일치",
-                        Colors.green[800]!,
-                        Colors.green[600]!,
-                      ),
-                    ];
-
-                    if (isMobile) {
-                      return SizedBox(
-                        width: double.infinity,
-                        child: Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: badges,
-                        ),
-                      );
-                    }
-
-                    return Wrap(spacing: 8, runSpacing: 8, children: badges);
-                  },
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 20),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSummaryBadge(
-    String label,
-    String status,
-    Color textColor,
-    Color statusColor,
-  ) {
-    return SizedBox(
-      width: 93,
-      height: 88,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: Colors.grey[100]!), // border-gray-100
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              offset: const Offset(0, 1),
-              blurRadius: 2,
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 10, color: Colors.grey),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              status,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: statusColor,
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+            ],
+          ),
 
-  Widget _buildDetailSection1(BuildContext context, bool isMobile) {
-    return _buildDetailBase(
-      context,
-      isMobile,
-      topic: "Topic 01",
-      title: "역할 및 책임 (R&R)",
-      badge: _buildStatusBadge(
-        "Insight: 데이터 기반 리스크",
-        const Color(0xFFFEF3C7),
-        const Color(0xFF92400E),
-      ), // yellow
-      userAContent: "경영/기획 총괄. 개발 결정권은 위임하되, 경영권 확보 필요.",
-      userBContent: "개발 전권. 기획 단계에서의 기술적 거부권(Veto) 희망.",
-      userBHighlight: "기술적 거부권(Veto)",
-      marketStandard:
-          "시장 표준 R&R: 경영/자금은 CEO 전결(100%), 기술 스택은 CTO 전결(100%). 단, 제품 로드맵은 5:5 합의를 원칙으로 하되, 데드락(Deadlock) 발생 시 CEO가 캐스팅 보트(Casting Vote)를 행사하는 구조가 일반적입니다.",
-      insight:
-          "CoSync의 누적 체결 데이터 15,000건 분석 결과, 초기 스타트업의 82%는 C-Level 간 '전결권'을 명확히 분리하고 있습니다. 특히 B님이 희망하시는 <strong>'기술적 거부권(Veto)'</strong>을 설정한 팀은 그렇지 않은 팀 대비 의사결정 시간이 <strong>평균 3.4배</strong> 더 소요되는 것으로 나타나, 데이터상으로는 '협의' 조항으로의 완화가 권장됩니다.",
-      agreement:
-          "경영/자금은 CEO, 기술은 CTO 전결. 제품 로드맵은 상호 합의하되 데드락 발생 시 CEO가 최종 결정권(Casting Vote)을 행사합니다.",
-    );
-  }
+          // --- Layer 2: Watermark (Ignore Pointer) ---
+          // 임시로 완전히 비활성화
+          // Positioned.fill(
+          //   child: IgnorePointer(
+          //     child: _buildWatermark(),
+          //   ),
+          // ),
 
-  Widget _buildDetailSection2(BuildContext context, bool isMobile) {
-    return _buildDetailBase(
-      context,
-      isMobile,
-      topic: "Topic 02",
-      title: "베스팅(Vesting) 기간",
-      badge: _buildStatusBadge(
-        "Insight: 투자 유치 적합성 우려",
-        const Color(0xFFFEE2E2),
-        const Color(0xFF991B1B),
-      ), // red
-      userAContent: "신뢰 기반, 기간 없이 즉시 100% 인정 희망.",
-      userAHighlight: "즉시 100% 인정",
-      userBContent: "이탈 대비 4년 베스팅 적용 필요.",
-      userBHighlight: "4년 베스팅",
-      marketStandard:
-          "VC 투자 표준: 총 4년(48개월) 베스팅. 최초 1년 클리프(Cliff) 근무 시 지분의 25%를 일괄 인정하고, 이후 3년간 매월 1/48(약 2.08%)씩 분할 귀속시키는 조건이 가장 보편적입니다.",
-      insight:
-          "CoSync를 통해 후속 투자를 유치한 팀의 <strong>96%</strong>가 '베스팅(Vesting)' 조항을 보유하고 있었습니다. A님의 '베스팅 없음(즉시 100% 인정)' 의견은 전체 데이터의 <strong>하위 2%</strong>에 해당하며, 이는 투자 유치 실패율을 40% 이상 높이는 리스크 요인으로 집계됩니다. 데이터 기반의 안전한 의사결정이 필요합니다.",
-      agreement:
-          "양측 의견을 절충하여 '총 3년(36개월) 베스팅'으로 단축하되, 1년 Cliff(필수 근속) 조건은 유지하여 상호 신뢰와 안전장치를 확보합니다.",
-    );
-  }
+          // --- Layer 3: Sticky Bottom CTA (Mobile & Tablet) ---
+          // Removed as per request to use inline footer style on all screens
 
-  Widget _buildDetailSection3(BuildContext context, bool isMobile) {
-    return _buildDetailBase(
-      context,
-      isMobile,
-      topic: "Topic 03",
-      title: "이탈 시 지분 처리 (Bad Leaver)",
-      badge: _buildStatusBadge(
-        "Insight: 높은 합의 일치도",
-        const Color(0xFFDCFCE7),
-        const Color(0xFF166534),
-      ), // green
-      userAContent: "징계 해고/배임 시 액면가로 전량 회수.",
-      userBContent: "액면가 회수 조항 삽입.",
-      marketStandard:
-          "Bad Leaver(횡령, 배임 등) 확정 시, 보유 지분 100%를 '액면가'로 콜옵션(Call Option). 단순 변심 등(Good Leaver)의 경우, 근속 기간에 비례해 베스팅된 지분은 인정하되 잔여 지분만 무상 회수합니다.",
-      insight:
-          "CoSync 사용자 중 <strong>86%</strong>가 동의한 '표준 합의(Consensus)' 항목입니다. 배임, 횡령 등의 명백한 귀책사유에 대해서는 예외 없이 <strong>'액면가 회수'</strong>를 적용하는 것이 압도적인 데이터 표준이며, 두 분의 의견 또한 이 데이터 트렌드와 정확히 일치합니다.",
-      agreement:
-          "Bad Leaver 발생 시 지분 100%를 액면가로 회수하고, Good Leaver는 근속 기간에 따라 베스팅된 지분만 인정하는 표준안에 합의합니다.",
-    );
-  }
-
-  Widget _buildDetailBase(
-    BuildContext context,
-    bool isMobile, {
-    required String topic,
-    required String title,
-    required Widget badge,
-    required String userAContent,
-    String? userAHighlight,
-    required String userBContent,
-    String? userBHighlight,
-    required String marketStandard,
-    required String insight,
-    required String agreement,
-  }) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(minHeight: isMobile ? 360 : 340),
-      child: Container(
-        padding: EdgeInsets.all(isMobile ? 20 : 32),
-        decoration: const BoxDecoration(
-          border: Border(bottom: BorderSide(color: Color(0xFFE5E7EB))),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flex(
-              direction: isMobile ? Axis.vertical : Axis.horizontal,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
+          // --- Layer 4: Custom Modal Overlay ---
+          if (_isModalOpen)
+            Positioned.fill(
+              child: Stack(
+                children: [
+                  // Backdrop
+                  GestureDetector(
+                    onTap: () => setState(() => _isModalOpen = false),
+                    child: Container(
+                      // [FIX] withOpacity -> withValues
+                      color: Colors.black.withValues(alpha: 0.6),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                        child: Container(color: Colors.transparent),
+                      ),
+                    ),
+                  ),
+                  // Modal Content
+                  Center(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(
+                        horizontal: isSmallMobile ? 16 : 20,
+                      ),
+                      constraints: BoxConstraints(
+                        maxWidth: isSmallMobile
+                            ? double.infinity
+                            : isMobile
+                            ? 380
+                            : 400,
+                      ),
+                      padding: EdgeInsets.all(
+                        isSmallMobile
+                            ? 20
+                            : isMobile
+                            ? 24
+                            : 28,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE2E8F0), // bg-slate-200
-                        borderRadius: BorderRadius.circular(4),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(
+                          28,
+                        ), // TDS: More rounded
+                        boxShadow: [
+                          // TDS: Soft shadow
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.08),
+                            blurRadius: 32,
+                            spreadRadius: 0,
+                            offset: const Offset(0, 8),
+                          ),
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.04),
+                            blurRadius: 16,
+                            spreadRadius: 0,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
-                      child: Text(
-                        topic,
-                        style: const TextStyle(
-                          fontSize: 10,
-                          color: Color(0xFF334155), // text-slate-700
-                          fontWeight: FontWeight.w500,
-                        ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: GestureDetector(
+                              onTap: () => setState(() => _isModalOpen = false),
+                              child: const Icon(
+                                Icons.close,
+                                color: _AppColors.gray400,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: isSmallMobile ? 44 : 48,
+                            height: isSmallMobile ? 44 : 48,
+                            decoration: const BoxDecoration(
+                              color: _AppColors.blue100,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.lock,
+                              color: _AppColors.blue600,
+                              size: isSmallMobile ? 20 : 24,
+                            ),
+                          ),
+                          SizedBox(height: isSmallMobile ? 12 : 16),
+                          Text(
+                            "상세 분석 데이터가 궁금하신가요?",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: isSmallMobile
+                                  ? 18
+                                  : isMobile
+                                  ? 20
+                                  : 22,
+                              fontWeight: FontWeight.bold,
+                              color: _AppColors.textPrimary,
+                              height: 1.4,
+                            ),
+                          ),
+                          SizedBox(height: isSmallMobile ? 12 : 16),
+                          Container(
+                            padding: EdgeInsets.all(
+                              isSmallMobile ? 16 : 20,
+                            ), // TDS: More padding
+                            decoration: BoxDecoration(
+                              color: _AppColors.gray50,
+                              borderRadius: BorderRadius.circular(
+                                16,
+                              ), // TDS: More rounded
+                            ),
+                            child: Column(
+                              children: [
+                                _buildCheckItem("오픈 시 내 팀 답변 기반 갭 체크"),
+                                _buildCheckItem("10문항 확정 → 결정 로그 v1.0 생성"),
+                                _buildCheckItem("링크 정본 + PIN 보호 + PDF 발급"),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: isSmallMobile ? 12 : 16),
+                          Text(
+                            "현재는 사전신청 단계이며, 기능은 오픈 후 제공됩니다.",
+                            style: TextStyle(
+                              fontSize: isSmallMobile ? 12 : 13,
+                              color: _AppColors.textSub,
+                              height: 1.5,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: isSmallMobile ? 20 : 24),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () => _handleRegister('modal'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: _AppColors.blue600,
+                                foregroundColor: Colors.white,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: isSmallMobile ? 16 : 18,
+                                ), // TDS: More padding
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    16,
+                                  ), // TDS: More rounded
+                                ),
+                                elevation: 0,
+                                shadowColor: Colors.transparent,
+                              ),
+                              child: Text(
+                                _ctaLabel,
+                                style: TextStyle(
+                                  fontSize: isSmallMobile ? 14 : 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: isMobile ? 16 : 20,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1F2937),
-                      ),
-                    ),
-                  ],
-                ),
-                if (isMobile) const SizedBox(height: 8),
-                badge,
-              ],
-            ),
-            const SizedBox(height: 24),
-            // User Inputs
-            if (isMobile)
-              Column(
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    child: _buildUserInputBox(
-                      "User A (CEO) 의견",
-                      userAContent,
-                      userAHighlight,
-                      Colors.red,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: _buildUserInputBox(
-                      "User B (CTO) 의견",
-                      userBContent,
-                      userBHighlight,
-                      title == "역할 및 책임 (R&R)" ? Colors.red : Colors.blue,
-                    ),
-                  ),
-                ],
-              )
-            else
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildUserInputBox(
-                      "User A (CEO) 의견",
-                      userAContent,
-                      userAHighlight,
-                      Colors.red,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _buildUserInputBox(
-                      "User B (CTO) 의견",
-                      userBContent,
-                      userBHighlight,
-                      title == "역할 및 책임 (R&R)" ? Colors.red : Colors.blue,
                     ),
                   ),
                 ],
               ),
-            const SizedBox(height: 16),
-            // Market Standard
-            _buildInfoBox(
-              title: "시장 표준 제안 (Reference)",
-              icon: Icons.balance,
-              content: marketStandard,
-              bgColor: const Color(0xFFF8FAFC),
-              borderColor: const Color(0xFF64748B),
-              titleColor: const Color(0xFF475569),
             ),
-            const SizedBox(height: 16),
-            // Insight
-            _buildInfoBox(
-              title: "CoSync 룰북 데이터 분석",
-              icon: Icons.storage,
-              content: insight,
-              bgColor: const Color(0xFFEFF6FF), // bg-blue-50
-              borderColor: const Color(0xFF3B82F6), // border-blue-500
-              titleColor: const Color(0xFF1E40AF),
-              isHtmlLike: true, // simplified rich text handling
+        ],
+      ),
+    );
+  }
+
+  // --- Sub-Widgets ---
+
+  Widget _buildStickyHeader({
+    required bool isDesktop,
+    required bool isMobile,
+    required bool isSmallMobile,
+    required double screenWidth,
+  }) {
+    return Container(
+      padding: EdgeInsets.zero,
+      decoration: const BoxDecoration(
+        color: _AppColors.slate900,
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            color: _AppColors.blue600,
+            padding: EdgeInsets.symmetric(
+              vertical: isSmallMobile ? 6 : 8,
+              horizontal: isSmallMobile ? 12 : 16,
             ),
-            const SizedBox(height: 16),
-            // Agreement
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: const BoxDecoration(
-                color: Color(0xFFF0FDF4),
-                border: Border(
-                  left: BorderSide(color: Color(0xFF16A34A), width: 4),
-                ),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(4),
-                ), // slightly rounded
+            child: Text(
+              "현재는 사전신청 단계입니다. $_ctaSubLabel. (다운로드/복사 제한)",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: isSmallMobile ? 11 : 13,
+                fontWeight: FontWeight.w500,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Row(
+            ),
+          ),
+          Container(
+            constraints: BoxConstraints(
+              maxWidth: isDesktop ? 768 : screenWidth,
+            ),
+            margin: EdgeInsets.symmetric(
+              horizontal: isSmallMobile
+                  ? 12
+                  : isMobile
+                  ? 16
+                  : isDesktop
+                  ? 32
+                  : 24,
+              vertical: isSmallMobile ? 12 : 16,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Row(
                     children: [
                       Icon(
-                        Icons.check_circle,
-                        size: 16,
-                        color: Color(0xFF166534),
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        "최종 합의안 (Ver 1.0)",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF166534),
-                          fontSize: 14,
+                        Icons.description,
+                        color: const Color(0xFF60A5FA),
+                        size: isSmallMobile ? 20 : 24,
+                      ), // blue-400
+                      SizedBox(width: isSmallMobile ? 6 : 8),
+                      Flexible(
+                        child: RichText(
+                          overflow: TextOverflow.ellipsis,
+                          text: TextSpan(
+                            style: TextStyle(
+                              fontFamily: 'Pretendard',
+                              fontSize: isSmallMobile
+                                  ? 14
+                                  : isMobile
+                                  ? 16
+                                  : isDesktop
+                                  ? 18
+                                  : 17,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            children: [
+                              const TextSpan(text: "CoSync "),
+                              if (!isMobile)
+                                TextSpan(
+                                  text: "Sample Report",
+                                  style: TextStyle(
+                                    fontSize: isSmallMobile
+                                        ? 12
+                                        : isMobile
+                                        ? 13
+                                        : 14,
+                                    color: _AppColors.gray400,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    agreement,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Color(0xFF374151),
-                      fontWeight: FontWeight.w500,
-                      height: 1.5,
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: _AppColors.gray600),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: const Text(
+                    "Read Only",
+                    style: TextStyle(color: _AppColors.gray400, fontSize: 11),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionLabel(String text, {required bool isMobile}) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 4,
+        bottom: isMobile ? 10 : 12,
+      ), // TDS: More spacing
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: isMobile ? 11 : 12,
+          color: _AppColors.textSub, // TDS: Use textSub color
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.2,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContextCard({
+    required bool isDesktop,
+    required bool isMobile,
+    required bool isSmallMobile,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        vertical: isMobile ? 32 : 40,
+        horizontal: isMobile ? 20 : 32,
+      ),
+      decoration: _cardDecoration(), // Consistent card style
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // 1. Label
+          const Text(
+            "AGREEMENT CONTEXT",
+            style: TextStyle(
+              color: _AppColors.textSub,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
+            ),
+          ),
+          SizedBox(height: isMobile ? 12 : 16),
+          // 2. Title
+          Text(
+            "공동창업자 합의안 (v1.0)",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: isSmallMobile ? 20 : (isMobile ? 22 : 26),
+              fontWeight: FontWeight.bold,
+              color: _AppColors.textPrimary,
+              height: 1.3,
+            ),
+          ),
+          SizedBox(height: isMobile ? 20 : 24),
+          // 3. Tags
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            alignment: WrapAlignment.center,
+            children: [
+              _tagChip("2인 팀"),
+              _tagChip(_stageLabel),
+              _tagChip("아직 투자 전"),
+              _tagChip("풀타임 전환 중"),
+            ],
+          ),
+          SizedBox(height: isMobile ? 24 : 32),
+          // 4. Divider with style
+          Container(
+            height: 1,
+            width: double.infinity,
+            color: _AppColors.gray200,
+          ),
+          SizedBox(height: isMobile ? 24 : 32),
+          // 5. Members
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _memberProfileCenter("CEO", "김철수"),
+              Container(
+                height: 24,
+                width: 1,
+                color: _AppColors.gray200,
+                margin: const EdgeInsets.symmetric(horizontal: 24),
+              ),
+              _memberProfileCenter("CTO", "이영희"),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _memberProfileCenter(String role, String name) {
+    return Column(
+      children: [
+        Text(
+          role,
+          style: const TextStyle(
+            fontSize: 11,
+            color: _AppColors.blue600, // Make role pop with color
+            fontWeight: FontWeight.bold,
+            letterSpacing: 0.5,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          name,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: _AppColors.textPrimary,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _tagChip(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 6,
+      ), // TDS: More padding
+      decoration: BoxDecoration(
+        color: _AppColors.gray50, // TDS: Light background
+        borderRadius: BorderRadius.circular(8), // TDS: More rounded
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 12,
+          color: _AppColors.textPrimary, // TDS: Dark text on light bg
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSummaryCard({
+    required bool isDesktop,
+    required bool isMobile,
+    required bool isSmallMobile,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(
+        isSmallMobile
+            ? 16
+            : isMobile
+            ? 20
+            : isDesktop
+            ? 32
+            : 24,
+      ), // Responsive Padding
+      decoration: _cardDecoration(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "합의 현황 요약",
+            style: TextStyle(
+              fontSize: isSmallMobile
+                  ? 16
+                  : isMobile
+                  ? 18
+                  : isDesktop
+                  ? 20
+                  : 19,
+              fontWeight: FontWeight.bold,
+              color: _AppColors.textPrimary,
+            ),
+          ),
+          SizedBox(height: isSmallMobile ? 10 : 12),
+          Text(
+            "예시값 기반으로 3개 안건을 모두 합의 완료한 결정 로그(v1.0) 형태의 샘플입니다.",
+            style: TextStyle(
+              fontSize: isSmallMobile
+                  ? 12
+                  : isMobile
+                  ? 13
+                  : 14,
+              color: _AppColors.textSub, // TDS: Use textSub
+              height: 1.6, // TDS: Generous line height
+            ),
+          ),
+          SizedBox(height: isSmallMobile ? 16 : 20),
+          // Stack on mobile if needed, but grid 3 items usually fit.
+          // Requirement ensures grid-cols-1 on mobile for "Section 2" but for summary boxes (3 items),
+          // usually they are side-by-side or wrapped. Let's use Column on very small screens.
+          // User said "All grid systems should be grid-cols-1 on mobile".
+          (isMobile || isSmallMobile)
+              ? Column(
+                  children: [
+                    _summaryBox(
+                      "3",
+                      "주요 안건",
+                      Icons.topic_rounded,
+                      _AppColors.blue50,
+                      _AppColors.blue600,
+                      width: double.infinity,
+                      isSmallMobile: isSmallMobile,
+                    ),
+                    SizedBox(height: isSmallMobile ? 10 : 12),
+                    _summaryBox(
+                      "100%",
+                      "합의 완료",
+                      Icons.check_circle_rounded,
+                      _AppColors.green50,
+                      _AppColors.green600,
+                      width: double.infinity,
+                      isSmallMobile: isSmallMobile,
+                    ),
+                    SizedBox(height: isSmallMobile ? 10 : 12),
+                    _summaryBox(
+                      "Locked",
+                      "누락된 포인트",
+                      Icons.lock_rounded,
+                      _AppColors.orange50,
+                      _AppColors.orange500,
+                      width: double.infinity,
+                      isSmallMobile: isSmallMobile,
+                    ),
+                  ],
+                )
+              : Row(
+                  children: [
+                    Expanded(
+                      child: _summaryBox(
+                        "3",
+                        "주요 안건",
+                        Icons.topic_rounded,
+                        _AppColors.blue50,
+                        _AppColors.blue600,
+                        isSmallMobile: false,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _summaryBox(
+                        "100%",
+                        "합의 완료",
+                        Icons.check_circle_rounded,
+                        _AppColors.green50,
+                        _AppColors.green600,
+                        isSmallMobile: false,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _summaryBox(
+                        "Locked",
+                        "누락된 포인트",
+                        Icons.lock_rounded,
+                        _AppColors.orange50,
+                        _AppColors.orange500,
+                        isSmallMobile: false,
+                      ),
+                    ),
+                  ],
+                ),
+        ],
+      ),
+    );
+  }
+
+  Widget _summaryBox(
+    String val,
+    String label,
+    IconData icon,
+    Color bg,
+    Color text, {
+    String? sub,
+    double? width,
+    required bool isSmallMobile,
+  }) {
+    return Container(
+      width: width,
+      padding: EdgeInsets.symmetric(
+        vertical: isSmallMobile ? 16 : 20,
+        horizontal: isSmallMobile ? 12 : 16,
+      ),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(isSmallMobile ? 16 : 20),
+        border: Border.all(
+          color: text.withValues(alpha: 0.1),
+          width: 1.5,
+        ), // Colored Border
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(isSmallMobile ? 6 : 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.6),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: text,
+              size: isSmallMobile ? 20 : 24,
+            ), // Added Icon
+          ),
+          SizedBox(height: isSmallMobile ? 8 : 12),
+          Text(
+            val,
+            style: TextStyle(
+              fontSize: isSmallMobile ? 22 : 28,
+              fontWeight: FontWeight.w800,
+              color: text,
+              height: 1.2,
+            ),
+          ),
+          SizedBox(height: isSmallMobile ? 3 : 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: isSmallMobile ? 11 : 13,
+              color: text.withValues(alpha: 0.8),
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          if (sub != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              sub,
+              style: const TextStyle(fontSize: 10, color: _AppColors.textSub),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTableOfContents({
+    required bool isDesktop,
+    required bool isMobile,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(
+        isMobile
+            ? 20
+            : isDesktop
+            ? 32
+            : 24,
+      ), // Responsive Padding
+      decoration: _cardDecoration(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "목차",
+            style: TextStyle(
+              fontSize: isMobile
+                  ? 16
+                  : isDesktop
+                  ? 20
+                  : 18,
+              fontWeight: FontWeight.bold,
+              color: _AppColors.textPrimary,
+            ),
+          ),
+          SizedBox(height: isMobile ? 12 : 16),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: _topics
+                .asMap()
+                .entries
+                .map(
+                  (e) => InkWell(
+                    onTap: () => _scrollToTopic(e.value.id),
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isMobile ? 14 : 16,
+                        vertical: isMobile ? 8 : 10,
+                      ), // TDS: More padding
+                      decoration: BoxDecoration(
+                        // TDS: Light background + dark text (no border)
+                        color: _AppColors.gray50,
+                        borderRadius: BorderRadius.circular(
+                          12,
+                        ), // TDS: More rounded
+                      ),
+                      child: Text(
+                        "Topic 0${e.key + 1}. ${e.value.title.split('(')[0]}", // Shorten title for TOC
+                        style: TextStyle(
+                          fontSize: isMobile ? 12 : 13,
+                          color: _AppColors.textPrimary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTopicCard(
+    _Topic topic, {
+    required bool isDesktop,
+    required bool isMobile,
+    required bool isSmallMobile,
+    GlobalKey? key,
+  }) {
+    // Determine Color based on ID (as per requirement: 1=Blue(Decision), 2=Green(Equity), 3=Orange(R&R))
+    // Current IDs: 1: Decision, 2: Finance, 3: Exit.
+    // Requirement Mapping:
+    // - Decision (Blue)
+    // - Equity/Vesting (Green)
+    // - R&R (Orange)
+    // We will align closely.
+
+    Color sectionColor = _AppColors.blue600;
+    Color sectionBg = _AppColors.blue50;
+    IconData sectionIcon = Icons.gavel_rounded;
+
+    if (topic.id == 2) {
+      // Finance/Vesting/Equity -> Green
+      sectionColor = _AppColors.green600;
+      sectionBg = _AppColors.green50;
+      sectionIcon = Icons.pie_chart_rounded;
+    } else if (topic.id == 3) {
+      // Exit/R&R -> Orange
+      sectionColor = _AppColors.orange500;
+      sectionBg = _AppColors.orange50;
+      sectionIcon = Icons.diversity_3_rounded;
+    }
+
+    return RepaintBoundary(
+      key: key,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 32),
+        decoration: _cardDecoration(),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Header
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: isSmallMobile
+                    ? 16
+                    : isMobile
+                    ? 20
+                    : isDesktop
+                    ? 32
+                    : 24,
+                vertical: isSmallMobile ? 16 : 20,
+              ),
+              color: _AppColors.gray50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        // Section Icon System
+                        Container(
+                          padding: EdgeInsets.all(
+                            isSmallMobile ? 8 : 12,
+                          ), // Larger padding for icon
+                          decoration: BoxDecoration(
+                            color: sectionBg,
+                            borderRadius: BorderRadius.circular(
+                              isSmallMobile ? 12 : 14,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: sectionColor.withValues(alpha: 0.2),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ], // Glow effect
+                          ),
+                          child: Icon(
+                            sectionIcon,
+                            color: sectionColor,
+                            size: isSmallMobile ? 20 : 28,
+                          ), // Larger Icon
+                        ),
+                        SizedBox(width: isSmallMobile ? 8 : 12),
+                        Expanded(
+                          child: Text(
+                            "Topic 0${topic.id}. ${topic.title}",
+                            style: TextStyle(
+                              fontSize: isSmallMobile
+                                  ? 16
+                                  : isMobile
+                                  ? 19
+                                  : isDesktop
+                                  ? 22
+                                  : 21,
+                              fontWeight: FontWeight.bold,
+                              color: _AppColors.textPrimary,
+                              height: 1.4,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (isDesktop)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ), // TDS: More padding
+                      margin: const EdgeInsets.only(left: 8),
+                      decoration: BoxDecoration(
+                        // TDS: Light background + dark text (no border)
+                        color: _AppColors.green50,
+                        borderRadius: BorderRadius.circular(
+                          8,
+                        ), // TDS: More rounded
+                      ),
+                      child: const Text(
+                        "합의 완료",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: _AppColors.green600,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            const Divider(height: 1, color: _AppColors.gray200),
+            Padding(
+              padding: EdgeInsets.all(
+                isSmallMobile
+                    ? 16
+                    : isMobile
+                    ? 20
+                    : isDesktop
+                    ? 32
+                    : 24,
+              ), // Responsive Padding
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Question
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(
+                      isSmallMobile ? 16 : 20,
+                    ), // TDS: More padding
+                    decoration: BoxDecoration(
+                      // TDS: Remove border, use soft shadow
+                      color: _AppColors.gray50,
+                      borderRadius: BorderRadius.circular(
+                        isSmallMobile ? 12 : 16,
+                      ), // TDS: More rounded
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.02),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Q.",
+                          style: TextStyle(
+                            fontSize: isSmallMobile ? 11 : 12,
+                            color: _AppColors.textSub,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: isSmallMobile ? 6 : 8),
+                        Text(
+                          topic.questionTitle,
+                          style: TextStyle(
+                            fontSize: isSmallMobile
+                                ? 14
+                                : isMobile
+                                ? 15
+                                : 16,
+                            fontWeight: FontWeight.w600,
+                            height: 1.6, // TDS: Generous line height
+                            color: _AppColors.textPrimary,
+                          ),
+                        ),
+                        SizedBox(height: isSmallMobile ? 10 : 12),
+                        Text(
+                          topic.questionDesc,
+                          style: TextStyle(
+                            fontSize: isSmallMobile
+                                ? 12
+                                : isMobile
+                                ? 13
+                                : 14,
+                            color: _AppColors.textSub,
+                            height: 1.6, // TDS: Generous line height
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: isSmallMobile ? 12 : 16),
+
+                  // Opinions
+                  isMobile
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _opinionBox(
+                              "A 의견 (CEO)",
+                              topic.opinionA,
+                              _AppColors.blue50,
+                              _AppColors.blue600,
+                              isSmallMobile: isSmallMobile,
+                              expand: false,
+                            ),
+                            SizedBox(height: isSmallMobile ? 12 : 16),
+                            _opinionBox(
+                              "B 의견 (CTO)",
+                              topic.opinionB,
+                              _AppColors.purple50,
+                              _AppColors.purple600,
+                              isSmallMobile: isSmallMobile,
+                              expand: false,
+                            ),
+                          ],
+                        )
+                      : IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(
+                                child: _opinionBox(
+                                  "A 의견 (CEO)",
+                                  topic.opinionA,
+                                  _AppColors.blue50,
+                                  _AppColors.blue600,
+                                  isSmallMobile: false,
+                                  expand: true,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: _opinionBox(
+                                  "B 의견 (CTO)",
+                                  topic.opinionB,
+                                  _AppColors.purple50,
+                                  _AppColors.purple600,
+                                  isSmallMobile: false,
+                                  expand: true,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                  SizedBox(height: isSmallMobile ? 12 : 16),
+
+                  // Reference
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(
+                      isSmallMobile ? 16 : 20,
+                    ), // TDS: More padding
+                    decoration: BoxDecoration(
+                      color: _AppColors.slate50,
+                      borderRadius: BorderRadius.circular(
+                        isSmallMobile ? 12 : 16,
+                      ), // TDS: More rounded
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          size: isSmallMobile ? 18 : 22,
+                          color: _AppColors.slate400,
+                        ),
+                        SizedBox(width: isSmallMobile ? 12 : 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "MARKET STANDARD",
+                                style: TextStyle(
+                                  fontSize: isSmallMobile ? 10 : 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: _AppColors.slate500,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              SizedBox(height: isSmallMobile ? 6 : 8),
+                              Text(
+                                topic.reference,
+                                style: TextStyle(
+                                  fontSize: isSmallMobile
+                                      ? 12
+                                      : isMobile
+                                      ? 13
+                                      : 14,
+                                  color: _AppColors.slate700,
+                                  height: 1.6, // TDS: Generous line height
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: isSmallMobile ? 12 : 16),
+
+                  // Blurred Section
+                  GestureDetector(
+                    onTap: () => setState(() => _isModalOpen = true),
+                    child: Container(
+                      height: 120,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: _AppColors.gray100),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Stack(
+                        children: [
+                          RepaintBoundary(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: ImageFiltered(
+                                imageFilter: ImageFilter.blur(
+                                  sigmaX: 6,
+                                  sigmaY: 6,
+                                ),
+                                child: Container(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: _AppColors.gray50,
+                                  ),
+                                  padding: const EdgeInsets.all(16),
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    "의사결정 권한 분배: 기술/보안 관련은 CTO 동의 필수, 나머지는 CEO 최종 확정. 비용 조정 트리거: 잔고 3,000만원 이하 시 마케팅 50% 축소 후 외주 신규 발주 중단. 이탈 시 인수인계: 2주 내 완료, 권한 즉시 차단, 지분/정산은 베스팅 기준 적용. 추가 합의 사항: 서버/보안 비용은 보호하며, 런웨이 6개월 회복 시 단계적으로 복구한다.",
+                                    textAlign: TextAlign.left,
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      height: 1.6,
+                                      color: _AppColors.gray900,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          // Overlay Button
+                          Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text(
+                                  "누락된 합의 포인트",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: _AppColors.gray600,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.1,
+                                        ),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.lock,
+                                        size: 14,
+                                        color: _AppColors.gray600,
+                                      ),
+                                      SizedBox(width: 6),
+                                      Text(
+                                        "분석 보기",
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold,
+                                          color: _AppColors.gray700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Decision Log
+                  Container(
+                    padding: EdgeInsets.all(
+                      isSmallMobile
+                          ? 16
+                          : isMobile
+                          ? 20
+                          : 24,
+                    ), // TDS: More padding
+                    decoration: BoxDecoration(
+                      color: _AppColors.blue50,
+                      // TDS: Remove border, use soft shadow
+                      borderRadius: BorderRadius.circular(
+                        isSmallMobile ? 12 : 16,
+                      ), // TDS: More rounded
+                      boxShadow: [
+                        BoxShadow(
+                          color: _AppColors.blue100.withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: isSmallMobile ? 6 : 8,
+                              height: isSmallMobile ? 6 : 8,
+                              decoration: const BoxDecoration(
+                                color: _AppColors.blue600,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            SizedBox(width: isSmallMobile ? 8 : 12),
+                            Text(
+                              "Final Decision Log v1.0",
+                              style: TextStyle(
+                                fontSize: isSmallMobile ? 10 : 12,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF2563EB), // blue700
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: isSmallMobile ? 10 : 12),
+                        Text(
+                          topic.decision,
+                          style: TextStyle(
+                            fontSize: isSmallMobile
+                                ? 13
+                                : isMobile
+                                ? 14
+                                : 15,
+                            height: 1.7, // TDS: Generous line height
+                            fontWeight: FontWeight.w500,
+                            color: _AppColors.textPrimary,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 50),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildUserInputBox(
-    String title,
+  Widget _opinionBox(
+    String label,
     String content,
-    String? highlight,
-    Color highlightColor,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: Colors.grey[200]!),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            offset: const Offset(0, 1),
-            blurRadius: 2,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 4),
-          RichText(
-            text: TextSpan(
-              style: const TextStyle(fontSize: 14, color: Color(0xFF374151)),
-              children: _buildRichTextWithTerms(
-                content,
-                baseStyle: const TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF374151),
-                ),
-                highlight: highlight,
-                highlightColor: highlightColor,
+    Color bg,
+    Color accent, {
+    required bool isSmallMobile,
+    bool expand = false,
+  }) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        // 1. Background Layer (Stretches to fill Stack)
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.circular(isSmallMobile ? 16 : 20),
+              border: Border.all(
+                color: accent.withValues(alpha: 0.1),
+                width: 1,
               ),
             ),
           ),
-        ],
-      ),
+        ),
+        // 2. Content Layer (Determines Size)
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.fromLTRB(
+            isSmallMobile ? 16 : 20,
+            isSmallMobile ? 24 : 28,
+            isSmallMobile ? 16 : 20,
+            isSmallMobile ? 16 : 20,
+          ),
+          child: Text(
+            '"$content"',
+            style: TextStyle(
+              fontSize: isSmallMobile ? 13 : 15,
+              height: 1.6,
+              color: _AppColors.textPrimary.withValues(alpha: 0.9),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        // 3. Badge Layer
+        Positioned(
+          top: isSmallMobile ? -10 : -12,
+          left: isSmallMobile ? 16 : 20,
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: isSmallMobile ? 8 : 10,
+              vertical: isSmallMobile ? 5 : 6,
+            ),
+            decoration: BoxDecoration(
+              color: accent,
+              borderRadius: BorderRadius.circular(isSmallMobile ? 6 : 8),
+              boxShadow: [
+                BoxShadow(
+                  color: accent.withValues(alpha: 0.3),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: isSmallMobile ? 11 : 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _buildInfoBox({
-    required String title,
-    required IconData icon,
-    required String content,
-    required Color bgColor,
-    required Color borderColor,
-    required Color titleColor,
-    bool isHtmlLike = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: bgColor,
-        border: Border(left: BorderSide(color: borderColor, width: 4)),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildCheckItem(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12), // TDS: More spacing
+      child: Row(
         children: [
-          Row(
-            children: [
-              Icon(
-                icon,
-                size: 14,
-                color: titleColor,
-              ), // FontAwesome icons are usually small here
-              const SizedBox(width: 8),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: titleColor,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          RichText(
-            textAlign: TextAlign.justify,
-            text: TextSpan(
+          const Icon(Icons.check_circle, size: 18, color: _AppColors.blue600),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
               style: const TextStyle(
                 fontSize: 14,
-                color: Color(0xFF4B5563),
-                height: 1.6,
-              ), // text-gray-600
-              children: _buildRichTextWithTerms(
-                content,
-                baseStyle: const TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF4B5563),
-                  height: 1.6,
-                ),
-                parseStrong: isHtmlLike,
+                color: _AppColors.textPrimary,
+                height: 1.5,
               ),
             ),
           ),
@@ -678,342 +1646,323 @@ class SampleReportPage extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge(String text, Color bgColor, Color textColor) {
+  Widget _buildDisclaimer({required bool isDesktop, required bool isMobile}) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: textColor,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDisclaimer(BuildContext context, bool isMobile) {
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: isMobile ? 20 : 32,
-        vertical: 16,
-      ),
-      padding: EdgeInsets.all(isMobile ? 16 : 24),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE5E7EB), // bg-gray-200
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "[면책 조항]",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-              color: Color(0xFF6B7280),
-            ),
-          ),
-          Text(
-            "본 리포트는 CoSync 사용자의 누적 데이터를 바탕으로 시장의 통상적인 사례와 트렌드를 제공하는 정보성 자료입니다. CoSync는 법무법인이 아니며, 본 리포트의 내용은 법률적 자문이나 유권해석을 구성하지 않습니다. 실제 주주간계약 체결 시에는 변호사 등 법률 전문가의 검토를 거치시기를 권고드립니다.",
-            style: TextStyle(
-              fontSize: 12,
-              color: Color(0xFF6B7280),
-              height: 1.5,
-            ),
-            textAlign: TextAlign.justify,
-          ),
-          SizedBox(height: 50),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFooter(BuildContext context, bool isMobile) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(
-        isMobile ? 24 : 32,
-        24,
-        isMobile ? 24 : 32,
-        48,
-      ),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Color(0xFFE5E7EB))),
-      ),
+      padding: EdgeInsets.symmetric(
+        vertical: isMobile ? 32 : 40,
+        horizontal: isMobile ? 12 : 16,
+      ), // TDS: More padding
+      alignment: Alignment.center,
       child: Column(
         children: [
           Text(
-            "분석된 리스크를 보완하는 '맞춤형 계약서'가 필요하신가요?",
+            "본 문서는 CoSync의 샘플 리포트이며 법적 효력이 없는 예시 자료입니다.",
             style: TextStyle(
-              fontSize: isMobile ? 16 : 18,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFF1F2937),
+              fontSize: isMobile ? 11 : 12,
+              color: _AppColors.textSub,
+              height: 1.6,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 8),
-          const Text(
-            "시장 표준 데이터를 반영하여 두 분의 의견 차이를 좁힌 초안을 확인해보세요.",
-            style: TextStyle(fontSize: 14, color: Color(0xFF4B5563)),
+          SizedBox(height: isMobile ? 6 : 8),
+          Text(
+            "실제 법적 분쟁 시에는 변호사의 자문을 구하시길 바랍니다.",
+            style: TextStyle(
+              fontSize: isMobile ? 11 : 12,
+              color: _AppColors.textSub,
+              height: 1.6,
+            ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 24),
-          SizedBox(
-            width: isMobile ? double.infinity : null,
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1E293B), // bg-slate-800
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 16,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(9999), // rounded-full
-                ),
-                elevation: 4,
-              ),
-              child: const Text(
-                "계약서 초안 생성하기 (Start Draft)",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            "Copyright © 2024 CoSync. All rights reserved.",
-            style: TextStyle(fontSize: 12, color: Color(0xFF9CA3AF)),
-          ),
-          SizedBox(height: 50),
         ],
       ),
+    );
+  }
+
+  Widget _buildFooterSection({
+    required bool isMobile,
+    required bool isSmallMobile,
+  }) {
+    // Determine the width constraint based on other cards
+    // In strict sense, it's already in a constrained column, so just using decoration is enough.
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        vertical: isMobile ? 32 : 48,
+        horizontal: isMobile ? 24 : 32,
+      ),
+      decoration:
+          _cardDecoration(), // Match the design of other cards (white, rounded, shadow)
+      child: Column(
+        children: [
+          // Visual Icon
+          Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: _AppColors.textPrimary.withValues(alpha: 0.1),
+                  blurRadius: 24,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+              border: Border.all(color: _AppColors.gray200, width: 1),
+            ),
+            child: const Icon(
+              Icons.mark_email_unread_rounded,
+              color: _AppColors.textPrimary,
+              size: 30,
+            ),
+          ),
+          SizedBox(height: isMobile ? 24 : 32),
+          Text(
+            "내 팀 답변으로 결정 로그(v1.0)를\n받아보고 싶으신가요?",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: isSmallMobile ? 20 : (isMobile ? 22 : 24),
+              fontWeight: FontWeight.bold,
+              color: _AppColors.textPrimary,
+              height: 1.3,
+              letterSpacing: -0.5,
+            ),
+          ),
+          SizedBox(height: isMobile ? 12 : 16),
+          Container(
+            constraints: const BoxConstraints(maxWidth: 460),
+            child: Text(
+              "오픈 시 내 팀 답변 기반으로 추가 논의 포인트(갭)를 잡아드리고,\n결정 로그 정본 링크로 최신 버전을 관리할 수 있습니다.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: isSmallMobile ? 13 : (isMobile ? 14 : 15),
+                color: _AppColors.textSub,
+                height: 1.6,
+              ),
+            ),
+          ),
+          SizedBox(height: isMobile ? 32 : 40),
+          _Bounceable(
+            child: ElevatedButton(
+              onPressed: () => _handleRegister('footer'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _AppColors.textPrimary, // Dark Navy
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(
+                  horizontal: isMobile ? 32 : 48,
+                  vertical: isMobile ? 18 : 22,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                elevation: 0,
+                shadowColor: Colors.black.withValues(alpha: 0.3),
+              ),
+              child: Text(
+                _ctaLabel,
+                style: TextStyle(
+                  fontSize: isMobile ? 16 : 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  BoxDecoration _cardDecoration() {
+    return BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(28), // TDS: rounded-3xl (24-32px)
+      // TDS: Remove border, use soft shadow instead
+      boxShadow: [
+        // TDS: shadow-soft - wide spread, low opacity
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.04),
+          blurRadius: 20,
+          spreadRadius: 0,
+          offset: const Offset(0, 4),
+        ),
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.02),
+          blurRadius: 6,
+          spreadRadius: 0,
+          offset: const Offset(0, 2),
+        ),
+      ],
     );
   }
 }
 
-class TermTooltip extends StatelessWidget {
-  final String term;
-  final String meaning;
-  final TextStyle? style;
-  final String? display;
+class _Bounceable extends StatefulWidget {
+  final Widget child;
 
-  const TermTooltip({
-    super.key,
-    required this.term,
-    required this.meaning,
-    this.style,
-    this.display,
-  });
+  const _Bounceable({required this.child});
+
+  @override
+  State<_Bounceable> createState() => _BounceableState();
+}
+
+class _BounceableState extends State<_Bounceable>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  final double _scaleFactor = 0.96;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+      lowerBound: 0.0,
+      upperBound: 1.0,
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onTapDown(PointerDownEvent event) {
+    _controller.forward();
+  }
+
+  void _onTapUp(PointerUpEvent event) {
+    _controller.reverse();
+  }
+
+  void _onTapCancel(PointerCancelEvent event) {
+    _controller.reverse();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final textStyle =
-        style ??
-        const TextStyle(
-          color: Colors.blue,
-          fontWeight: FontWeight.bold,
-          decoration: TextDecoration.underline,
-          decorationStyle: TextDecorationStyle.solid,
-        );
-    return Tooltip(
-      message: meaning,
-      waitDuration: const Duration(milliseconds: 250),
-      child: InkWell(
-        onTap: () => showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: Text(term),
-            content: Text(meaning),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("닫기"),
-              ),
-            ],
-          ),
-        ),
-        child: Text(
-          display ?? term,
-          style: textStyle.copyWith(
-            color: Colors.blue,
-            fontWeight: FontWeight.bold,
-            decoration: TextDecoration.underline,
-            decorationStyle: TextDecorationStyle.solid,
-          ),
-        ),
+    return Listener(
+      onPointerDown: _onTapDown,
+      onPointerUp: _onTapUp,
+      onPointerCancel: _onTapCancel,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: 1.0 - (_controller.value * (1.0 - _scaleFactor)),
+            child: child,
+          );
+        },
+        child: widget.child,
       ),
     );
   }
 }
 
-const Map<String, String> _termMeanings = {
-  "베스팅(Vesting)":
-      "공동창업자의 지분을 한 번에 주지 않고, 일정 기간 일할 때마다 조금씩 내 지분이 확정되는 제도. 팀에 오래 남아 함께 하자는 안전장치.",
-  "클리프(Cliff)":
-      "베스팅을 시작할 때 '최초 확정' 구간. 예를 들어 1년 클리프면 1년을 채워야 첫 25% 지분이 한 번에 확정되고, 이후 매달/매분기 조금씩 추가 확정.",
-  "데드락(Deadlock)": "의사결정이 완전히 막힌 상태. 서로 합의가 안 되어 회사가 멈춰버리는 상황.",
-  "캐스팅 보트(Casting Vote)":
-      "표가 동률일 때 최종 결정권. 예를 들어 CEO가 캐스팅 보트를 가지면 의견이 반반일 때 CEO가 최종 결정.",
-  "최종 결정권(Casting Vote)":
-      "표가 동률일 때 최종 결정권. 예를 들어 CEO가 캐스팅 보트를 가지면 의견이 반반일 때 CEO가 최종 결정.",
-  "콜옵션(Call Option)":
-      "특정 조건에서 회사가 지분을 정해진 가격(주로 액면가)으로 사올 수 있는 권리. 문제가 있는 퇴사자 지분을 회수할 때 쓰임.",
-  "Bad Leaver": "배임·횡령 같은 중대한 잘못으로 퇴사한 사람. 보통 이 경우 지분을 싸게(액면가 등) 회수하는 조항을 둠.",
-  "Good Leaver":
-      "정상적 사유(개인 사정, 건강, 성과 문제 아님 등)로 퇴사한 사람. 이미 근속하며 확정된 지분은 인정하되, 남은 미확정 지분만 회수하는 식으로 보호.",
-};
+// Fade In Up Animation Wrapper
+class _RevealAnimation extends StatefulWidget {
+  final Widget child;
+  final int delay;
 
-const Map<String, String> _termDisplay = {
-  "베스팅(Vesting)": "베스팅(Vesting)",
-  "베스팅": "베스팅(Vesting)",
-  "클리프(Cliff)": "클리프(Cliff)",
-  "Cliff": "클리프(Cliff)",
-  "데드락(Deadlock)": "데드락(Deadlock)",
-  "캐스팅 보트(Casting Vote)": "최종 결정권(Casting Vote)",
-  "최종 결정권(Casting Vote)": "최종 결정권(Casting Vote)",
-  "Casting Vote": "최종 결정권(Casting Vote)",
-  "콜옵션(Call Option)": "콜옵션(Call Option)",
-  "Call Option": "콜옵션(Call Option)",
-  "Bad Leaver": "배드 리버(Bad Leaver)",
-  "Good Leaver": "굿 리버(Good Leaver)",
-};
+  const _RevealAnimation({required this.child, this.delay = 0});
 
-List<InlineSpan> _buildRichTextWithTerms(
-  String text, {
-  TextStyle? baseStyle,
-  bool parseStrong = false,
-  String? highlight,
-  Color? highlightColor,
-}) {
-  final style = baseStyle ?? const TextStyle(color: Colors.black);
-  final List<InlineSpan> spans = [];
+  @override
+  State<_RevealAnimation> createState() => _RevealAnimationState();
+}
 
-  // handle <strong> ... </strong>
-  if (parseStrong) {
-    final exp = RegExp(r"<strong>(.*?)<\/strong>");
-    int lastIndex = 0;
-    for (final m in exp.allMatches(text)) {
-      if (m.start > lastIndex) {
-        spans.addAll(
-          _buildTermSpans(text.substring(lastIndex, m.start), style),
-        );
-      }
-      spans.addAll(
-        _buildTermSpans(
-          m.group(1) ?? "",
-          style.copyWith(fontWeight: FontWeight.bold),
-        ),
-      );
-      lastIndex = m.end;
-    }
-    if (lastIndex < text.length) {
-      spans.addAll(_buildTermSpans(text.substring(lastIndex), style));
-    }
-  } else {
-    spans.addAll(
-      _buildTermSpans(
-        text,
-        style,
-        highlight: highlight,
-        highlightColor: highlightColor,
-      ),
+class _RevealAnimationState extends State<_RevealAnimation>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    );
+
+    _fadeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOut,
+    );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
+    // Simulate "Intersection Observer" by triggering after build/delay
+    Future.delayed(Duration(milliseconds: widget.delay), () {
+      if (mounted) _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: SlideTransition(position: _slideAnimation, child: widget.child),
+    );
+  }
+}
+
+class _BouncingButton extends StatefulWidget {
+  final Widget child;
+  final VoidCallback onTap;
+
+  const _BouncingButton({required this.child, required this.onTap});
+
+  @override
+  State<_BouncingButton> createState() => _BouncingButtonState();
+}
+
+class _BouncingButtonState extends State<_BouncingButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+      lowerBound: 0.0,
+      upperBound: 0.04, // Scale down by 4%
     );
   }
 
-  return spans;
-}
-
-List<InlineSpan> _buildTermSpans(
-  String text,
-  TextStyle style, {
-  String? highlight,
-  Color? highlightColor,
-}) {
-  final List<InlineSpan> result = [];
-  final termsPattern =
-      r"(베스팅\(Vesting\)|베스팅|클리프\(Cliff\)|Cliff|데드락\(Deadlock\)|캐스팅 보트\(Casting Vote\)|최종 결정권\(Casting Vote\)|Casting Vote|콜옵션\(Call Option\)|Call Option|Bad Leaver|Good Leaver)";
-  final reg = RegExp(termsPattern);
-
-  int last = 0;
-  for (final m in reg.allMatches(text)) {
-    if (m.start > last) {
-      result.add(
-        _maybeHighlightSpan(
-          text.substring(last, m.start),
-          style,
-          highlight: highlight,
-          highlightColor: highlightColor,
-        ),
-      );
-    }
-    final term = m.group(0)!;
-    final meaning = _termMeanings[term];
-    if (meaning != null) {
-      result.add(
-        WidgetSpan(
-          alignment: PlaceholderAlignment.baseline,
-          baseline: TextBaseline.alphabetic,
-          child: TermTooltip(
-            term: term,
-            meaning: meaning,
-            display: _termDisplay[term] ?? term,
-            style: style.copyWith(
-              color: Colors.blue,
-              fontWeight: FontWeight.bold,
-              decoration: TextDecoration.underline,
-              decorationStyle: TextDecorationStyle.solid,
-            ),
-          ),
-        ),
-      );
-    } else {
-      result.add(TextSpan(text: term, style: style));
-    }
-    last = m.end;
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
-  if (last < text.length) {
-    result.add(
-      _maybeHighlightSpan(
-        text.substring(last),
-        style,
-        highlight: highlight,
-        highlightColor: highlightColor,
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) => _controller.forward(),
+      onTapUp: (_) {
+        _controller.reverse();
+        widget.onTap();
+      },
+      onTapCancel: () => _controller.reverse(),
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return Transform.scale(scale: 1.0 - _controller.value, child: child);
+        },
+        child: widget.child,
       ),
     );
   }
-  return result;
-}
-
-InlineSpan _maybeHighlightSpan(
-  String text,
-  TextStyle style, {
-  String? highlight,
-  Color? highlightColor,
-}) {
-  if (highlight != null && text.contains(highlight)) {
-    final parts = text.split(highlight);
-    final spans = <InlineSpan>[];
-    for (int i = 0; i < parts.length; i++) {
-      spans.add(TextSpan(text: parts[i], style: style));
-      if (i != parts.length - 1) {
-        spans.add(
-          TextSpan(
-            text: highlight,
-            style: style.copyWith(
-              fontWeight: FontWeight.bold,
-              color: highlightColor ?? style.color,
-            ),
-          ),
-        );
-      }
-    }
-    return TextSpan(children: spans);
-  }
-  return TextSpan(text: text, style: style);
 }

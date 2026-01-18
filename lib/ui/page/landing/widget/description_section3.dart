@@ -1,60 +1,99 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import 'landing_section_layout.dart';
 
-class Description3 extends StatelessWidget {
+class Description3 extends StatefulWidget {
   const Description3({super.key});
+
+  @override
+  State<Description3> createState() => _Description3State();
+}
+
+class _Description3State extends State<Description3> {
+  int _animationKey = 0;
+  bool _hasAnimated = false;
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 1024;
     final isSmallScreen = screenWidth <= 1024;
     final isSmallMobile = screenWidth <= 480;
 
-    return LandingSectionLayout(
-      height: null,
-      backgroundColor: const Color(0xFFF8FAFC),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 80),
-          Text.rich(
-            TextSpan(
-            style: TextStyle(
-              fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
-              fontWeight: FontWeight.w900,
-                color: Colors.black,
-              ),
+    return VisibilityDetector(
+      key: const Key('description3'),
+      onVisibilityChanged: (VisibilityInfo info) {
+        // 한 번만 실행되도록 플래그 체크
+        if (!_hasAnimated && info.visibleFraction > 0.2) {
+          setState(() {
+            _animationKey = DateTime.now().millisecondsSinceEpoch;
+            _hasAnimated = true;
+          });
+        }
+      },
+      child: LandingSectionLayout(
+        height: null,
+        backgroundColor: const Color(0xFFF8FAFC),
+        child: Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 1200),
+            padding: EdgeInsets.symmetric(
+              horizontal: isSmallMobile ? 20 : (isSmallScreen ? 40 : 60),
+              vertical: isDesktop ? 100 : 80,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const TextSpan(text: '계약서를 안 써서 아낀 '),
-                const TextSpan(
-                  text: '300만 원',
-                  style: TextStyle(color: Color(0xFF1D4ED8)),
-                ),
-                TextSpan(text: isSmallMobile ? ',\n그 대가는 얼마일까요?' : ',\n그 대가는 얼마일까요?'),
+                SizedBox(height: isDesktop ? 100 : 80),
+                Text.rich(
+                  TextSpan(
+                    style: GoogleFonts.montserrat(
+                      fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
+                      fontWeight: FontWeight.w900,
+                      color: Colors.black,
+                    ),
+                    children: [
+                      const TextSpan(text: '계약서를 안 써서 아낀 '),
+                      const TextSpan(
+                        text: '300만 원',
+                        style: TextStyle(color: Color(0xFF1D4ED8)),
+                      ),
+                      TextSpan(text: isSmallMobile ? ',\n그 대가는 얼마일까요?' : ',\n그 대가는 얼마일까요?'),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                )
+                    .animate(key: ValueKey('title_$_animationKey'))
+                    .fadeIn(duration: 800.ms, delay: 100.ms)
+                    .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 100.ms, curve: Curves.easeOutCubic),
+                const SizedBox(height: 18),
+                Text(
+                  "비용을 아끼려다 더 큰 기회를 놓치고 있습니다.",
+                  style: GoogleFonts.inter(
+                    fontSize: isSmallMobile ? 14 : (isSmallScreen ? 16 : 18),
+                    fontWeight: FontWeight.w900,
+                    color: Colors.black54,
+                  ),
+                  textAlign: TextAlign.center,
+                )
+                    .animate(key: ValueKey('subtitle_$_animationKey'))
+                    .fadeIn(duration: 800.ms, delay: 250.ms)
+                    .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 250.ms, curve: Curves.easeOutCubic),
+                SizedBox(height: isSmallMobile ? 28 : 38),
+                // 카드 영역
+                (isSmallScreen
+                    ? _buildVerticalLayout(isSmallMobile)
+                    : _buildHorizontalLayout())
+                    .animate(key: ValueKey('cards_$_animationKey'))
+                    .fadeIn(duration: 800.ms, delay: 400.ms)
+                    .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 400.ms, curve: Curves.easeOutCubic),
+                SizedBox(height: isDesktop ? 100 : 80),
               ],
             ),
-            textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 18),
-          Text(
-            "비용을 아끼려다 더 큰 기회를 놓치고 있습니다.",
-            style: TextStyle(
-              fontSize: isSmallMobile ? 14 : (isSmallScreen ? 16 : 18),
-              fontWeight: FontWeight.w900,
-              color: Colors.black54,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: isSmallMobile ? 28 : 38),
-          // 카드 영역
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: isSmallMobile ? 0 : 30.0),
-              child: isSmallScreen
-                ? _buildVerticalLayout(isSmallMobile)
-                : _buildHorizontalLayout(),
-          ),
-          const SizedBox(height: 80),
-        ],
+        ),
       ),
     );
   }

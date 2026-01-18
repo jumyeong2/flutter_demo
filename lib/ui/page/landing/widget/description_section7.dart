@@ -1,4 +1,7 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'landing_section_layout.dart';
 
 class Description7 extends StatelessWidget {
@@ -7,48 +10,68 @@ class Description7 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 1024;
     final isSmallScreen = screenWidth <= 1180;
     final isMediumScreen = screenWidth <= 763;
     final isSmallMobile = screenWidth <= 480;
 
-    // 패딩 값 정의 (수정하기 쉽도록 변수로 분리)
-    final double horizontalPadding = isSmallMobile ? 0 : 20;
-
     return LandingSectionLayout(
       height: null,
       backgroundColor: const Color(0xFFF8FAFC),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-        child: Column(
-        children: [
-            const SizedBox(height: 80),
-            Container(
-              child: isSmallScreen
+      child: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          padding: EdgeInsets.symmetric(
+            horizontal: isSmallMobile ? 20 : (isSmallScreen ? 40 : 60),
+            vertical: isDesktop ? 100 : 80,
+          ),
+          child: Column(
+            children: [
+              SizedBox(height: isDesktop ? 100 : 80),
+              (isSmallScreen
                   ? _buildVerticalLayout(isMediumScreen, isSmallMobile)
-                  : _buildHorizontalLayout(),
-            ),
-            const SizedBox(height: 80),
-                  ],
-                ),
-              ),
+                  : _buildHorizontalLayout())
+                  .animate()
+                  .fadeIn(duration: 800.ms, delay: 100.ms)
+                  .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 100.ms, curve: Curves.easeOutCubic),
+              SizedBox(height: isDesktop ? 100 : 80),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   // 가로 배치 (1024px 초과)
   Widget _buildHorizontalLayout() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Flexible(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 560),
-            child: _buildTextContent(),
-          ),
-        ),
-        const SizedBox(width: 80),
-        // Mockup은 고정 크기 유지
-        SizedBox(width: 580, child: _buildMockup()),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              flex: 1,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: _buildTextContent(),
+              ),
+            ),
+            const SizedBox(width: 80),
+            // Mockup은 사용 가능한 공간에 맞춰 조정
+            Flexible(
+              flex: 1,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: math.min(580, constraints.maxWidth * 0.45),
+                  minWidth: 400,
+                ),
+                child: _buildMockup(),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -93,7 +116,7 @@ class Description7 extends StatelessWidget {
             ],
             Text(
               "FINAL OUTPUT",
-              style: TextStyle(
+              style: GoogleFonts.montserrat(
                 fontSize: isSmallMobile ? 12 : 14,
                 fontWeight: FontWeight.w800,
                 color: const Color(0xFF2563EB),
@@ -101,30 +124,45 @@ class Description7 extends StatelessWidget {
               ),
             ),
           ],
-        ),
+        )
+            .animate()
+            .fadeIn(duration: 800.ms, delay: 200.ms)
+            .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 200.ms, curve: Curves.easeOutCubic),
         const SizedBox(height: 12),
-                Text(
-          "말뿐인 약속은 잊혀집니다.\n'Agreement'로 기록하세요.",
+        Text(
+          isSmallMobile
+              ? "말뿐인 약속은\n잊혀집니다.\n'Agreement'로\n기록하세요."
+              : isMediumScreen
+                  ? "말뿐인 약속은 잊혀집니다.\n'Agreement'로 기록하세요."
+                  : "말뿐인 약속은 잊혀집니다.\n'Agreement'로 기록하세요.",
           textAlign: isSmallScreen ? TextAlign.center : TextAlign.start,
-                  style: TextStyle(
+          style: GoogleFonts.montserrat(
             fontSize: isSmallMobile ? 20 : (isMediumScreen ? 24 : 32),
-                    fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w900,
             color: const Color(0xFF1E293B),
             height: 1.3,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  isSmallMobile
-              ? "합의된 내용을 바탕으로 우리 팀만의 헌법,\n[Agreement.pdf]를 생성해 드립니다."
-              : "동업계약서 쓰기엔 너무 딱딱하고, 말로만 하기엔 불안하신가요?\nCoSync는 우리 팀만의 헌법,\n[Agreement.pdf]를 생성해 드립니다.",
+          ),
+        )
+            .animate()
+            .fadeIn(duration: 800.ms, delay: 350.ms)
+            .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 350.ms, curve: Curves.easeOutCubic),
+        const SizedBox(height: 24),
+        Text(
+          isSmallMobile
+              ? "합의된 내용을 바탕으로\n우리 팀만의 헌법,\n[Agreement.pdf]를\n생성해 드립니다."
+              : isMediumScreen
+                  ? "동업계약서 쓰기엔 너무 딱딱하고,\n말로만 하기엔 불안하신가요?\n\nCoSync는 우리 팀만의 헌법,\n[Agreement.pdf]를 생성해 드립니다."
+                  : "동업계약서 쓰기엔 너무 딱딱하고,\n말로만 하기엔 불안하신가요?\n\nCoSync는 우리 팀만의 헌법,\n[Agreement.pdf]를 생성해 드립니다.",
           textAlign: isSmallScreen ? TextAlign.center : TextAlign.start,
-                  style: TextStyle(
+          style: GoogleFonts.inter(
             fontSize: isSmallMobile ? 13 : 16,
             color: const Color(0xFF64748B),
-                    height: 1.6,
-                  ),
-                ),
+            height: 1.6,
+          ),
+        )
+            .animate()
+            .fadeIn(duration: 800.ms, delay: 500.ms)
+            .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 500.ms, curve: Curves.easeOutCubic),
         const SizedBox(height: 40),
         _buildListItem("Mission & Vision (우리가 모인 이유)", isSmallMobile),
         _buildListItem("R&R (역할과 책임)", isSmallMobile),
@@ -141,7 +179,7 @@ class Description7 extends StatelessWidget {
 
   Widget _buildListItem(String text, bool isSmallMobile) {
     return Container(
-      width: isSmallMobile ? double.infinity : 560,
+      width: isSmallMobile ? double.infinity : 500,
       margin: const EdgeInsets.only(bottom: 6),
       padding: EdgeInsets.symmetric(
         horizontal: isSmallMobile ? 12 : 20,
@@ -153,16 +191,16 @@ class Description7 extends StatelessWidget {
         border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
       ),
       child: Row(
-                  children: [
-                      Icon(
+        children: [
+          Icon(
             Icons.check_circle_outline_rounded,
             color: const Color(0xFF2563EB),
             size: isSmallMobile ? 16 : 20,
-                      ),
+          ),
           const SizedBox(width: 12),
           Text(
             text,
-                        style: TextStyle(
+            style: TextStyle(
               fontSize: isSmallMobile ? 13 : 15,
               fontWeight: FontWeight.w600,
               color: const Color(0xFF334155),
@@ -248,7 +286,11 @@ extension on Description7 {
       children: [
         // 태블릿 프레임
         Container(
-          width: 580,
+          width: double.infinity,
+          constraints: const BoxConstraints(
+            maxWidth: 580,
+            minWidth: 400,
+          ),
           height: 1000,
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
@@ -274,18 +316,21 @@ extension on Description7 {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Co-founder Agreement",
-                                  style: TextStyle(
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.w900,
-                                    fontFamily: 'Serif',
-                                    color: Color(0xFF1E293B),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Co-founder Agreement",
+                                    style: TextStyle(
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.w900,
+                                      fontFamily: 'Serif',
+                                      color: Color(0xFF1E293B),
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
                                   ),
-                                ),
                                 const SizedBox(height: 8),
                                 Text(
                                   "Ver 1.0 | 2024.05.20",
@@ -295,7 +340,8 @@ extension on Description7 {
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                              ],
+                                ],
+                              ),
                             ),
                             Icon(
                               Icons.description_outlined,

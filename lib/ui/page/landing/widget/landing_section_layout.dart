@@ -36,4 +36,3 @@ class LandingSectionLayout extends StatelessWidget {
     return container;
   }
 }
-

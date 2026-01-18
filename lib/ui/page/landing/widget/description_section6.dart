@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'landing_section_layout.dart';
 
 class Description6 extends StatelessWidget {
@@ -33,28 +35,37 @@ class Description6 extends StatelessWidget {
           Text(
             "데이터가 증명하는 리스크 감소 효과",
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: GoogleFonts.montserrat(
               fontSize: isSmallMobile ? 20 : (isSmallScreen ? 24 : 32),
               fontWeight: FontWeight.w900,
               color: Color(0xFF1E293B),
             ),
-          ),
+          )
+              .animate()
+              .fadeIn(duration: 800.ms, delay: 100.ms)
+              .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 100.ms, curve: Curves.easeOutCubic),
           const SizedBox(height: 16),
           Text(
             "막연한 불안감을 명확한 수치로 관리하세요.",
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: isSmallMobile ? 14 : 18,
               fontWeight: FontWeight.w500,
               color: Colors.black54,
             ),
-          ),
+          )
+              .animate()
+              .fadeIn(duration: 800.ms, delay: 250.ms)
+              .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 250.ms, curve: Curves.easeOutCubic),
           SizedBox(height: isSmallMobile ? 40 : 80),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-          child: isSmallScreen
+            child: (isSmallScreen
                 ? _buildVerticalLayout(isSmallMobile)
-              : _buildHorizontalLayout(),
-        ),
+                : _buildHorizontalLayout())
+                .animate()
+                .fadeIn(duration: 800.ms, delay: 400.ms)
+                .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 400.ms, curve: Curves.easeOutCubic),
+          ),
           const SizedBox(height: 80),
         ],
       ),
