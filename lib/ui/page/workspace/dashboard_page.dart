@@ -1,740 +1,701 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../router/routes.dart';
 import '../../../data/model/session.dart';
 import 'dashboard_controller.dart';
 
-/// DashboardPage: 대시보드/세션 리스트 페이지
-/// 세션 목록을 표시하고 새 세션을 생성할 수 있습니다.
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // 컨트롤러 초기화 (currentCompanyKey 확인 및 리다이렉트 처리)
     final controller = Get.put(DashboardController());
 
+    // Colors
+    const Color primaryColor = Color(0xFF137FEC);
+    const Color backgroundLight = Color(0xFFF6F7F8);
+    // const Color surfaceLight = Colors.white;
+    const Color textDark = Color(0xFF191F28);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB),
-      appBar: AppBar(
-        title: Obx(
-          () => Text(
-            '내 워크스페이스',
-            style: const TextStyle(
-              color: Color(0xFF191F28),
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(color: const Color(0xFFE2E8F0), height: 1),
-        ),
-      ),
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(color: Color(0xFF3182F6)),
-                SizedBox(height: 16),
-                Text('로딩 중...', style: TextStyle(color: Color(0xFF6B7684))),
-              ],
-            ),
-          );
-        }
-
-        return RefreshIndicator(
-          onRefresh: controller.loadDashboardData,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 1152),
-              margin: const EdgeInsets.symmetric(horizontal: 24),
-              padding: const EdgeInsets.symmetric(vertical: 48),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // 헤더 섹션
-                  _buildHeader(controller),
-                  const SizedBox(height: 48),
-
-                  // 메인 콘텐츠 영역
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      final isDesktop = constraints.maxWidth >= 768;
-                      if (isDesktop) {
-                        // 데스크톱: 2단 레이아웃 (8/12, 4/12)
-                        return Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // 왼쪽 8/12 영역
-                            Expanded(
-                              flex: 8,
-                              child: _buildMainContent(controller),
-                            ),
-                            const SizedBox(width: 32),
-                            // 오른쪽 4/12 영역
-                            Expanded(flex: 4, child: _buildSidebar(controller)),
-                          ],
-                        );
-                      } else {
-                        // 모바일: 세로 배치
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildMainContent(controller),
-                            const SizedBox(height: 32),
-                            _buildSidebar(controller),
-                          ],
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      }),
-    );
-  }
-
-  /// 헤더 섹션
-  Widget _buildHeader(DashboardController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Obx(
-                    () => Text(
-                      controller.company.value?.name ?? '내 워크스페이스',
-                      style: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF191F28),
+      backgroundColor: backgroundLight,
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              // Sticky Header (Simulated with just a container at top of column for now,
+              // or use CustomScrollView with SliverAppBar if actual sticky behavior is needed.
+              // Given the design "sticky top-0", let's use a blurred container on top of body stack
+              // but here we can just place it at top of column if we don't need body to scroll BEHIND it transparently yet.
+              // Better visual: content scrolls behind header. So Header should be in Stack.
+              // Let's make main content a ScrollView).
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.only(top: 80), // Space for header
+                  child: Center(
+                    child: Container(
+                      constraints: const BoxConstraints(maxWidth: 800),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 32,
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Obx(
-                    () => Text(
-                      '${controller.company.value?.name ?? ''} 팀의 합의 진행 상황입니다.',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFF6B7684),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ElevatedButton.icon(
-              onPressed: () {
-                Get.toNamed(Routes.sessionCreate);
-              },
-              icon: const Icon(Icons.add, size: 18),
-              label: const Text('새 세션 시작'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF3182F6),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                elevation: 0,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  /// 메인 콘텐츠 영역 (왼쪽 8/12)
-  Widget _buildMainContent(DashboardController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // 진행 중인 세션 섹션
-        _buildActiveSessionSection(controller),
-        const SizedBox(height: 32),
-
-        // 최근 문서 섹션 (문서 없음, 이전 합의안, Tip 포함)
-        _buildRecentDocumentsSection(controller),
-      ],
-    );
-  }
-
-  /// 진행 중인 세션 섹션
-  Widget _buildActiveSessionSection(DashboardController controller) {
-    final activeSessions = controller.sessions
-        .where((s) => s.status != 'final')
-        .toList();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Text(
-              '진행 중',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF333D4B),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: const Color(0xFFEFF6FF),
-                borderRadius: BorderRadius.circular(999),
-              ),
-              child: Text(
-                '${activeSessions.length}',
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF3182F6),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Obx(() {
-          final activeSession = controller.activeSession;
-          if (activeSession == null) {
-            return Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
-              ),
-              child: const Center(
-                child: Text(
-                  '진행 중인 세션이 없습니다',
-                  style: TextStyle(color: Color(0xFF8B95A1)),
-                ),
-              ),
-            );
-          }
-
-          return _buildActiveSessionCard(activeSession);
-        }),
-      ],
-    );
-  }
-
-  /// 진행 중인 세션 카드
-  Widget _buildActiveSessionCard(Session session) {
-    final totalQuestions = 8;
-    final completedCount = session.confirmedQuestionIds.length;
-    final myProgress = 60; // TODO: 실제 사용자 진행률 계산
-    final overallProgress = totalQuestions > 0
-        ? ((completedCount / totalQuestions) * 100).toInt()
-        : 0;
-
-    final statusText =
-        {
-          'draft': '초안',
-          'answering': '작성중',
-          'ready_for_consensus': '합의 대기',
-          'consensus': '합의 진행 중',
-          'final': '완료',
-        }[session.status] ??
-        session.status;
-
-    final statusColor = session.status == 'answering'
-        ? const Color(0xFFFFB800)
-        : const Color(0xFF3182F6);
-
-    return InkWell(
-      onTap: () {
-        Get.toNamed(Routes.sessionHomePath(session.sessionId));
-      },
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border(
-            left: const BorderSide(color: Color(0xFF3182F6), width: 4),
-            top: const BorderSide(color: Color(0xFFE2E8F0)),
-            right: const BorderSide(color: Color(0xFFE2E8F0)),
-            bottom: const BorderSide(color: Color(0xFFE2E8F0)),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Title Section
+                          const SizedBox(height: 10),
                           Text(
-                            '지분 계약 논의', // TODO: 세션 제목 가져오기
-                            style: const TextStyle(
-                              fontSize: 20,
+                            '대시보드',
+                            style: GoogleFonts.notoSansKr(
+                              fontSize: 32, // lg:text-[36px]
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF191F28),
+                              color: textDark,
+                              height: 1.2,
+                              letterSpacing: -0.5,
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
+                          const SizedBox(height: 12),
+                          Text(
+                            '현재 진행 중인 합의와 완료된 문서를 확인하세요.',
+                            style: GoogleFonts.notoSansKr(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey.shade500,
                             ),
-                            decoration: BoxDecoration(
-                              color: statusColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              statusText,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: statusColor,
+                          ),
+                          const SizedBox(height: 40),
+
+                          // Timeline
+                          // Active Session Item
+                          Obx(() {
+                            final activeSession = controller.activeSession;
+                            if (activeSession != null) {
+                              return _buildTimelineItem(
+                                isLast: false,
+                                icon: Icons.pending_actions,
+                                iconBgColor: primaryColor,
+                                iconColor: Colors.white,
+                                badgeText: 'ONGOING',
+                                badgeColor: primaryColor,
+                                dateText: '현재 진행 중',
+                                child: _buildActiveSessionCard(activeSession),
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          }),
+
+                          // Completed Documents
+                          Obx(() {
+                            // If we have documents, show them. For now showing Latest.
+                            // If user wants full list, we might map them.
+                            // Design shows "Final Report v1".
+                            // Let's show latest document if exists.
+                            final latestDoc = controller.latestDocument.value;
+                            if (latestDoc != null) {
+                              return _buildTimelineItem(
+                                isLast: false,
+                                icon: Icons.description_outlined,
+                                iconBgColor: Colors.grey.shade100,
+                                iconColor: Colors.grey.shade500,
+                                badgeText: 'COMPLETED',
+                                badgeColor: Colors.grey.shade500,
+                                badgeBgColor: Colors.grey.shade100,
+                                dateText: '2023년 10월 24일', // TODO: Format date
+                                child: _buildCompletedDocCard(latestDoc),
+                              );
+                            } else {
+                              // Static "Completed" item from design if no docs yet?
+                              // Or maybe just skip.
+                              // Let's show the static example from design if no actual data,
+                              // OR better, show empty state or nothing.
+                              // For fidelity to design request "UI는 아래 코드와 거의 그대로 유지",
+                              // I will implement the layout structure.
+                              // If no docs, maybe I shouldn't show the card.
+                              // But let's assume we show at least the "Workspace Created" start item next.
+                              return const SizedBox.shrink();
+                            }
+                          }),
+
+                          // Start Item (Workspace Created)
+                          _buildTimelineItem(
+                            isLast: true,
+                            icon: Icons.flag_outlined,
+                            iconBgColor: Colors.grey.shade100,
+                            iconColor: Colors.grey.shade400,
+                            content: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              child: Text(
+                                '팀 워크스페이스가 생성되었습니다.',
+                                style: GoogleFonts.notoSansKr(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey.shade400,
+                                ),
                               ),
                             ),
                           ),
+
+                          // Bottom Spacer to avoid FAB overlap
+                          const SizedBox(height: 128),
                         ],
                       ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        '마지막 활동: 10분 전 • 김토스님 작성 중', // TODO: 실제 활동 정보
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFF8B95A1),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF9FAFB),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.arrow_forward,
-                    color: Color(0xFF94A3B8),
-                    size: 20,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '나의 진행률 ${myProgress}%',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF3182F6),
-                      ),
                     ),
-                    Text(
-                      '전체 ${overallProgress}%',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF8B95A1),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(999),
-                  child: LinearProgressIndicator(
-                    value: overallProgress / 100,
-                    minHeight: 10,
-                    backgroundColor: const Color(0xFFE5E7EB),
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      Color(0xFF3182F6),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// 최근 문서 섹션
-  Widget _buildRecentDocumentsSection(DashboardController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          '최근 문서 & 팁',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF333D4B),
-          ),
-        ),
-        const SizedBox(height: 20),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final isDesktop = constraints.maxWidth >= 640;
-
-            return GridView.count(
-              crossAxisCount: isDesktop ? 2 : 1,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 20,
-              crossAxisSpacing: 20,
-              childAspectRatio: isDesktop ? 1.1 : 1.2,
-              children: [
-                // 문서 없음 카드 (항상 표시)
-                Container(
-                  padding: const EdgeInsets.all(64),
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: const Color(0xFFE2E8F0),
-                      style: BorderStyle
-                          .values[1], // dashed 스타일 (BorderStyle.solid = 0, BorderStyle.none = 1은 아니고...)
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 56,
-                        height: 56,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF3F4F6),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.description_outlined,
-                          size: 28,
-                          color: Color(0xFFD1D5DB),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      const Text(
-                        '완료된 문서가 없습니다',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF8B95A1),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // 이전 프로젝트 합의안 카드 (항상 표시)
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFE2E8F0)),
-                  ),
-                  child: Stack(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF3F4F6),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(
-                              Icons.description_outlined,
-                              size: 24,
-                              color: Color(0xFF9CA3AF),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          const Text(
-                            '이전 프로젝트 합의안',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF333D4B),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            '2023.12.01',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Color(0xFF8B95A1),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            '보기 권한 없음',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Color(0xFF8B95A1),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Positioned(
-                        top: 16,
-                        right: 16,
-                        child: Icon(
-                          Icons.lock_outline,
-                          size: 20,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  /// 사이드바 영역 (오른쪽 4/12)
-  Widget _buildSidebar(DashboardController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // 팀 멤버 카드
-        _buildTeamMembersCard(controller),
-        const SizedBox(height: 20),
-        // Tip 카드 (사이드바로 이동)
-        _buildTipCard(),
-      ],
-    );
-  }
-
-  /// 팀 멤버 카드
-  Widget _buildTeamMembersCard(DashboardController controller) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Text(
-                '팀 멤버',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF333D4B),
-                ),
-              ),
-              const SizedBox(width: 4),
-              Obx(
-                () => Text(
-                  '${controller.members.length}명',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.normal,
-                    color: Color(0xFF8B95A1),
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
-          Obx(() {
-            if (controller.members.isEmpty) {
-              return const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text(
-                    '멤버가 없습니다',
-                    style: TextStyle(color: Color(0xFF8B95A1)),
-                  ),
-                ),
-              );
-            }
 
-            return Column(
-              children: [
-                ...controller.members.take(3).map((member) {
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    child: Row(
-                      children: [
-                        Stack(
-                          children: [
-                            Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF3F4F6),
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 2,
-                                ),
-                              ),
-                              child: Icon(
-                                member.role == 'A'
-                                    ? Icons.person
-                                    : Icons.person_outline,
-                                color: const Color(0xFF9CA3AF),
-                                size: 20,
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Container(
-                                width: 12,
-                                height: 12,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF34D399),
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 2,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+          // Sticky Header
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                child: Container(
+                  height: 72,
+                  decoration: BoxDecoration(
+                    color: backgroundLight.withValues(alpha: 0.8),
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.transparent,
+                      ), // or slight divider
+                    ),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                  ), // lg:px-10
+                  child: Center(
+                    child: Container(
+                      constraints: const BoxConstraints(
+                        maxWidth: 1200,
+                      ), // Max width for header content if needed
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Left: Team Info
+                          Row(
                             children: [
-                              Text(
-                                member.uid, // TODO: 사용자 이름 가져오기
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF333D4B),
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: primaryColor.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(
+                                  Icons.groups_outlined,
+                                  color: primaryColor,
+                                  size: 24,
                                 ),
                               ),
-                              const SizedBox(height: 2),
-                              const Text(
-                                'Online',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Color(0xFF8B95A1),
+                              const SizedBox(width: 16),
+                              Obx(
+                                () => Text(
+                                  '팀: ${controller.company.value?.name ?? 'Loading...'}',
+                                  style: GoogleFonts.notoSansKr(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: textDark,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-                const SizedBox(height: 8),
-                OutlinedButton.icon(
-                  onPressed: controller.copyInviteCode,
-                  icon: const Icon(Icons.person_add, size: 16),
-                  label: const Text('+ 멤버 초대하기'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFF6B7684),
-                    side: const BorderSide(
-                      color: Color(0xFFD1D5DB),
-                      style: BorderStyle.solid,
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+
+                          // Right: Actions
+                          Row(
+                            children: [
+                              // Team Code Button (Desktop/Tablet)
+                              // Hidden on small mobile in HTML "hidden sm:flex"
+                              // We can simulate with LayoutBuilder or just display for now
+                              Container(
+                                height: 40,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(999),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.04,
+                                      ),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: InkWell(
+                                  onTap: controller.copyInviteCode,
+                                  borderRadius: BorderRadius.circular(999),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        '팀 코드: ',
+                                        style: GoogleFonts.notoSansKr(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey.shade500,
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Text(
+                                          '#${controller.companyKey.value}',
+                                          style: GoogleFonts.notoSansKr(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: textDark,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Icon(
+                                        Icons.content_copy_outlined,
+                                        size: 16,
+                                        color: Colors.grey.shade400,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              // Settings Button
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.04,
+                                      ),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.settings_outlined,
+                                    size: 20,
+                                  ),
+                                  color: textDark,
+                                  onPressed: () {
+                                    // Navigate to Settings
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ],
-            );
-          }),
+              ),
+            ),
+          ),
+
+          // Floating Action Button (Bottom Center)
+          Positioned(
+            bottom: 32,
+            left: 16,
+            right: 16,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 480),
+                child: Container(
+                  height: 56, // h-14
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: textDark.withValues(
+                          alpha: 0.3,
+                        ), // Shadow approximation
+                        blurRadius: 24,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Get.toNamed(Routes.sessionCreate);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: textDark, // #191f28
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      padding: EdgeInsets.zero,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.add, size: 24),
+                        const SizedBox(width: 12),
+                        Text(
+                          '새로운 합의 세션 만들기',
+                          style: GoogleFonts.notoSansKr(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  /// Tip 카드
-  Widget _buildTipCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [const Color(0xFFEFF6FF), const Color(0xFFEEF2FF)],
-        ),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFDBEAFE).withOpacity(0.5)),
-      ),
-      child: Column(
+  // --- Timeline Builder Methods ---
+
+  Widget _buildTimelineItem({
+    required bool isLast,
+    IconData? icon,
+    Color? iconBgColor,
+    Color? iconColor,
+    String? badgeText,
+    Color? badgeColor,
+    Color? badgeBgColor,
+    String? dateText,
+    Widget? child,
+    Widget? content, // Alternative if not using child card pattern
+  }) {
+    return IntrinsicHeight(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.lightbulb_outline,
-                size: 16,
-                color: Color(0xFF3182F6),
+          // Timeline Line & Icon
+          SizedBox(
+            width: 48 + 24, // Icon width + spacing
+            child: Stack(
+              children: [
+                // Line
+                if (!isLast)
+                  Positioned(
+                    top: 48,
+                    bottom: 0,
+                    left: 24 - 1, // center of 48 is 24. width 2.
+                    child: Container(width: 2, color: const Color(0xFFE2E8F0)),
+                  ),
+                // Icon
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: iconBgColor,
+                    shape: BoxShape.circle,
+                    border: isLast
+                        ? null
+                        : null, // Last item in HTML example has border-4 for bg color match, here we can simplify
+                    boxShadow: iconBgColor == const Color(0xFF137FEC)
+                        ? [
+                            BoxShadow(
+                              color: Colors.blue.withValues(alpha: 0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ]
+                        : null,
+                  ),
+                  child: Icon(icon, color: iconColor, size: 24),
+                ),
+              ],
+            ),
+          ),
+
+          // Content
+          Expanded(
+            child:
+                content ??
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header (Badge + Date)
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color:
+                                badgeBgColor ??
+                                badgeColor?.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: Text(
+                            badgeText ?? '',
+                            style: GoogleFonts.inter(
+                              // Robot/Inter for uppercase English
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              color: badgeColor,
+                              letterSpacing: 0.5, // wider tracking
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          dateText ?? '',
+                          style: GoogleFonts.notoSansKr(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey.shade400,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Card
+                    if (child != null) ...[
+                      child,
+                      const SizedBox(height: 40), // Gap to next item
+                    ],
+                  ],
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActiveSessionCard(Session session) {
+    const Color primaryColor = Color(0xFF137FEC);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.blue.shade100),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
+        children: [
+          // Blob decoration
+          Positioned(
+            top: -30,
+            right: -30,
+            child: Container(
+              width: 128,
+              height: 128,
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                shape: BoxShape.circle,
               ),
-              const SizedBox(width: 8),
-              const Text(
-                'Tip',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF3182F6),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+                child: Container(color: Colors.transparent),
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '지분 분배 세션', // Static title as per design for now, or use session data
+                          style: GoogleFonts.notoSansKr(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF191F28),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '현재 단계: 구성원 동의 대기 중', // Placeholder status
+                          style: GoogleFonts.notoSansKr(
+                            fontSize: 14,
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: primaryColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Text(
+                        '합의 진행 중',
+                        style: GoogleFonts.notoSansKr(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: primaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () {
+                    Get.toNamed(Routes.sessionHomePath(session.sessionId));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryColor,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 4,
+                    shadowColor: Colors.blue.withValues(alpha: 0.2),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '세션 바로가기',
+                        style: GoogleFonts.notoSansKr(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.arrow_forward, size: 20),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCompletedDocCard(dynamic doc) {
+    // using dynamic for doc placeholder standardisation
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        // border: Border.all(color: Colors.transparent), // HTML says border-transparent but hover effect?
+        // Let's stick to clean white with shadow
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '최종 합의 리포트 v1', // Placeholder
+                    style: GoogleFonts.notoSansKr(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF191F28),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '2023년 10월 24일 생성됨',
+                    style: GoogleFonts.notoSansKr(
+                      fontSize: 14,
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  '완료됨',
+                  style: GoogleFonts.notoSansKr(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey.shade600,
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          const Text(
-            '답변이 막힐 땐 \'시장 표준 데이터\'를 켜보세요. 업계 평균을 참고할 수 있습니다.',
-            style: TextStyle(
-              fontSize: 14,
-              color: Color(0xFF4E5968),
-              height: 1.6,
+          const SizedBox(height: 24),
+          ElevatedButton(
+            onPressed: () {
+              // Routes.docViewPath(doc.id)
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.grey.shade100,
+              foregroundColor: const Color(0xFF191F28),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.visibility_outlined, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  '문서 보기',
+                  style: GoogleFonts.notoSansKr(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
