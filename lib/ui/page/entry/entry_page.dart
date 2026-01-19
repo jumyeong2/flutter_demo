@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../router/routes.dart';
 import '../../../service/pending_route_service.dart';
 import '../../../service/company_key_cache_service.dart';
+import '../../../data/repository/firestore_repo.dart';
 
 /// AppEntryPage: 앱 진입 시 자동 분기 페이지
 /// v5 스펙에 따라 분기 규칙:
@@ -32,10 +33,26 @@ class _AppEntryPageState extends State<AppEntryPage> {
 
   @override
   Widget build(BuildContext context) {
-    // 로딩 중 표시
-    return const Scaffold(
+    // 로딩 중 표시 (개선된 UI)
+    return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
-        child: CircularProgressIndicator(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const CircularProgressIndicator(
+              color: Color(0xFF0F172A),
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              '로딩 중...',
+              style: TextStyle(
+                fontSize: 16,
+                color: Color(0xFF64748B),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -93,18 +110,25 @@ class _AppEntryPageState extends State<AppEntryPage> {
     
     try {
       final cacheService = Get.find<CompanyKeyCacheService>();
+      final repo = Get.find<FirestoreRepository>();
       
-      // 로컬 캐시 확인 (빠른 분기)
-      companyKey = cacheService.getCachedCompanyKey();
-      
-      // 서버 동기화는 백그라운드로 처리 (UX를 위해 빠른 분기 우선)
-      // AuthService.onInit()에서 이미 동기화를 시도하므로,
-      // 여기서는 로컬 캐시로 빠르게 분기하고 서버 동기화는 백그라운드로 수행
-      cacheService.syncFromServer(user.uid).catchError((e) {
-        // 에러 무시 (오프라인 대응)
-      });
+      // 서버에서 먼저 확인 (source of truth)
+      try {
+        final firestoreUser = await repo.getUser(user.uid);
+        if (firestoreUser != null && firestoreUser.currentCompanyKey != null && firestoreUser.currentCompanyKey!.isNotEmpty) {
+          companyKey = firestoreUser.currentCompanyKey;
+          // 서버 값이 있으면 로컬 캐시도 갱신
+          cacheService.setCachedCompanyKey(companyKey!);
+        } else {
+          // 서버에 값이 없으면 로컬 캐시도 삭제
+          cacheService.clearCachedCompanyKey();
+        }
+      } catch (e) {
+        // 서버 조회 실패 시 로컬 캐시 확인 (오프라인 대응)
+        companyKey = cacheService.getCachedCompanyKey();
+      }
     } catch (e) {
-      // CompanyKeyCacheService가 아직 초기화되지 않은 경우 무시
+      // CompanyKeyCacheService나 FirestoreRepository가 아직 초기화되지 않은 경우 무시
       // (앱 시작 초기 단계에서 발생할 수 있음)
     }
 

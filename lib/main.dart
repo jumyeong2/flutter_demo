@@ -14,6 +14,7 @@ import 'service/company_key_cache_service.dart';
 import 'service/deep_link_service.dart';
 import 'router/app_pages.dart';
 import 'router/routes.dart';
+import 'ui/page/landing/landing_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,6 +60,14 @@ class MyApp extends StatelessWidget {
       getPages: AppPages.routes,
       // 딥링크 처리: 웹 환경에서 URL 변경 감지
       onGenerateRoute: (settings) {
+        // 웹 환경에서 루트 경로(/) 접근 시 랜딩 페이지로 리다이렉트
+        if (settings.name == Routes.entry || settings.name == '/') {
+          return GetPageRoute(
+            settings: settings,
+            page: () => const LandingPage(),
+          );
+        }
+        
         // 웹 환경에서 URL 변경 시 딥링크 처리
         try {
           final deepLinkService = Get.find<DeepLinkService>();

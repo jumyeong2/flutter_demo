@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_demo/ui/page/landing/widget/email_signup_modal.dart';
 import 'package:flutter_demo/ui/page/onboarding/onboarding_page.dart';
 import 'package:flutter_demo/main.dart' as main_app;
 import 'package:get/get.dart';

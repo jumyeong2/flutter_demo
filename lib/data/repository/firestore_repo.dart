@@ -34,11 +34,26 @@ class FirestoreRepository {
   }
 
   /// users/{uid}.currentCompanyKey 업데이트
+  /// 문서가 없으면 먼저 생성하고, 있으면 업데이트합니다.
   Future<void> updateUserCompanyKey(String uid, String? companyKey) async {
     try {
-      await _firestore.collection('users').doc(uid).update({
-        'currentCompanyKey': companyKey,
-      });
+      final userRef = _firestore.collection('users').doc(uid);
+      final userDoc = await userRef.get();
+      
+      if (!userDoc.exists) {
+        // 문서가 없으면 먼저 생성
+        // 주의: 이 메서드는 email 필드가 없을 수 있으므로,
+        // 호출하는 쪽에서 사용자 문서를 먼저 생성하는 것이 권장됩니다.
+        await userRef.set({
+          'currentCompanyKey': companyKey,
+          'createdAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
+      } else {
+        // 문서가 있으면 업데이트
+        await userRef.update({
+          'currentCompanyKey': companyKey,
+        });
+      }
     } catch (e) {
       throw Exception('Failed to update user companyKey: $e');
     }
@@ -242,6 +257,22 @@ class FirestoreRepository {
   /// sessions/{sessionId} 실시간 스트림
   Stream<DocumentSnapshot> watchSession(String sessionId) {
     return _firestore.collection('sessions').doc(sessionId).snapshots();
+  }
+
+  /// sessions에서 companyKey의 모든 세션 조회
+  Future<List<Session>> getSessionsByCompany(String companyKey) async {
+    try {
+      final snapshot = await _firestore
+          .collection('sessions')
+          .where('companyKey', isEqualTo: companyKey)
+          .orderBy('createdAt', descending: true)
+          .get();
+      return snapshot.docs
+          .map((doc) => Session.fromJson(doc.data(), doc.id))
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to get sessions by company: $e');
+    }
   }
 
   /// sessions/{sessionId} 상태를 ready_for_consensus로 전환 (Transaction)

@@ -18,6 +18,7 @@ class Routes {
   static const String teamSelect = '/team/select';
   static const String teamCreate = '/team/create';
   static const String teamJoin = '/team/join';
+  static const String teamMemberRequired = '/team/member-required';
 
   // Workspace
   static const String dashboard = '/dashboard';
@@ -42,6 +43,7 @@ class Routes {
 
   // Error
   static const String error = '/error';
+  static const String notFound = '/404';
 
   // Helper methods for dynamic routes
   /// 세션 홈 경로 생성

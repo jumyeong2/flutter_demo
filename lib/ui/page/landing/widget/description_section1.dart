@@ -7,7 +7,6 @@ import 'package:flutter_demo/ui/page/sample/sample_report.dart';
 import 'package:flutter_demo/ui/page/onboarding/onboarding_page.dart';
 import 'package:get/get.dart';
 import 'landing_section_layout.dart';
-import 'email_signup_modal.dart';
 
 class Description1 extends StatelessWidget {
   const Description1({super.key});

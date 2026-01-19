@@ -84,14 +84,24 @@ class AuthService extends GetxService {
       return credential.user;
     } on firebase_auth.FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        throw Exception('사용자를 찾을 수 없습니다.');
+        throw Exception('등록되지 않은 이메일입니다.');
       } else if (e.code == 'wrong-password') {
-        throw Exception('잘못된 비밀번호입니다.');
+        throw Exception('비밀번호가 일치하지 않습니다.');
+      } else if (e.code == 'invalid-credential') {
+        // Firebase의 새로운 에러 코드 (잘못된 이메일 또는 비밀번호)
+        throw Exception('이메일 또는 비밀번호가 올바르지 않습니다.');
       } else if (e.code == 'invalid-email') {
         throw Exception('유효하지 않은 이메일 형식입니다.');
+      } else if (e.code == 'too-many-requests') {
+        throw Exception('너무 많은 시도가 있었습니다. 잠시 후 다시 시도해주세요.');
+      } else if (e.code == 'network-request-failed') {
+        throw Exception('네트워크 연결을 확인해주세요.');
       }
       throw Exception('로그인 실패: ${e.message}');
     } catch (e) {
+      if (e is Exception) {
+        rethrow;
+      }
       throw Exception('로그인 중 오류 발생: $e');
     }
   }

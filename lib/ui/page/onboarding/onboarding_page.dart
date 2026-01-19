@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'onboarding_controller.dart';
-import '../login/login_page.dart';
+import '../agreement/agreement_adjust_intro.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -251,9 +251,9 @@ class _OnboardingPageState extends State<OnboardingPage>
                           style: TextStyle(color: Color(0xFF64748B)),
                         ),
                         TextButton(
-                          onPressed: () => Get.to(() => const LoginPage()),
+                          onPressed: () => Get.to(() => const AgreementAdjustIntroPage()),
                           child: const Text(
-                            "로그인",
+                            "회원가입",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF0F172A), // Blue 600

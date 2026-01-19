@@ -1,7 +1,9 @@
+import 'dart:math';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../data/repository/firestore_repo.dart';
 import '../../../data/model/company.dart';
+import '../../../data/model/firestore_user.dart';
 import '../../../service/company_key_cache_service.dart';
 import '../../../router/routes.dart';
 
@@ -25,13 +27,26 @@ class TeamCreateController extends GetxController {
     teamName.value = name;
   }
 
+  /// 고유한 companyKey 생성 (랜덤 문자열)
+  String _generateCompanyKey() {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    final random = Random();
+    return String.fromCharCodes(
+      Iterable.generate(
+        8,
+        (_) => chars.codeUnitAt(random.nextInt(chars.length)),
+      ),
+    );
+  }
+
   /// 팀 생성
   /// 
-  /// 1. companyKey 생성 (간단 normalize)
-  /// 2. companies 문서 생성
-  /// 3. members/{uid} 생성 (role A)
-  /// 4. users.currentCompanyKey 설정
-  /// 5. redirect 있으면 이동 else /dashboard
+  /// 1. companyKey 생성
+  /// 2. Company 생성
+  /// 3. members/{uid} 생성 (role A - 팀 생성자)
+  /// 4. users/{uid}.currentCompanyKey 업데이트
+  /// 5. CompanyKeyCacheService에 캐시 저장
+  /// 6. 대시보드로 이동
   Future<void> createTeam() async {
     if (teamName.value.trim().isEmpty) {
       Get.snackbar('오류', '팀 이름을 입력해주세요');
@@ -48,20 +63,21 @@ class TeamCreateController extends GetxController {
         return;
       }
 
-      // 1. companyKey 생성 (간단 normalize: 소문자, 공백 제거, 특수문자 제거)
-      final normalizedName = teamName.value
-          .toLowerCase()
-          .replaceAll(RegExp(r'[^a-z0-9]'), '')
-          .trim();
+      // 고유한 companyKey 생성
+      String companyKey = _generateCompanyKey();
       
-      if (normalizedName.isEmpty) {
-        Get.snackbar('오류', '유효한 팀 이름을 입력해주세요');
-        return;
+      // companyKey 중복 확인 (간단한 재시도 로직)
+      int retryCount = 0;
+      while (retryCount < 5) {
+        final existingCompany = await _repo.getCompany(companyKey);
+        if (existingCompany == null) {
+          break; // 사용 가능한 키
+        }
+        companyKey = _generateCompanyKey();
+        retryCount++;
       }
 
-      final companyKey = '${normalizedName}_${DateTime.now().millisecondsSinceEpoch}';
-
-      // 2. companies 문서 생성
+      // Company 생성
       final company = Company(
         companyKey: companyKey,
         name: teamName.value.trim(),
@@ -69,7 +85,7 @@ class TeamCreateController extends GetxController {
       );
       await _repo.createCompany(company);
 
-      // 3. members/{uid} 생성 (role A)
+      // 멤버 생성 (role A - 팀 생성자)
       final member = CompanyMember(
         uid: user.uid,
         role: 'A',
@@ -77,17 +93,26 @@ class TeamCreateController extends GetxController {
       );
       await _repo.setCompanyMember(companyKey, member);
 
-      // 4. users.currentCompanyKey 설정
-      await _repo.updateUserCompanyKey(user.uid, companyKey);
+      // 사용자 문서가 없으면 먼저 생성
+      final existingUser = await _repo.getUser(user.uid);
+      if (existingUser == null) {
+        final firestoreUser = FirestoreUser(
+          uid: user.uid,
+          email: user.email ?? '',
+          createdAt: DateTime.now(),
+          currentCompanyKey: companyKey,
+        );
+        await _repo.setUser(firestoreUser);
+      } else {
+        // 사용자 문서가 있으면 currentCompanyKey만 업데이트
+        await _repo.updateUserCompanyKey(user.uid, companyKey);
+      }
+      
+      // 캐시 저장
       _cacheService.setCachedCompanyKey(companyKey);
 
-      // 5. redirect 있으면 이동 else /dashboard
-      final redirect = Get.parameters['redirect'];
-      if (redirect != null && redirect.isNotEmpty) {
-        Get.offAllNamed(redirect);
-      } else {
-        Get.offAllNamed(Routes.dashboard);
-      }
+      // 대시보드로 이동
+      Get.offAllNamed(Routes.dashboard);
     } catch (e) {
       Get.snackbar('오류', '팀 생성 실패: $e');
     } finally {

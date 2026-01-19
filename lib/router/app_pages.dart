@@ -12,6 +12,8 @@ import '../ui/page/entry/entry_page.dart';
 import '../ui/page/team/team_select_page.dart';
 import '../ui/page/team/team_create_page.dart';
 import '../ui/page/team/team_join_page.dart';
+import '../ui/page/team/team_member_required_page.dart';
+import '../ui/page/workspace/dashboard_page.dart';
 import '../ui/page/session/session_create_page.dart';
 import '../ui/page/session/session_home_page.dart';
 import '../ui/page/session/session_wait_page.dart';
@@ -20,6 +22,8 @@ import '../ui/page/session/session_generate_page.dart';
 import '../ui/page/document/doc_latest_page.dart';
 import '../ui/page/document/doc_view_page.dart';
 import '../ui/page/settings/settings_team_page.dart';
+import '../ui/page/error/error_page.dart';
+import '../ui/page/error/not_found_page.dart';
 
 /// GetPage 라우팅 트리
 /// v5 스펙에 따른 모든 라우트와 middlewares를 정의합니다.
@@ -69,6 +73,11 @@ class AppPages {
     GetPage(
       name: Routes.teamJoin,
       page: () => const TeamJoinPage(), // TODO: TeamJoinPage 생성 필요
+      middlewares: [AuthGuard()],
+    ),
+    GetPage(
+      name: Routes.teamMemberRequired,
+      page: () => const TeamMemberRequiredPage(),
       middlewares: [AuthGuard()],
     ),
 
@@ -175,7 +184,11 @@ class AppPages {
     // Error (middlewares: [])
     GetPage(
       name: Routes.error,
-      page: () => const ErrorPage(), // TODO: ErrorPage 생성 필요
+      page: () => const ErrorPage(),
+    ),
+    GetPage(
+      name: Routes.notFound,
+      page: () => const NotFoundPage(),
     ),
   ];
 }
@@ -213,17 +226,6 @@ class SignupPage extends StatelessWidget {
 }
 
 
-class DashboardPage extends StatelessWidget {
-  const DashboardPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('대시보드')),
-      body: const Center(child: Text('대시보드 페이지 (구현 예정)')),
-    );
-  }
-}
 
 
 class SessionQuestionsPage extends StatelessWidget {
@@ -278,41 +280,3 @@ class SettingsLogoutPage extends StatelessWidget {
   }
 }
 
-class ErrorPage extends StatelessWidget {
-  const ErrorPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final args = Get.arguments as Map<String, dynamic>?;
-    final message = args?['message'] as String? ?? '오류가 발생했습니다';
-    final fallbackRoute = args?['fallbackRoute'] as String? ?? Routes.dashboard;
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('오류')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Text(
-              message,
-              style: const TextStyle(fontSize: 16),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => Get.back(),
-              child: const Text('뒤로가기'),
-            ),
-            const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: () => Get.offAllNamed(fallbackRoute),
-              child: const Text('대시보드로 이동'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
