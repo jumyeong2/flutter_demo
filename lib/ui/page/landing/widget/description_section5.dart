@@ -130,7 +130,7 @@ class Description5 extends StatelessWidget {
           SizedBox(height: verticalGap),
           _ProcessCard(
             step: "4. Agreement",
-            description: "합의된 내용을 바탕으로 법적 효력을 고려한 공동창업자 합의안을 생성합니다.\n",
+            description: "합의된 내용을 바탕으로 공동창업자 합의안을 생성합니다.\n",
             icon: Icons.description_outlined,
             iconSize: iconSize,
             iconBackgroundSize: iconBackgroundSize,
@@ -206,7 +206,7 @@ class Description5 extends StatelessWidget {
                   Expanded(
                     child: _ProcessCard(
                       step: "4. Agreement",
-                      description: "합의된 내용을 바탕으로 법적 효력을 고려한\n공동창업자 합의안을 생성합니다.\n",
+                      description: "합의된 내용을 바탕으로\n공동창업자 합의안을 생성합니다.\n",
                       icon: Icons.description_outlined,
                       iconSize: iconSize,
                       iconBackgroundSize: iconBackgroundSize,

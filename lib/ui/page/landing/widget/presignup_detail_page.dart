@@ -26,7 +26,7 @@ class PreSignupDetailPage extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          '베타 출시 알림 신청',
+          '출시 알림 신청',
           style: TextStyle(
             fontSize: isSmallMobile ? 18 : 20,
             fontWeight: FontWeight.w700,
@@ -37,7 +37,11 @@ class PreSignupDetailPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: isSmallMobile ? 20 : isMobileScreen ? 40 : 120,
+            horizontal: isSmallMobile
+                ? 20
+                : isMobileScreen
+                ? 40
+                : 120,
             vertical: isSmallMobile ? 32 : 48,
           ),
           child: Column(
@@ -47,7 +51,11 @@ class PreSignupDetailPage extends StatelessWidget {
               Text(
                 'CoSync 베타 출시를\n가장 먼저 경험하세요',
                 style: TextStyle(
-                  fontSize: isSmallMobile ? 24 : isMobileScreen ? 32 : 40,
+                  fontSize: isSmallMobile
+                      ? 24
+                      : isMobileScreen
+                      ? 32
+                      : 40,
                   fontWeight: FontWeight.w900,
                   color: const Color(0xFF0F172A),
                   height: 1.2,
@@ -125,7 +133,7 @@ class PreSignupDetailPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '베타 출시 알림 신청하기',
+                        '출시 알림 신청하기',
                         style: TextStyle(
                           fontSize: isSmallMobile ? 16 : 18,
                           fontWeight: FontWeight.bold,
@@ -207,4 +215,3 @@ class PreSignupDetailPage extends StatelessWidget {
     );
   }
 }
-

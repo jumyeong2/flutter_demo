@@ -79,285 +79,319 @@ class Description1 extends StatelessWidget {
                   SizedBox(height: isDesktop ? 100 : 80),
                   // 배지 - 텍스트 너비에 맞춤
                   Container(
-                height: badgeHeight,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF1F5F9),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: const Color(0xFFE2E8F0),
-                    width: 1,
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.verified_user_outlined,
-                      color: const Color(0xFF64748B),
-                      size: badgeIconSize,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '창업 팀 필수 안전장치',
-                      style: TextStyle(
-                        color: const Color(0xFF64748B),
-                        fontSize: badgeFontSize,
-                        fontWeight: FontWeight.w600,
+                        height: badgeHeight,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF1F5F9),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: const Color(0xFFE2E8F0),
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.verified_user_outlined,
+                              color: const Color(0xFF64748B),
+                              size: badgeIconSize,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              '창업 팀 필수 안전장치',
+                              style: TextStyle(
+                                color: const Color(0xFF64748B),
+                                fontSize: badgeFontSize,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                      .animate()
+                      .fadeIn(duration: 800.ms, delay: 100.ms)
+                      .slideY(
+                        begin: 0.15,
+                        end: 0,
+                        duration: 800.ms,
+                        delay: 100.ms,
+                        curve: Curves.easeOutCubic,
                       ),
-                    ),
-                  ],
-                ),
-              )
-                  .animate()
-                  .fadeIn(duration: 800.ms, delay: 100.ms)
-                  .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 100.ms, curve: Curves.easeOutCubic),
-              SizedBox(height: spacingAfterBadge),
-              // 메인 카피 - 화면의 시각적 중심
-              Text(
-                  "공동창업 팀이 흔들리는 순간은\n대부분 '사업 문제'가 아니라,\n'기준'의 차이에서 시작됩니다",
-                  style: GoogleFonts.montserrat(
-                    height: 1.3,
-                    letterSpacing: isDesktop ? -0.8 : -1.0,
-                    fontSize: mainCopyFontSize,
-                    fontWeight: FontWeight.w900,
-                    color: const Color(0xFF0F172A),
-                  ),
-                textAlign: TextAlign.center,
-              )
-                  .animate()
-                  .fadeIn(duration: 800.ms, delay: 300.ms)
-                  .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 300.ms, curve: Curves.easeOutCubic),
-              SizedBox(height: spacingAfterMainCopy),
-              // 서브 카피 - 포지셔닝
-              Text(
-                  "CoSync는 합의를 계약으로 옮길 수 있도록 구조화하는\n공동창업자 전용 인프라입니다.",
-                  style: GoogleFonts.inter(
-                    height: 1.5,
-                    fontSize: subCopyFontSize,
-                    fontWeight: FontWeight.w500,
-                    color: const Color(0xFF64748B),
-                  ),
-                textAlign: TextAlign.center,
-              )
-                  .animate()
-                  .fadeIn(duration: 800.ms, delay: 500.ms)
-                  .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 500.ms, curve: Curves.easeOutCubic),
-              SizedBox(height: isSmallMobile ? 40 : 60),
-              // Before/After 2컬럼
-              (isSmallScreen
-                  ? _buildBeforeAfterVertical(isSmallMobile)
-                  : _buildBeforeAfterHorizontal(isDesktop))
-                  .animate()
-                  .fadeIn(duration: 800.ms, delay: 700.ms)
-                  .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 700.ms, curve: Curves.easeOutCubic),
-              SizedBox(height: spacingBeforeCTA),
-              // CTA 버튼 영역
-              isMobileScreen
-                    ? Column(
-                        children: [
-                          SizedBox(
-                            width: double.infinity,
-                            height: ctaButtonHeight,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // 이벤트 트래킹: lead_modal_open
-                                MyApp.analytics.logEvent(
-                                  name: 'lead_modal_open',
-                                );
-
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  builder: (context) =>
-                                      const EmailSignupModal(),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0F172A),
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      "베타 출시 알림 + 30% 쿠폰",
-                                      style: TextStyle(
-                                        fontSize: ctaPrimaryFontSize,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: ctaIconSize,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          SizedBox(
-                            width: double.infinity,
-                            height: ctaButtonHeight,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.to(() => const SampleReportPage());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: Colors.black,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                ),
-                                elevation: 0,
-                                side: BorderSide(color: Colors.grey[300]!),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      "결과 화면 미리보기",
-                                      style: TextStyle(
-                                        fontSize: ctaPrimaryFontSize,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: ctaIconSize,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                  SizedBox(height: spacingAfterBadge),
+                  // 메인 카피 - 화면의 시각적 중심
+                  Text(
+                        "공동창업 팀이 흔들리는 순간은\n대부분 '사업 문제'가 아니라,\n'기준'의 차이에서 시작됩니다",
+                        style: GoogleFonts.montserrat(
+                          height: 1.3,
+                          letterSpacing: isDesktop ? -0.8 : -1.0,
+                          fontSize: mainCopyFontSize,
+                          fontWeight: FontWeight.w900,
+                          color: const Color(0xFF0F172A),
+                        ),
+                        textAlign: TextAlign.center,
                       )
-                    : Column(
-                        children: [
-                          SizedBox(
-                            width: isDesktop ? 480 : 500,
-                            height: ctaButtonHeight,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // 이벤트 트래킹: lead_modal_open
-                                MyApp.analytics.logEvent(
-                                  name: 'lead_modal_open',
-                                );
-
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  builder: (context) =>
-                                      const EmailSignupModal(),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0F172A),
-                                foregroundColor: Colors.white,
-                                padding: EdgeInsets.zero,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      "베타 출시 알림 + 30% 쿠폰",
-                                      style: TextStyle(
-                                        fontSize: ctaPrimaryFontSize,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: ctaIconSize,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: isDesktop ? 16 : 12),
-                          SizedBox(
-                            width: isDesktop ? 480 : 500,
-                            height: ctaButtonHeight,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.to(() => const SampleReportPage());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: Colors.black,
-                                padding: EdgeInsets.zero,
-                                elevation: 0,
-                                side: BorderSide(color: Colors.grey[300]!),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      "결과 화면 미리보기",
-                                      style: TextStyle(
-                                        fontSize: ctaPrimaryFontSize,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: ctaIconSize,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                      .animate()
+                      .fadeIn(duration: 800.ms, delay: 300.ms)
+                      .slideY(
+                        begin: 0.15,
+                        end: 0,
+                        duration: 800.ms,
+                        delay: 300.ms,
+                        curve: Curves.easeOutCubic,
+                      ),
+                  SizedBox(height: spacingAfterMainCopy),
+                  // 서브 카피 - 포지셔닝
+                  Text(
+                        "CoSync는 합의를 계약으로 옮길 수 있도록 구조화하는\n공동창업자 전용 인프라입니다.",
+                        style: GoogleFonts.inter(
+                          height: 1.5,
+                          fontSize: subCopyFontSize,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFF64748B),
+                        ),
+                        textAlign: TextAlign.center,
                       )
-                  .animate()
-                  .fadeIn(duration: 800.ms, delay: 900.ms)
-                  .slideY(begin: 0.15, end: 0, duration: 800.ms, delay: 900.ms, curve: Curves.easeOutCubic),
-              SizedBox(height: isDesktop ? 100 : 80),
-            ],
+                      .animate()
+                      .fadeIn(duration: 800.ms, delay: 500.ms)
+                      .slideY(
+                        begin: 0.15,
+                        end: 0,
+                        duration: 800.ms,
+                        delay: 500.ms,
+                        curve: Curves.easeOutCubic,
+                      ),
+                  SizedBox(height: isSmallMobile ? 40 : 60),
+                  // Before/After 2컬럼
+                  (isSmallScreen
+                          ? _buildBeforeAfterVertical(isSmallMobile)
+                          : _buildBeforeAfterHorizontal(isDesktop))
+                      .animate()
+                      .fadeIn(duration: 800.ms, delay: 700.ms)
+                      .slideY(
+                        begin: 0.15,
+                        end: 0,
+                        duration: 800.ms,
+                        delay: 700.ms,
+                        curve: Curves.easeOutCubic,
+                      ),
+                  SizedBox(height: spacingBeforeCTA),
+                  // CTA 버튼 영역
+                  isMobileScreen
+                      ? Column(
+                          children: [
+                            SizedBox(
+                              width: double.infinity,
+                              height: ctaButtonHeight,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  // 이벤트 트래킹: lead_modal_open
+                                  MyApp.analytics.logEvent(
+                                    name: 'lead_modal_open',
+                                  );
+
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (context) =>
+                                        const EmailSignupModal(),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF0F172A),
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        "출시 알림 + 사전 신청",
+                                        style: TextStyle(
+                                          fontSize: ctaPrimaryFontSize,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: ctaIconSize,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            SizedBox(
+                              width: double.infinity,
+                              height: ctaButtonHeight,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Get.to(() => const SampleReportPage());
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: Colors.black,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  elevation: 0,
+                                  side: BorderSide(color: Colors.grey[300]!),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        "결과 화면 미리보기",
+                                        style: TextStyle(
+                                          fontSize: ctaPrimaryFontSize,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: ctaIconSize,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Column(
+                              children: [
+                                SizedBox(
+                                  width: isDesktop ? 480 : 500,
+                                  height: ctaButtonHeight,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      // 이벤트 트래킹: lead_modal_open
+                                      MyApp.analytics.logEvent(
+                                        name: 'lead_modal_open',
+                                      );
+
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: true,
+                                        builder: (context) =>
+                                            const EmailSignupModal(),
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFF0F172A),
+                                      foregroundColor: Colors.white,
+                                      padding: EdgeInsets.zero,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            "출시 알림 + 사전 신청",
+                                            style: TextStyle(
+                                              fontSize: ctaPrimaryFontSize,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: ctaIconSize,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: isDesktop ? 16 : 12),
+                                SizedBox(
+                                  width: isDesktop ? 480 : 500,
+                                  height: ctaButtonHeight,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Get.to(() => const SampleReportPage());
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      foregroundColor: Colors.black,
+                                      padding: EdgeInsets.zero,
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: Colors.grey[300]!,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            "결과 화면 미리보기",
+                                            style: TextStyle(
+                                              fontSize: ctaPrimaryFontSize,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: ctaIconSize,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                            .animate()
+                            .fadeIn(duration: 800.ms, delay: 900.ms)
+                            .slideY(
+                              begin: 0.15,
+                              end: 0,
+                              duration: 800.ms,
+                              delay: 900.ms,
+                              curve: Curves.easeOutCubic,
+                            ),
+                  SizedBox(height: isDesktop ? 100 : 80),
+                ],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
-    ],
-    ),
     );
   }
 

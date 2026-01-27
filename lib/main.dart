@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
     analytics: analytics,
   );
 
-  @override
+@override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'CoSync',
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       navigatorObservers: [observer],
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-        useMaterial3: true,
+         useMaterial3: true,
         textTheme: TextTheme(
           displayLarge: GoogleFonts.montserrat(),
           displayMedium: GoogleFonts.montserrat(),

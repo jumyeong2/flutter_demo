@@ -90,7 +90,7 @@ class _SampleReportPageState extends State<SampleReportPage>
   // State
   bool _isModalOpen = false;
   final ScrollController _scrollController = ScrollController();
-  
+
   // Topic별 GlobalKey 맵
   final Map<int, GlobalKey> _topicKeys = {};
 
@@ -172,12 +172,12 @@ class _SampleReportPageState extends State<SampleReportPage>
       );
     } else {
       // Fallback: Snackbar (key가 아직 준비되지 않은 경우)
-      Get.snackbar(
-        "Navigation",
-        "Topic 0$id로 이동합니다.",
-        snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 1),
-      );
+    Get.snackbar(
+      "Navigation",
+      "Topic 0$id로 이동합니다.",
+      snackPosition: SnackPosition.BOTTOM,
+      duration: const Duration(seconds: 1),
+    );
     }
   }
 
