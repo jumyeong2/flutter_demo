@@ -305,12 +305,15 @@ class _EmailSignupModalState extends State<EmailSignupModal> {
                       SizedBox(height: isSmallMobile ? 12 : 16),
                       _buildBenefitItem('출시 즉시 우선 안내', isSmallMobile),
                       SizedBox(height: isSmallMobile ? 8 : 12),
-                      _buildBenefitItem('사전 신청자 전용 30% 할인 쿠폰', isSmallMobile),
+                      _buildBenefitItem(
+                        '동업 계약 필수 체크리스트 (PDF) 제공',
+                        isSmallMobile,
+                      ),
                       SizedBox(height: isSmallMobile ? 8 : 12),
-                      _buildBenefitItem('Pro 질문 일부 무료 체험', isSmallMobile),
+                      _buildBenefitItem('창업가 전용 심화 질문 셋 제공', isSmallMobile),
                       SizedBox(height: isSmallMobile ? 10 : 12),
                       Text(
-                        '쿠폰 및 무료 체험 혜택은 출시 시점에 신청하신 연락처로 발급됩니다.',
+                        '혜택은 서비스 출시 시점에 신청하신 연락처로 일괄 발송됩니다.',
                         style: TextStyle(
                           fontSize: isSmallMobile ? 12 : 12,
                           color: const Color(0xFF64748B),
